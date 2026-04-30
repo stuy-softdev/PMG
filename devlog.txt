@@ -1,0 +1,5 @@
+Task Z:
+  Wipe box clean (re-image)? NO
+  Serve multiple apps concurrently? NO
+  Flask
+  Has any team member provisioned SSL certificates to facilitate httpS traffic? NO
