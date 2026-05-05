@@ -9,3 +9,6 @@ jasonC -- 2026-05-04 11:45
 	set up basic vm stuff, my vm is fully working hopefully
 	other vms are still a work in progress
 	did copyfail on primary vm
+
+ethanC -- 2026-05-05 10:10
+	add flag
