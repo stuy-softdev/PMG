@@ -11,4 +11,4 @@ jasonC -- 2026-05-04 11:45
 	did copyfail on primary vm
 
 ethanC -- 2026-05-05 10:10
-	add flag
+	add flag.png and .gitignore
