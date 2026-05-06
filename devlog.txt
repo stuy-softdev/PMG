@@ -12,3 +12,8 @@ jasonC -- 2026-05-04 11:45
 
 ethanC -- 2026-05-05 10:10
 	add flag.png and .gitignore
+
+jasonC -- 2026-05-06 10:43
+	SORRY I FORGOR AGAIN, this is for yesterday
+	worked on dd
+		figuring our how db and structure for website should work
