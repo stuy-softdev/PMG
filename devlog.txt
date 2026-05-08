@@ -18,6 +18,9 @@ jasonC -- 2026-05-06 10:43
 	worked on dd
 		figuring our how db and structure for website should work
 
+ethanC -- 2026-05-06 11:20
+	design doc site map creation
+
 jasonC -- 2026-05-08 08:15
 	continued to work on dd
 		more specifically, html stuff and what they do
