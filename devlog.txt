@@ -17,3 +17,7 @@ jasonC -- 2026-05-06 10:43
 	SORRY I FORGOR AGAIN, this is for yesterday
 	worked on dd
 		figuring our how db and structure for website should work
+
+jasonC -- 2026-05-08 08:15
+	continued to work on dd
+		more specifically, html stuff and what they do
