@@ -24,3 +24,6 @@ ethanC -- 2026-05-06 11:20
 jasonC -- 2026-05-08 08:15
 	continued to work on dd
 		more specifically, html stuff and what they do
+
+jasonC -- 2026-05-11 01:37
+	completed frist version of dd and added to repo
