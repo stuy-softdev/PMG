@@ -27,3 +27,14 @@ jasonC -- 2026-05-08 08:15
 
 jasonC -- 2026-05-11 01:37
 	completed frist version of dd and added to repo
+
+jasonC -- 2026-05-12 02:07
+	DESIGN DOC REVISIONS:
+		more clarity on buzzer.html about using one computer when playing a game
+		removed redundant info in login/register info
+		removed unnessary data visualization library and data extraction sectinos
+		removed FEF section and combined it with CSS section for more clarity
+		more clarity that we are using SQLite3 in the database sections
+		fixed very very very very very stupid errors in component map
+		added timeline
+		added deadlines in task breakdown
