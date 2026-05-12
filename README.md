@@ -1,4 +1,4 @@
-# jeffpoordee by Pomegranates
+# THIS IS JEOPARDY!!!!!!! by Pomegranates
 ## Team Members: Artemis Lee (PM), Jason Chan, Ethan Cheung  
 
 ### Description
