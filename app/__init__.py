@@ -66,6 +66,30 @@ def register():
             return render_template("register.html", error = execute_register)
     return render_template("register.html")
 
+@app.route("/home", methods=["GET", "POST"])
+def home():
+    return render_template("home.html")
+
+@app.route("/create", methods=["GET", "POST"])
+def create():
+    return render_template("create.html")
+
+@app.route("/edit_profile", methods=["GET", "POST"])
+def edit_profile():
+    return render_template("edit.html")
+
+@app.route("/edit", methods=["GET", "POST"])
+def edit():
+    return render_template("edit.html")
+
+@app.route("/game", methods=["GET", "POST"])
+def game():
+    return render_template("game.html")
+
+@app.route("/profile", methods=["GET", "POST"])
+def profile():
+    return render_template("profile.html")
+
 if __name__ == "__main__":
     app.debug=True
     app.run(host='0.0.0.0')
