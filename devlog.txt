@@ -44,3 +44,8 @@ ethanC -- 2026-05-12 11:17
     made html files and js file
     add project name
     add flask paths to html 
+    
+jasonC -- 2026-05-12 11:40
+	set up basic python stuff for login/register
+	set up data.py, still working on setting up data.py
+	we might need to make more design doc changes in terms of database tables
