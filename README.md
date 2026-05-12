@@ -1,4 +1,4 @@
-# what_is_our_project by Pomegranates
+# jeffpoordee by Pomegranates
 ## Team Members: Artemis Lee (PM), Jason Chan, Ethan Cheung  
 
 ### Description
