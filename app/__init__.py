@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 
-import sqlite3, datetime   #enable control of an sqlite database
+import sqlite3
+import datetime   #enable control of an sqlite database
 
 # our helper db files
-import data_setup, data
+import data_setup
+import data
 
 DB_FILE="data.db"
 

@@ -49,3 +49,8 @@ jasonC -- 2026-05-12 11:40
 	set up basic python stuff for login/register
 	set up data.py, still working on setting up data.py
 	we might need to make more design doc changes in terms of database tables
+	
+jasonC -- 2026-05-12 15:22
+	APPLICATION OF PYTHON STYLE:
+		1: The section about how to import things is the most applicable to our codebase. Literally today, we combined the Flask imports into one line which is correct, but not when we combined "import sqlite3", "import datetime", "import data_setup", etc. We have fixed the styling for those lines now.
+		2: The section about indenting is the most useful to us because we never really had a convention to indenting before, which led to uneven, ugly code.
