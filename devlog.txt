@@ -54,3 +54,9 @@ jasonC -- 2026-05-12 15:22
 	APPLICATION OF PYTHON STYLE:
 		1: The section about how to import things is the most applicable to our codebase. Literally today, we combined the Flask imports into one line which is correct, but not when we combined "import sqlite3", "import datetime", "import data_setup", etc. We have fixed the styling for those lines now.
 		2: The section about indenting is the most useful to us because we never really had a convention to indenting before, which led to uneven, ugly code.
+
+artemisL -- 2026-05-12 22:28
+	APPLICATION OF JS STYLE:
+		1: The section on loops and conditionals is the most helpful - our main JS feature (a buzzer) is completely based on conditionals to activate it.
+		2: The general guidelines - it keeps our JS code from being unreadable
+		
