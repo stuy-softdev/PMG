@@ -60,3 +60,5 @@ artemisL -- 2026-05-12 22:28
 		1: The section on loops and conditionals is the most helpful - our main JS feature (a buzzer) is completely based on conditionals to activate it.
 		2: The general guidelines - it keeps our JS code from being unreadable
 		
+jasonC -- 2026-05-13 09:32
+	added summary of project in readme
