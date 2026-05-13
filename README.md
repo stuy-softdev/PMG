@@ -1,8 +1,8 @@
 # THIS IS JEOPARDY!!!!!!! by Pomegranates
-## Team Members: Artemis Lee (PM), Jason Chan, Ethan Cheung  
+## Team Members: Jason Chan (PM), Artemis Lee, Ethan Cheung  
 
 ### Description
-Our project shall be something with the impact of pomegranates.
+Have you ever wanted to compete with your friends, flex your trivia knowledge and gain bragging rights for eternity? Then our website is definitely the best for you! Users will be able to play games of Jeopardy using pre-generated boards and they will compete with each other to see who gets to brag. There are several all-time leaderboards to see the which players are the best of the best. Users will also be able to create and edit their own custom boards and publish them for others to play.
 
 
 ### Install Guide:
