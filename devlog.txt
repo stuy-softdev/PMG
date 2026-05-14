@@ -62,3 +62,6 @@ artemisL -- 2026-05-12 22:28
 		
 jasonC -- 2026-05-13 09:32
 	added summary of project in readme
+
+jasonC -- 2026-05-14 09:33
+	datasetup pretty much complete but i will need to modify it later
