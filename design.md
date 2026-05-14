@@ -122,3 +122,16 @@ WEEK 3:
 | Python stuff (making flask work) | DAL | 05-15 @ 23:59 |
 | Javascript stuff (making buzzer work) | DAL | 05-26 @ 11:06 |
 | Devlog | EVERYONE | 06-01 @ 08:00 |
+
+
+testing
+
+Here is a simple flow chart:
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
