@@ -86,7 +86,34 @@ OpenTDB: Provides a whole bunch of trivia questions as requested. Responsive and
 *\#\#\# \-------------------------------------------------------- \#\#\#*
 
 # **FRONT END DIAGRAM:**
+``` mermaid
+---
+config:
+  theme: redux
+  layout: dagre
+---
+flowchart TB
+    n1["Register"] --> n2["Login"]
+    n2 --> n1 & n5["Home"]
+    n5 --> n4["Profile"] & n6["Create"]
+    n4 --> n3["Edit Profile"] & n5
+    n3 --> n4
+    n6 --> n7["Edit"] & n5
+    n7 --> n6
+    n9["Game"] --> n8["Buzzer"]
+    n8 --> n9
+    n5 --> n9
 
+    n1@{ shape: rect}
+    n2@{ shape: rect}
+    n5@{ shape: rect}
+    n4@{ shape: rect}
+    n6@{ shape: rect}
+    n3@{ shape: rect}
+    n7@{ shape: rect}
+    n9@{ shape: rect}
+    n8@{ shape: rect}
+```
 # **TIMELINE:**
 
 WEEK 1: 
