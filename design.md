@@ -1,14 +1,14 @@
 **Le Fin**  
-**Project: P05 — THIS IS JEOPARDY\!\!\!\!\!\!\!**  
+**Project: P05 — THIS IS JEOPARDY**
 **Team: Pomegranates**  
 **Roster: Jason Chan (PM), Artemis Lee, Ethan Cheung**  
-*\#\#\# \-------------------------------------------------------- \#\#\#*
+--------------------------------------------------------
 
 # **PROJECT DESCRIPTION:**
 
 Users will be able to play a game of Jeopardy with friends. They may use pre-generated boards created from our database of questions, or they may make their own customizable gameboard. Upon playing a game, the user will reveal clues and take keyboard inputs from the players. A player will gain/lose points depending on if they give the correct answer. Obviously, whoever has the most points wins. Have fun\!
 
-*\#\#\# \-------------------------------------------------------- \#\#\#*
+--------------------------------------------------------
 
 # **PROGRAM COMPONENTS \+ EXPLANATION:**
 
@@ -38,7 +38,7 @@ Users will be able to play a game of Jeopardy with friends. They may use pre-gen
 
 * We will be using Tailwind because it is awesome. We will not be using a CSS file.
 
-*\#\#\# \-------------------------------------------------------- \#\#\#*
+--------------------------------------------------------
 
 # **DATABASE ORGANIZATION:**
 
@@ -77,7 +77,7 @@ userdata
 
 OpenTDB: Provides a whole bunch of trivia questions as requested. Responsive and easy to filter, but only outputs 50 questions at a time.
 
-*\#\#\# \-------------------------------------------------------- \#\#\#*
+--------------------------------------------------------
 
 # **COMPONENT MAP:**
 ``` mermaid
@@ -97,7 +97,7 @@ flowchart TB
 ```
 
 
-*\#\#\# \-------------------------------------------------------- \#\#\#*
+--------------------------------------------------------
 
 # **FRONT END DIAGRAM:**
 ``` mermaid
@@ -163,16 +163,3 @@ WEEK 3:
 | Python stuff (making flask work) | DAL | 05-15 @ 23:59 |
 | Javascript stuff (making buzzer work) | DAL | 05-26 @ 11:06 |
 | Devlog | EVERYONE | 06-01 @ 08:00 |
-
-
-testing
-
-Here is a simple flow chart:
-
-```mermaid
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
-```
