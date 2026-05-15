@@ -84,7 +84,7 @@ OpenTDB: Provides a whole bunch of trivia questions as requested. Responsive and
 ---
 config:
   theme: neutral
- layout: dagre
+  layout: dagre
 ---
 flowchart TB
    L["__init__.py"] -- renders --> M["HTML templates"]
