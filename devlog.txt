@@ -65,3 +65,10 @@ jasonC -- 2026-05-13 09:32
 
 jasonC -- 2026-05-14 09:33
 	datasetup pretty much complete but i will need to modify it later
+
+jasonC -- 2026-05-15 08:30
+	modifications to DD:
+		fixed the diagrams showing up as nonexistent images on md file (used mermaid instead)
+		our timeline has not changed that much since we began our journy
+	did requirements.txt
+	need to work on changing the db a little more

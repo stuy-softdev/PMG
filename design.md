@@ -4,7 +4,7 @@
 **Roster: Jason Chan (PM), Artemis Lee, Ethan Cheung**  
 *\#\#\# \-------------------------------------------------------- \#\#\#*
 
-# **PROJECT DESCRIPTION:** 
+# **PROJECT DESCRIPTION:**
 
 Users will be able to play a game of Jeopardy with friends. They may use pre-generated boards created from our database of questions, or they may make their own customizable gameboard. Upon playing a game, the user will reveal clues and take keyboard inputs from the players. A player will gain/lose points depending on if they give the correct answer. Obviously, whoever has the most points wins. Have fun\!
 
@@ -44,7 +44,7 @@ Users will be able to play a game of Jeopardy with friends. They may use pre-gen
 
 ## We will be using SQLite3 to organize our data; more specifically the user information, their saved boards, and current game stats. We will not be using any databases from external sources.
 
-## 
+##
 
 ## Tables:
 
@@ -80,22 +80,63 @@ OpenTDB: Provides a whole bunch of trivia questions as requested. Responsive and
 *\#\#\# \-------------------------------------------------------- \#\#\#*
 
 # **COMPONENT MAP:**
+``` mermaid
+---
+config:
+  theme: neutral
+  layout: dagre
+---
+flowchart TB
+   L["__init__.py"] -- renders --> M["HTML templates"]
+   M -- uses/links to --> Q["JS Files"]
+   L -- uses --> N["data_setup.py"]
+   L --> O["data.py"]
+   M -- uses --> O
+   O -- handles --> P["data.db"]
+   O --> R["SQLite database"]
+```
 
-![][image1]
 
 *\#\#\# \-------------------------------------------------------- \#\#\#*
 
 # **FRONT END DIAGRAM:**
+``` mermaid
+---
+config:
+  theme: neutral
+  layout: dagre
+---
+flowchart TB
+    n1["Register"] --> n2["Login"]
+    n2 --> n1 & n5["Home"]
+    n5 --> n4["Profile"] & n6["Create"]
+    n4 --> n3["Edit Profile"] & n5
+    n3 --> n4
+    n6 --> n7["Edit"] & n5
+    n7 --> n6
+    n9["Game"] --> n8["Buzzer"]
+    n8 --> n9
+    n5 --> n9
 
+    n1@{ shape: rect}
+    n2@{ shape: rect}
+    n5@{ shape: rect}
+    n4@{ shape: rect}
+    n6@{ shape: rect}
+    n3@{ shape: rect}
+    n7@{ shape: rect}
+    n9@{ shape: rect}
+    n8@{ shape: rect}
+```
 # **TIMELINE:**
 
-WEEK 1: 
+WEEK 1:
 
 * Get basic flask app and HTML template structure working  
 * Login/Register  
 * data\_setup.py completed or close to complete
 
-WEEK 2: 
+WEEK 2:
 
 * Functions for data.py completed  
 * OpenTDB API implementation  
