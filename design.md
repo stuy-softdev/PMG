@@ -83,6 +83,7 @@ OpenTDB: Provides a whole bunch of trivia questions as requested. Responsive and
 ``` mermaid
 ---
 config:
+  theme: neutral
  layout: dagre
 ---
 flowchart TB
