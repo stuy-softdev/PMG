@@ -23,7 +23,7 @@ def create_game_table():
                     answer          TEXT        NOT NULL,
                     points          INTEGER     NOT NULL,
                     category        TEXT        NOT NULL,
-                    hint            TEXT        NOT NULL,
+                    hint            TEXT        NOT NULL
                 )"""
     create_table(contents)
 
@@ -33,7 +33,7 @@ def create_userdata_table():
                CREATE TABLE IF NOT EXISTS favs (
                    userpoints       INTEGER      NOT NULL,
                    currentgame	    TEXT	     NOT NULL,
-                   highscore        INTEGER      NOT NULL,
+                   highscore        INTEGER      NOT NULL
                )"""
     create_table(contents)
 

@@ -6,7 +6,7 @@ DB_FILE="data.db"
 
 #=============================USERS=============================#
 
-
+'''
 # returns a list of usernames
 def get_all_users():
 
@@ -19,7 +19,7 @@ def get_all_users():
     db.close()
 
     return clean_list(data)
-
+'''
 
 # returns whether or not a user exists
 def user_exists(username):
@@ -40,7 +40,6 @@ def auth(username, password):
         db.commit()
         db.close()
 
-        #raise ValueError("Username does not exist")
         return False
 
     # use ? for unsafe/user provided variables
@@ -54,7 +53,6 @@ def auth(username, password):
 
     # hash password here
     if real_pass != str(hashlib.sha256(password).hexdigest()):
-        #raise ValueError("Incorrect password")
         return False
 
     return True
@@ -64,11 +62,9 @@ def auth(username, password):
 def add_user(username, password):
 
     if user_exists(username):
-        #raise ValueError("Username already exists")
         return "Username already exists"
 
     if password == "":
-        #raise ValueError("You must enter a non-empty password")
         return "Password cannot be empty"
 
     db = sqlite3.connect(DB_FILE)
@@ -86,11 +82,13 @@ def add_user(username, password):
 
     return "success"
 
+#=============================GAME==============================#
+
 
 
 #=============================HELPERS=============================#
 
-
+'''
 # turn a list of tuples (returned by .fetchall()) into a 1d list
 def clean_list(raw_output):
     clean_output = []
@@ -202,3 +200,4 @@ def delete_row(table, ID_fieldname, id):
 def gen_id():
     # use secrets module to generate a random 32-byte string
     return secrets.token_hex(32)
+'''
