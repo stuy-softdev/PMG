@@ -19,7 +19,7 @@ def get_all_users():
     db.close()
 
     return clean_list(data)
-'''
+
 
 # returns whether or not a user exists
 def user_exists(username):
@@ -88,7 +88,7 @@ def add_user(username, password):
 
 #=============================HELPERS=============================#
 
-'''
+
 # turn a list of tuples (returned by .fetchall()) into a 1d list
 def clean_list(raw_output):
     clean_output = []
@@ -201,3 +201,17 @@ def gen_id():
     # use secrets module to generate a random 32-byte string
     return secrets.token_hex(32)
 '''
+
+def add_user():
+
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    
+    
+    
+    db.commit()
+    db.close()
+
+    return clean_list(data)
+
+
