@@ -1,5 +1,5 @@
 **Le Fin**  
-**Project: P05 — THIS IS JEOPARDY**
+**Project: P05 — THIS IS JEOPARDY**  
 **Team: Pomegranates**  
 **Roster: Jason Chan (PM), Artemis Lee, Ethan Cheung**  
 --------------------------------------------------------
