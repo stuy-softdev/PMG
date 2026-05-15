@@ -3,13 +3,33 @@
 
 
 <head>
-  <link href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
-  rel="stylesheet">
+<title>Login</title>
 </head>
 
 <body>
 
-
+<h1>Login</h1>
+    <br>
+    <form action="/" method="POST">
+      <h3>Username:</h3>
+      <input class="a" type="text" name="username" required />
+      <br>
+      <br>
+      <h3>Password:</h3>
+      <input class="a" type="password" name="password" required />
+      <br>
+      <br>
+      <input class="b" type="submit" name="sub1" value="Login" />
+    </form>
+    <br>
+    <h5>{{invalid}}</h5>
+    <br>
+    <div>
+      <p>Click the button below to register.</p>
+      <a href="{{url_for('register')}}">
+        <button class="b">Register</button>
+      </a>
+    </div>
 
 </body>
 </html>
