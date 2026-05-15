@@ -6,7 +6,7 @@ DB_FILE="data.db"
 
 #=============================USERS=============================#
 
-'''
+
 # returns a list of usernames
 def get_all_users():
 
@@ -200,18 +200,6 @@ def delete_row(table, ID_fieldname, id):
 def gen_id():
     # use secrets module to generate a random 32-byte string
     return secrets.token_hex(32)
-'''
 
-def add_user():
-
-    db = sqlite3.connect(DB_FILE)
-    c = db.cursor()
-    
-    
-    
-    db.commit()
-    db.close()
-
-    return clean_list(data)
 
 
