@@ -16,7 +16,7 @@ Users will be able to play a game of Jeopardy with friends. They may use pre-gen
 
 * *\_\_init\_\_.py*: The main file; serves app  
 * *data\_setup.py*: Handles parsing of CSV file and creation of Sqlite3 database tables  
-* *data.py*: Handles the data in the Sqlite3 grocery database and the user data (all stored in *data.db*)
+* *data.py*: Handles the data in the Sqlite3 database and the user data (all stored in *data.db*)
 
 ## Templates
 
