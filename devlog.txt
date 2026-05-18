@@ -72,3 +72,8 @@ jasonC -- 2026-05-15 08:30
 		our timeline has not changed that much since we began our journy
 	did requirements.txt
 	need to work on changing the db a little more
+
+jasonC -- 2026-05-18 9:32
+	modifications to db
+		board table with all questions, answers, corresponding row and column, etc
+		will update data_setup.py to reflect that
