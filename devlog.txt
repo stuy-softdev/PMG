@@ -86,3 +86,6 @@ jasonC -- 2026-05-19 12:08
 ethanC -- 2026-05-19 10:15
 	made button grid
 
+jasonC -- 2026-05-19 11:45
+	worked on function that returns 2d array of all text in a board, need to clean the array for proper use
+	fixed issue with data_setup

@@ -13,10 +13,10 @@ def create_users_table():
                     username        TEXT        NOT NULL    PRIMARY KEY,
                     password        TEXT        NOT NULL,
                     bio             TEXT        NOT NULL,
-                    total_points    TEXT        NOT NULL,
-                    wins            TEXT        NOT NULL,
-                    runnerups       TEXT        NOT NULL,
-                    losses          TEXT        NOT NULL
+                    total_points    INTEGER     NOT NULL,
+                    wins            INTEGER     NOT NULL,
+                    runnerups       INTEGER     NOT NULL,
+                    losses          INTEGER     NOT NULL
                 )"""
     create_table(contents)
 

@@ -88,6 +88,7 @@ def add_user(username, password):
 
 #=============================BOARD==============================#
 
+# creats a new board with placeholder text and null values for each board
 def create_new_board(title):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
@@ -101,6 +102,26 @@ def create_new_board(title):
 
     db.commit()
     db.close()
+
+# returns a 2d array of all of the text in a board
+def get_board_text(title):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    board_text = [[], [], [], [], [], []]
+    print(board_text)
+
+    for row in range(6):
+        for column in range(6):
+            board_text[row].append(c.execute(
+                                 'SELECT quest_cat FROM board WHERE (title, row, column) = (?, ?, ?)',
+                                 (title, row, column,)
+                             ).fetchone()
+                         )
+
+    board_text = clean_list_2d(board_text)
+    print(board_text)
+    return board_text
 
 #=============================HELPERS=============================#
 

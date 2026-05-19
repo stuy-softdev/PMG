@@ -89,6 +89,7 @@ def create_new():
 
 @app.route("/create/<string:board>", methods=["GET", "POST"])
 def create(board):
+    a=data.get_board_text(board)
     return render_template("create.html")
 
 @app.route("/edit_profile", methods=["GET", "POST"])
