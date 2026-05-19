@@ -11,29 +11,43 @@ def create_users_table():
     contents =  """
                 CREATE TABLE IF NOT EXISTS users (
                     username        TEXT        NOT NULL    PRIMARY KEY,
-                    password        TEXT        NOT NULL
+                    password        TEXT        NOT NULL,
+                    bio             TEXT        NOT NULL,
+                    total_points    TEXT        NOT NULL,
+                    wins            TEXT        NOT NULL,
+                    runnerups       TEXT        NOT NULL,
+                    losses          TEXT        NOT NULL
                 )"""
     create_table(contents)
 
 # groceries
-def create_game_table():
+def create_board_table():
     contents =  """
-                CREATE TABLE IF NOT EXISTS game (
-                    question        TEXT        NOT NULL    PRIMARY KEY,
-                    answer          TEXT        NOT NULL,
-                    points          INTEGER     NOT NULL,
+                CREATE TABLE IF NOT EXISTS board (
+                    title           TEXT        NOT NULL,
+                    row             INTEGER     NOT NULL,
+                    column          INTEGER     NOT NULL,
                     category        TEXT        NOT NULL,
-                    hint            TEXT        NOT NULL
+                    question        TEXT        NOT NULL,
+                    answer          TEXT        NOT NULL,
+                    wrong1          TEXT        NOT NULL,
+                    wrong2          TEXT,
+                    wrong3          TEXT,
+                    point_value     INTEGER     NOT NULL,
+                    chosen          INTEGER     NOT NULL
                 )"""
     create_table(contents)
 
 # favs
-def create_userdata_table():
+def create_game_table():
     contents = """
-               CREATE TABLE IF NOT EXISTS favs (
-                   userpoints       INTEGER      NOT NULL,
-                   currentgame	    TEXT	     NOT NULL,
-                   highscore        INTEGER      NOT NULL
+               CREATE TABLE IF NOT EXISTS game (
+                   player1	        TEXT	     NOT NULL,
+                   player2          TEXT,
+                   player3          TEXT,
+                   points1          INTEGER      NOT NULL,
+                   points2          INTEGER,
+                   points3          INTEGER
                )"""
     create_table(contents)
 

@@ -15,8 +15,8 @@ c = db.cursor()               #facilitate db ops -- you will use cursor to trigg
 
 # create tables
 data_setup.create_users_table()
+data_setup.create_board_table()
 data_setup.create_game_table()
-data_setup.create_userdata_table()
 
 app = Flask(__name__)
 app.secret_key = "secret"
@@ -57,8 +57,8 @@ def register():
         c = conn.cursor()
 
         try:
-            c.execute("INSERT INTO users (username, password) VALUES (?, ?)",
-                      (username, password))
+            c.execute("INSERT INTO users (username, password, bio, total_points, wins, runnerups, losses) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                      (username, password, "No bio", 0, 0, 0, 0))
             conn.commit()
         except sqlite3.IntegrityError:
             conn.close()
@@ -75,6 +75,13 @@ def register():
 @app.route("/home", methods=["GET", "POST"])
 def home():
     return render_template("home.html")
+
+@app.route("/create_new", methods=["GET", "POST"])
+def create_new():
+    #if request.method == "POST":
+    #    title = request.form["title"]
+
+    return render_template("create_new.html")
 
 @app.route("/create", methods=["GET", "POST"])
 def create():
