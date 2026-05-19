@@ -86,6 +86,22 @@ def add_user(username, password):
 
 
 
+#=============================BOARD==============================#
+
+def create_new_board(title):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    for row in range(6):
+        for column in range(6):
+            c.execute(
+                'INSERT INTO board VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                (title, row, column, "Placeholder Text", None, None, None, None, None, 0,)
+            )
+
+    db.commit()
+    db.close()
+
 #=============================HELPERS=============================#
 
 
@@ -200,6 +216,3 @@ def delete_row(table, ID_fieldname, id):
 def gen_id():
     # use secrets module to generate a random 32-byte string
     return secrets.token_hex(32)
-
-
-

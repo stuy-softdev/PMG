@@ -78,13 +78,17 @@ def home():
 
 @app.route("/create_new", methods=["GET", "POST"])
 def create_new():
-    #if request.method == "POST":
-    #    title = request.form["title"]
+    if request.method == "POST":
+        title = request.form["title"]
+
+        data.create_new_board(title)
+
+        return redirect(url_for("create", board = title))
 
     return render_template("create_new.html")
 
-@app.route("/create", methods=["GET", "POST"])
-def create():
+@app.route("/create/<string:board>", methods=["GET", "POST"])
+def create(board):
     return render_template("create.html")
 
 @app.route("/edit_profile", methods=["GET", "POST"])

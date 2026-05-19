@@ -27,13 +27,12 @@ def create_board_table():
                     title           TEXT        NOT NULL,
                     row             INTEGER     NOT NULL,
                     column          INTEGER     NOT NULL,
-                    category        TEXT        NOT NULL,
-                    question        TEXT        NOT NULL,
-                    answer          TEXT        NOT NULL,
-                    wrong1          TEXT        NOT NULL,
+                    quest_cat       TEXT        NOT NULL,
+                    answer          TEXT,
+                    wrong1          TEXT,
                     wrong2          TEXT,
                     wrong3          TEXT,
-                    point_value     INTEGER     NOT NULL,
+                    point_value     INTEGER,
                     chosen          INTEGER     NOT NULL
                 )"""
     create_table(contents)
