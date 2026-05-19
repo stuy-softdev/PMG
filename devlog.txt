@@ -77,3 +77,8 @@ jasonC -- 2026-05-18 9:32
 	modifications to db
 		board table with all questions, answers, corresponding row and column, etc
 		will update data_setup.py to reflect that
+
+jasonC -- 2026-05-19 12:08
+	created create_new page, which allows the user to come up with a unique title to their own custom board
+		unique title enforcement not implemented yet
+		but creating the boards now work
