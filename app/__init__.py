@@ -90,14 +90,14 @@ def create_new():
 @app.route("/create/<string:board>", methods=["GET", "POST"])
 def create(board):
     board_text = data.get_board_text(board)
-    return render_template("create.html", board_text = board_text)
+    return render_template("create.html", board_text = board_text, board = board)
 
 @app.route("/edit_profile", methods=["GET", "POST"])
 def edit_profile():
     return render_template("edit.html")
 
-@app.route("/edit", methods=["GET", "POST"])
-def edit():
+@app.route("/edit/<string:board>/<int:row>/<int:column>", methods=["GET", "POST"])
+def edit(board, row, column):
     return render_template("edit.html")
 
 @app.route("/game", methods=["GET", "POST"])

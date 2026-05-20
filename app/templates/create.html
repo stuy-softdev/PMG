@@ -83,50 +83,55 @@
 
 <div class="grid grid-cols-6 gap-5">
 
-  <div><button class="button">Category</button></div>
-  <div><button class="button">Category</button></div>
-  <div><button class="button">Category</button></div>
-  <div><button class="button">Category</button></div>
-  <div><button class="button">Category</button></div>
-  <div><button class="button">Category</button></div>
+  <div><button class="button">Category1</button></div>
+  <div><button class="button">Category2</button></div>
+  <div><button class="button">Category3</button></div>
+  <div><button class="button">Category4</button></div>
+  <div><button class="button">Category5</button></div>
+  <div><button class="button">Category6</button></div>
 
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
+  <!--<div><button class="button">Cluea1</button></div>
+  <div><button class="button">Cluea2</button></div>
+  <div><button class="button">Cluea3</button></div>
+  <div><button class="button">Cluea4</button></div>
+  <div><button class="button">Cluea5</button></div>
+  <div><button class="button">Cluea6</button></div>
 
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
+  <div><button class="button">bClue1</button></div>
+  <div><button class="button">bClue2</button></div>
+  <div><button class="button">bClue3</button></div>
+  <div><button class="button">bClue4</button></div>
+  <div><button class="button">bClue5</button></div>
+  <div><button class="button">bClue6</button></div>
 
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
+  <div><button class="button">cClue1</button></div>
+  <div><button class="button">cClue2</button></div>
+  <div><button class="button">cClue3</button></div>
+  <div><button class="button">cClue4</button></div>
+  <div><button class="button">cClue5</button></div>
+  <div><button class="button">cClue6</button></div>
 
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
+  <div><button class="button">dClue1</button></div>
+  <div><button class="button">dClue2</button></div>
+  <div><button class="button">dClue3</button></div>
+  <div><button class="button">dClue4</button></div>
+  <div><button class="button">dClue5</button></div>
+  <div><button class="button">dClue6</button></div>
 
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
+  <div><button class="button">eClue1</button></div>
+  <div><button class="button">eClue2</button></div>
+  <div><button class="button">eClue3</button></div>
+  <div><button class="button">eClue4</button></div>
+  <div><button class="button">eClue5</button></div>
+  <div><button class="button">eClue6</button></div>-->
 
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
-  <div><button class="button">Clue</button></div>
+  {% for row in range(6) %}
+    {% for column in range(6) %}
+      <div><a href="{{ url_for('edit', board = board, row = row, column = column) }}"><button class="button">{{ board_text[row][column] }}</button></a></div>
+    {% endfor %}
+  {% endfor %}
 
-  <!-- <div><a href <PAGE TO DISPLAY CLUE WITH VARIABLES BOARD, ROW, COLUMN>><button class="button">Clue</button></a></div> -->
+  <!-- <div><a href <PAGE TO DISPLAY CLUE WITH VARIABLES BOARD, ROW, COLUMN> target="_blank"><button class="button">Clue</button></a></div> -->
 </div>
 
 
