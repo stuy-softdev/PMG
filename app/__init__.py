@@ -98,7 +98,7 @@ def edit_profile():
 
 @app.route("/edit/<string:board>/<int:row>/<int:column>", methods=["GET", "POST"])
 def edit(board, row, column):
-    return render_template("edit.html")
+    return render_template("edit.html", board = board, row = row, column = column)
 
 @app.route("/game", methods=["GET", "POST"])
 def game():
