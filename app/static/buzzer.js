@@ -7,12 +7,10 @@ window.addEventListener("DOMContentLoaded", () => {
     let letter = '';
     let questionDP = '';
     
-    while (questionDQ.length != 0) {
+    if (questionDQ.length != 0) {
       const questionInterval = setInterval(displayquestionIV(questionDQ), 500);
     }
-    else {
-      clearInterval(questionInterval);
-    }
+    
     
   }
 
@@ -23,6 +21,29 @@ window.addEventListener("DOMContentLoaded", () => {
     questionDP =+ letter;
     questionDQ_IV = questionDQ_IV.replace(letter, "");
     disp(questionDP);
+
+    if (questionDQ.length == 0) {
+      clearInterval(questionInterval);
+      buzzer()
+    }
+    
+  }
+
+
+  function buzzer() {
+
+    let startTime = Date().getTime();
+    
+    const buzzerB = document.createElement('button');
+    
+    buzzerB.addEventListener('click', buzzerClick());
+    
+  }
+
+
+  function buzzerClick() {
+
+    let stopwatch = Date().getTime() - startTime;
     
   }
   
