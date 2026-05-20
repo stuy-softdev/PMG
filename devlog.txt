@@ -94,3 +94,4 @@ jasonC -- 2026-05-20 01:04
 	function that returns 2d array of all text in board fully works now
 	have a good idea on how to display it, will implement tmr morning
 	edited component map and front end diagram
+	displaying text works, but needs slight modifications
