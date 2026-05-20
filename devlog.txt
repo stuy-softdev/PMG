@@ -89,3 +89,7 @@ ethanC -- 2026-05-19 10:15
 jasonC -- 2026-05-19 11:45
 	worked on function that returns 2d array of all text in a board, need to clean the array for proper use
 	fixed issue with data_setup
+
+jasonC -- 2026-05-20 01:04
+	function that returns 2d array of all text in board fully works now
+	have a good idea on how to display it, will implement tmr morning
