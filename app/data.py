@@ -108,19 +108,22 @@ def get_board_text(title):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
 
-    board_text = [[], [], [], [], [], []]
+    board_text = []
     print(board_text)
 
     for row in range(6):
-        for column in range(6):
-            board_text[row].append(c.execute(
-                                 'SELECT quest_cat FROM board WHERE (title, row, column) = (?, ?, ?)',
-                                 (title, row, column,)
-                             ).fetchone()
-                         )
+        board_text.append(c.execute(
+                             'SELECT quest_cat FROM board WHERE (title, row) = (?, ?)',
+                             (title, row),
+                         ).fetchall()
+                     )
 
     board_text = clean_list_2d(board_text)
     print(board_text)
+    #board_text = c.execute('SELECT quest_cat FROM board WHERE title = ?', (title,)).fetchall()
+    #print(board_text)
+    #board_text = clean_list(board_text)
+    #print(board_text)
     return board_text
 
 #=============================HELPERS=============================#
@@ -139,13 +142,10 @@ def clean_list(raw_output):
 # turn a list of tuples (returned by .fetchall()) into a 2d list
 def clean_list_2d(raw_output):
     clean_output = []
+
     for lst in raw_output:
-        clean_1d = []
-        for item in lst:
-            if str(item) != 'None' and item != '':
-                clean_1d += [item]
-        if len(lst) > 0:
-            clean_output += [lst]
+        clean_output += [clean_list(lst)]
+
     return clean_output
 
 
