@@ -83,8 +83,8 @@ OpenTDB: Provides a whole bunch of trivia questions as requested. Responsive and
 ``` mermaid
 ---
 config:
-  theme: neutral
-  layout: dagre
+ theme: neutral
+ layout: dagre
 ---
 flowchart TB
    L["__init__.py"] -- renders --> M["HTML templates"]
@@ -109,11 +109,11 @@ config:
 flowchart TB
     n1["Register"] --> n2["Login"]
     n2 --> n1 & n5["Home"]
-    n5 --> n4["Profile"] & n6["Create"]
+    n5 --> n4["Profile"] & n6["Create_New"]
+    n6 --> n10["Create"] & n11["Edit_Board"]
     n4 --> n3["Edit Profile"] & n5
     n3 --> n4
-    n6 --> n7["Edit"] & n5
-    n7 --> n6
+    n7["Edit_Slot"] <--> n10 & n11
     n9["Game"] --> n8["Buzzer"]
     n8 --> n9
     n5 --> n9
