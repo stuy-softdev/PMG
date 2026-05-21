@@ -123,15 +123,17 @@ def edit(board, row, column):
 @app.route("/game", methods=["GET", "POST"])
 def game():
     return render_template("game.html")
-
+    
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
-    username = "six seven on a merry rizzmas"
+    username = session["user"]
     desc = "Hello, It's Me Crewmate I am the good guy on the spaceship. And I complete, all the tasks"
     gc = 0
     wc = 0
     lc = 0
+        
     return render_template("profile.html", username=username, description = desc, game_count=gc, win_count=wc, lose_count=lc)
+
 
 if __name__ == "__main__":
     app.debug=True
