@@ -74,7 +74,7 @@ jasonC -- 2026-05-15 08:30
 	need to work on changing the db a little more
 
 ethanC -- 2026-05-15 11:00
-  login page and register page edits
+  login page and register page edits so it stays in db
 
 jasonC -- 2026-05-18 9:32
 	modifications to db
@@ -87,7 +87,7 @@ jasonC -- 2026-05-19 12:08
 		but creating the boards now work
 
 ethanC -- 2026-05-19 10:15
-	made button grid
+	made button grid with css
 
 jasonC -- 2026-05-19 11:45
 	worked on function that returns 2d array of all text in a board, need to clean the array for proper use
@@ -101,6 +101,9 @@ jasonC -- 2026-05-20 01:04
 
 jasonC -- 2026-05-20 11:18
 	made input boxes for editing the board
+
+ethanC -- 2026-05-20 11:20
+  made profile show username
 
 jasonC -- 2026-05-21 12:28
 	completed editing boards
