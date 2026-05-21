@@ -6,7 +6,7 @@ DB_FILE="data.db"
 
 #=============================USERS=============================#
 
-'''
+
 # returns a list of usernames
 def get_all_users():
 
@@ -19,7 +19,7 @@ def get_all_users():
     db.close()
 
     return clean_list(data)
-'''
+
 
 # returns whether or not a user exists
 def user_exists(username):
@@ -86,9 +86,76 @@ def add_user(username, password):
 
 
 
+#=============================BOARD==============================#
+
+# creats a new board with placeholder text and null values for each board
+def create_new_board(title):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    for row in range(6):
+        for column in range(6):
+            c.execute(
+                'INSERT INTO board VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                (title, row, column, "Placeholder Text", None, None, None, None, None, 0,)
+            )
+
+    db.commit()
+    db.close()
+
+# returns a 2d array of all of the text in a board
+def get_board_text(title):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    board_text = []
+
+    for row in range(6):
+        board_text.append(c.execute(
+                             'SELECT quest_cat FROM board WHERE (title, row) = (?, ?)',
+                             (title, row,)
+                         ).fetchall()
+                     )
+
+    board_text = clean_list_2d(board_text)
+    return board_text
+
+def edit_question(board, row, column, question, points, correct, wrong1, wrong2, wrong3):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    if wrong2 == "":
+        wrong2 = None
+    if wrong3 == "":
+        wrong3 = None
+
+    if wrong2 == None:
+        print("yay")
+
+    c.execute(
+        'UPDATE board SET (quest_cat, point_value, answer, wrong1, wrong2, wrong3) = (?, ?, ?, ?, ?, ?) WHERE (title, row, column) = (?, ?, ?)',
+        (question, int(points), correct, wrong1, wrong2, wrong3, board, row, column,)
+    )
+
+    db.commit()
+    db.close()
+    return
+
+def edit_category(board, row, column, category):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    c.execute(
+        'UPDATE board SET (quest_cat) = (?) WHERE (title, row, column) = (?, ?, ?)',
+        (category, board, row, column,)
+    )
+
+    db.commit()
+    db.close()
+    return
+
 #=============================HELPERS=============================#
 
-'''
+
 # turn a list of tuples (returned by .fetchall()) into a 1d list
 def clean_list(raw_output):
     clean_output = []
@@ -102,13 +169,10 @@ def clean_list(raw_output):
 # turn a list of tuples (returned by .fetchall()) into a 2d list
 def clean_list_2d(raw_output):
     clean_output = []
+
     for lst in raw_output:
-        clean_1d = []
-        for item in lst:
-            if str(item) != 'None' and item != '':
-                clean_1d += [item]
-        if len(lst) > 0:
-            clean_output += [lst]
+        clean_output += [clean_list(lst)]
+
     return clean_output
 
 
@@ -200,4 +264,3 @@ def delete_row(table, ID_fieldname, id):
 def gen_id():
     # use secrets module to generate a random 32-byte string
     return secrets.token_hex(32)
-'''

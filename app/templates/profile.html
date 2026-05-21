@@ -3,13 +3,30 @@
 
 
 <head>
-  <link href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
-  rel="stylesheet">
+<title>Profile</title>
 </head>
 
 <body>
 
+<nav>
+<ul>
+<li><a href="/home">Home</a></li>
+<li><a href="/create">Create</a></li>
+<li><a href="/profile">Profile</a></li>
+<li><a href="/game">Game</a></li>
+</ul>
 
+    <div class="flex justify-center items-center">
+        <h1> {{username}}'s profile </h1>
+        <br>
+        <p> {{description}} </p>
+    </div> 
+    <div class="flex justify-left items-left">
+         <h1> User Statistics </h1>   
+         <p> Amount of games {{username}} has played: {{game_count}} </p>
+         <p> {{username}}'s wins: {{win_count}} </p> 
+         <p> {{username}}'s loses: {{lose_count}} </p>
+    </div>
 
 </body>
 </html>

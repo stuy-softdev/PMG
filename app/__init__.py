@@ -6,6 +6,7 @@ import datetime   #enable control of an sqlite database
 # our helper db files
 import data_setup
 import data
+from werkzeug.security import generate_password_hash, check_password_hash
 
 DB_FILE="data.db"
 
@@ -14,83 +15,125 @@ c = db.cursor()               #facilitate db ops -- you will use cursor to trigg
 
 # create tables
 data_setup.create_users_table()
+data_setup.create_board_table()
 data_setup.create_game_table()
-data_setup.create_userdata_table()
 
 app = Flask(__name__)
 app.secret_key = "secret"
-
-@app.route("/", methods=['GET', 'POST'])
-def login():
-
-    # stored active session, take user to response page
-    if 'username' in session:
-        return redirect(url_for("home"))
-
-    if 'username' in request.form:
-        username = request.form.get('username').strip().lower()
-        password = request.form.get('password').strip()
-
-        # check if password is correct, if not then reload page
-        if not data.auth(username, password):
-            return render_template("login.html", error="Username or password is incorrect")
-
-        # if password is correct redirect home
-        session["username"] = username
-        return redirect(url_for("home"))
-
-    else:
-        return render_template("login.html")
-
 
 @app.route("/logout")
 def logout():
     session.pop('username', None) # remove username from session
     return redirect(url_for('login'))
 
-@app.route('/register', methods=["GET", "POST"])
-def register():
+@app.route('/', methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
 
-    if request.method == 'POST':
-        username = request.form.get('username').strip().lower()
-        password = request.form.get('password').strip()
+        conn = sqlite3.connect("data.db")
+        c = conn.cursor()
 
-        # reload page if no username or password was entered
-        if not username or not password:
-            return render_template("register.html", error="No username or password inputted")
+        c.execute("SELECT password FROM users WHERE username = ?", (username,))
+        result = c.fetchone()
+        conn.close()
 
-        # puts user into database unless if there's an error
-        execute_register = data.add_user(username, password)
-        if execute_register == "success":
-            session['username'] = username
+        if result and check_password_hash(result[0], password):
+            session["user"] = username
             return redirect(url_for("home"))
         else:
-            return render_template("register.html", error = execute_register)
+            return render_template("login.html", invalid="Invalid username or password")
+
+    return render_template("login.html")
+
+@app.route('/register', methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = generate_password_hash(request.form["password"])
+
+        conn = sqlite3.connect("data.db")
+        c = conn.cursor()
+
+        try:
+            c.execute("INSERT INTO users (username, password, bio, total_points, wins, runnerups, losses) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                      (username, password, "No bio", 0, 0, 0, 0))
+            conn.commit()
+        except sqlite3.IntegrityError:
+            conn.close()
+            return render_template("register.html", invalid="Username already exists")
+
+        conn.close()
+
+        session["user"] = username
+        return redirect(url_for("home"))
+
     return render_template("register.html")
+
 
 @app.route("/home", methods=["GET", "POST"])
 def home():
     return render_template("home.html")
 
-@app.route("/create", methods=["GET", "POST"])
-def create():
-    return render_template("create.html")
+@app.route("/create_new", methods=["GET", "POST"])
+def create_new():
+    if request.method == "POST":
+        title = request.form["title"]
+
+        data.create_new_board(title)
+
+        return redirect(url_for("create", board = title))
+
+    return render_template("create_new.html")
+
+@app.route("/create/<string:board>", methods=["GET", "POST"])
+def create(board):
+    board_text = data.get_board_text(board)
+    return render_template("create.html", board_text = board_text, board = board)
 
 @app.route("/edit_profile", methods=["GET", "POST"])
 def edit_profile():
     return render_template("edit.html")
 
-@app.route("/edit", methods=["GET", "POST"])
-def edit():
-    return render_template("edit.html")
+@app.route("/edit/<string:board>/<int:row>/<int:column>", methods=["GET", "POST"])
+def edit(board, row, column):
+    if request.method == "POST":
+        if row == 0:
+            category = request.form["category"]
+
+            data.edit_category(board, row, column, category)
+
+            return redirect(url_for("create", board = board))
+
+        else:
+            question = request.form["question"]
+            points = request.form["points"]
+            correct = request.form["correct"]
+            wrong1 = request.form["wrong1"]
+            wrong2 = request.form["wrong2"] # IF NOTHING INPUTTED, IT IS AN EMPTY STRING
+            wrong3 = request.form["wrong3"]
+
+            data.edit_question(board, row, column, question, points, correct, wrong1, wrong2, wrong3)
+
+            return redirect(url_for("create", board = board))
+
+    return render_template("edit.html", board = board, row = row, column = column)
 
 @app.route("/game", methods=["GET", "POST"])
 def game():
     return render_template("game.html")
-
+    
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
-    return render_template("profile.html")
+    username = session["user"]
+    desc = "Hello, It's Me Crewmate I am the good guy on the spaceship. And I complete, all the tasks"
+    gc = 0
+    wc = 0
+    lc = 0
+        
+    return render_template("profile.html", username=username, description = desc, game_count=gc, win_count=wc, lose_count=lc)
+
 
 if __name__ == "__main__":
     app.debug=True

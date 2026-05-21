@@ -3,11 +3,136 @@
 
 
 <head>
-  <link href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
-  rel="stylesheet">
+<title>Game</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style>
+/* From Uiverse.io by cssbuttons-io */
+.button {
+  display: inline-block;
+  padding: 12px 24px;
+  border: 1px solid #4f4f4f;
+  border-radius: 4px;
+  transition: all 0.2s ease-in;
+  position: relative;
+  overflow: hidden;
+  font-size: 19px;
+  cursor: pointer;
+  color: black;
+  z-index: 1;
+}
+
+.button:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scaleY(1) scaleX(1.25);
+  top: 100%;
+  width: 140%;
+  height: 180%;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  display: block;
+  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  z-index: -1;
+}
+
+.button:after {
+  content: "";
+  position: absolute;
+  left: 55%;
+  transform: translateX(-50%) scaleY(1) scaleX(1.45);
+  top: 180%;
+  width: 160%;
+  height: 190%;
+  background-color: #39bda7;
+  border-radius: 50%;
+  display: block;
+  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  z-index: -1;
+}
+
+.button:hover {
+  color: #ffffff;
+  border: 1px solid #39bda7;
+}
+
+.button:hover:before {
+  top: -35%;
+  background-color: #39bda7;
+  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+.button:hover:after {
+  top: -45%;
+  background-color: #39bda7;
+  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+</style>
+
 </head>
 
 <body>
+<ul>
+<li><a href="/home">Home</a></li>
+<li><a href="/create">Create</a></li>
+<li><a href="/profile">Profile</a></li>
+<li><a href="/game">Game</a></li>
+</ul>
+
+<h1> Game </h1>
+
+<div class="grid grid-cols-6 gap-5">
+
+  <div><button class="button">Category1</button></div>
+  <div><button class="button">Category2</button></div>
+  <div><button class="button">Category3</button></div>
+  <div><button class="button">Category4</button></div>
+  <div><button class="button">Category5</button></div>
+  <div><button class="button">Category6</button></div>
+
+  <!--<div><button class="button">Cluea1</button></div>
+  <div><button class="button">Cluea2</button></div>
+  <div><button class="button">Cluea3</button></div>
+  <div><button class="button">Cluea4</button></div>
+  <div><button class="button">Cluea5</button></div>
+  <div><button class="button">Cluea6</button></div>
+
+  <div><button class="button">bClue1</button></div>
+  <div><button class="button">bClue2</button></div>
+  <div><button class="button">bClue3</button></div>
+  <div><button class="button">bClue4</button></div>
+  <div><button class="button">bClue5</button></div>
+  <div><button class="button">bClue6</button></div>
+
+  <div><button class="button">cClue1</button></div>
+  <div><button class="button">cClue2</button></div>
+  <div><button class="button">cClue3</button></div>
+  <div><button class="button">cClue4</button></div>
+  <div><button class="button">cClue5</button></div>
+  <div><button class="button">cClue6</button></div>
+
+  <div><button class="button">dClue1</button></div>
+  <div><button class="button">dClue2</button></div>
+  <div><button class="button">dClue3</button></div>
+  <div><button class="button">dClue4</button></div>
+  <div><button class="button">dClue5</button></div>
+  <div><button class="button">dClue6</button></div>
+
+  <div><button class="button">eClue1</button></div>
+  <div><button class="button">eClue2</button></div>
+  <div><button class="button">eClue3</button></div>
+  <div><button class="button">eClue4</button></div>
+  <div><button class="button">eClue5</button></div>
+  <div><button class="button">eClue6</button></div>-->
+
+  {% for row in range(6) %}
+    {% for column in range(6) %}
+      <div><a href="{{ url_for('edit', board = board, row = row, column = column) }}"><button class="button">{{ board_text[row][column] }}</button></a></div>
+    {% endfor %}
+  {% endfor %}
+
+  <!-- <div><a href <PAGE TO DISPLAY CLUE WITH VARIABLES BOARD, ROW, COLUMN> target="_blank"><button class="button">Clue</button></a></div> -->
+</div>
 
 
 

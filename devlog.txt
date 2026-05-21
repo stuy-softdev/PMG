@@ -43,13 +43,13 @@ ethanC -- 2026-05-12 11:17
     mk static and template dirs
     made html files and js file
     add project name
-    add flask paths to html 
-    
+    add flask paths to html
+
 jasonC -- 2026-05-12 11:40
 	set up basic python stuff for login/register
 	set up data.py, still working on setting up data.py
 	we might need to make more design doc changes in terms of database tables
-	
+
 jasonC -- 2026-05-12 15:22
 	APPLICATION OF PYTHON STYLE:
 		1: The section about how to import things is the most applicable to our codebase. Literally today, we combined the Flask imports into one line which is correct, but not when we combined "import sqlite3", "import datetime", "import data_setup", etc. We have fixed the styling for those lines now.
@@ -59,7 +59,7 @@ artemisL -- 2026-05-12 22:28
 	APPLICATION OF JS STYLE:
 		1: The section on loops and conditionals is the most helpful - our main JS feature (a buzzer) is completely based on conditionals to activate it.
 		2: The general guidelines - it keeps our JS code from being unreadable
-		
+
 jasonC -- 2026-05-13 09:32
 	added summary of project in readme
 
@@ -72,3 +72,40 @@ jasonC -- 2026-05-15 08:30
 		our timeline has not changed that much since we began our journy
 	did requirements.txt
 	need to work on changing the db a little more
+
+ethanC -- 2026-05-15 11:00
+  login page and register page edits so it stays in db
+  password hashed
+
+jasonC -- 2026-05-18 9:32
+	modifications to db
+		board table with all questions, answers, corresponding row and column, etc
+		will update data_setup.py to reflect that
+
+jasonC -- 2026-05-19 12:08
+	created create_new page, which allows the user to come up with a unique title to their own custom board
+		unique title enforcement not implemented yet
+		but creating the boards now work
+
+ethanC -- 2026-05-19 10:15
+	made button grid with css
+
+jasonC -- 2026-05-19 11:45
+	worked on function that returns 2d array of all text in a board, need to clean the array for proper use
+	fixed issue with data_setup
+
+jasonC -- 2026-05-20 01:04
+	function that returns 2d array of all text in board fully works now
+	have a good idea on how to display it, will implement tmr morning
+	edited component map and front end diagram
+  displaying text works, but needs slight modification
+
+jasonC -- 2026-05-20 11:18
+	made input boxes for editing the board
+
+ethanC -- 2026-05-20 11:20
+  made profile show username
+  regexed user input data
+
+jasonC -- 2026-05-21 12:28
+	completed editing boards
