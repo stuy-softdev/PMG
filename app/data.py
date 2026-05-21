@@ -123,6 +123,14 @@ def edit_question(board, row, column, question, points, correct, wrong1, wrong2,
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
 
+    if wrong2 == "":
+        wrong2 = None
+    if wrong3 == "":
+        wrong3 = None
+
+    if wrong2 == None:
+        print("yay")
+
     c.execute(
         'UPDATE board SET (quest_cat, point_value, answer, wrong1, wrong2, wrong3) = (?, ?, ?, ?, ?, ?) WHERE (title, row, column) = (?, ?, ?)',
         (question, int(points), correct, wrong1, wrong2, wrong3, board, row, column,)
