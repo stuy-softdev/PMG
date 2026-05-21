@@ -97,3 +97,6 @@ jasonC -- 2026-05-20 01:04
 
 jasonC -- 2026-05-20 11:18
 	made input boxes for editing the board
+
+jasonC -- 2026-05-21 12:28
+	completed editing boards
