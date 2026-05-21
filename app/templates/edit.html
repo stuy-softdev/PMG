@@ -2,18 +2,38 @@
 <html>
 
 
-<head>
-<title>Edit Game</title>
-</head>
+  <head>
+    <title>Edit</title>
+  </head>
 
-<body>
-<ul>
-<li><a href="/home">Home</a></li>
-<li><a href="/create">Create</a></li>
-<li><a href="/profile">Profile</a></li>
-<li><a href="/game">Game</a></li>
-</ul>
+  <body>
 
+    <h1>Edit your Board!</h1>
+    {% if row == 0 %}
 
-</body>
+    <form method="post">
+      <label for="title">Enter your category: </label>
+      <br>
+      <input type="text" placeholder="Enter Category" name="category" required>
+      <br><br>
+      <input type="submit" name="sub1">
+    </form>
+
+    {% else %}
+
+    <form method="post">
+      <label for="title">Enter information for your selected clue: </label>
+      <br>
+      <input type="text" placeholder="Enter Question" name="question" required>
+      <input type="text" placeholder="Enter Point Value" name="points" required>
+      <input type="text" placeholder="Enter Correct Answer" name="correct" required>
+      <input type="text" placeholder="Enter Incorrect Option" name="wrong1" required>
+      <input type="text" placeholder="Enter Incorrect Option" name="wrong2">
+      <input type="text" placeholder="Enter Incorrect Option" name="wrong3">
+      <br><br>
+      <input type="submit" name="sub1">
+    </form>
+
+    {% endif %}
+  </body>
 </html>

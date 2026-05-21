@@ -107,24 +107,51 @@ def create_new_board(title):
 def get_board_text(title):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-
     board_text = []
-    print(board_text)
 
     for row in range(6):
         board_text.append(c.execute(
                              'SELECT quest_cat FROM board WHERE (title, row) = (?, ?)',
-                             (title, row),
+                             (title, row,)
                          ).fetchall()
                      )
 
     board_text = clean_list_2d(board_text)
-    print(board_text)
-    #board_text = c.execute('SELECT quest_cat FROM board WHERE title = ?', (title,)).fetchall()
-    #print(board_text)
-    #board_text = clean_list(board_text)
-    #print(board_text)
     return board_text
+
+def edit_question(board, row, column, question, points, correct, wrong1, wrong2, wrong3):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    if wrong2 == "":
+        wrong2 = None
+    if wrong3 == "":
+        wrong3 = None
+
+    if wrong2 == None:
+        print("yay")
+
+    c.execute(
+        'UPDATE board SET (quest_cat, point_value, answer, wrong1, wrong2, wrong3) = (?, ?, ?, ?, ?, ?) WHERE (title, row, column) = (?, ?, ?)',
+        (question, int(points), correct, wrong1, wrong2, wrong3, board, row, column,)
+    )
+
+    db.commit()
+    db.close()
+    return
+
+def edit_category(board, row, column, category):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    c.execute(
+        'UPDATE board SET (quest_cat) = (?) WHERE (title, row, column) = (?, ?, ?)',
+        (category, board, row, column,)
+    )
+
+    db.commit()
+    db.close()
+    return
 
 #=============================HELPERS=============================#
 
