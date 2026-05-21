@@ -137,8 +137,18 @@ def new_game():
         print(password2)
         print(password3)
 
+        if not username1 == "":
+            if not data.auth(username1, password1):
+                return render_template("new_game.html", invalid="Username or password is incorrect for Player 1")
+        if not username2 == "":
+            if not data.auth(username2, password2):
+                return render_template("new_game.html", invalid="Username or password is incorrect for Player 2")
+        if not username3 == "":
+            if not data.auth(username3, password3):
+                return render_template("new_game.html", invalid="Username or password is incorrect for Player 3")
+
         return redirect(url_for("game"))
-        
+
     return render_template("new_game.html")
 
 @app.route("/game", methods=["GET", "POST"])

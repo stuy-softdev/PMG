@@ -35,10 +35,12 @@ def auth(username, password):
 
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
+    print("11")
 
     if not user_exists(username):
         db.commit()
         db.close()
+        print("22")
 
         return False
 
@@ -53,8 +55,10 @@ def auth(username, password):
 
     # hash password here
     if real_pass != str(hashlib.sha256(password).hexdigest()):
+        print("33")
         return False
 
+    print("44")
     return True
 
 
