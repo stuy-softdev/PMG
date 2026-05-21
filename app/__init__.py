@@ -98,6 +98,18 @@ def edit_profile():
 
 @app.route("/edit/<string:board>/<int:row>/<int:column>", methods=["GET", "POST"])
 def edit(board, row, column):
+    if request.method == "POST":
+        question = request.form["question"]
+        points = request.form["points"]
+        correct = request.form["correct"]
+        wrong1 = request.form["wrong1"]
+        wrong2 = request.form["wrong2"] # IF NOTHING INPUTTED, IT IS AN EMPTY STRING
+        wrong3 = request.form["wrong3"]
+
+        data.edit_slot_contents(board, row, column, question, points, correct, wrong1, wrong2, wrong3)
+
+        return redirect(url_for("create", board = board))
+
     return render_template("edit.html", board = board, row = row, column = column)
 
 @app.route("/game", methods=["GET", "POST"])
