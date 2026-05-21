@@ -2,9 +2,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
   
 
-  function displayquestion(questionDQ) {
+  function displayquestion(questionDQ) { //gets string "questionDQ" from HTML file (imported from SQLite to HTML by python) 
 
-    let letter = '';
+    let letter = ''; 
     let questionDP = '';
     
     if (questionDQ.length != 0) {
@@ -15,16 +15,16 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  function displayquestionIV(questionDQ_IV) {
+  function displayquestionIV(questionDQ_IV) { //"questionDQ" will be displayed letter-by-letter, with a letter appearing each .5 seconds until the entire question has been displayed
 
-    letter = questionDQ_IV.slice(0, 1);
+    letter = questionDQ_IV.slice(0, 1); //a letter will be taken from "QuestionDQ", added to "QuestionDP", and promptly displayed with "QuestionDP"
     questionDP =+ letter;
     questionDQ_IV = questionDQ_IV.replace(letter, "");
     disp(questionDP);
 
     if (questionDQ.length == 0) {
       clearInterval(questionInterval);
-      buzzer()
+      buzzer() //once the question is fully displayed, the buzzer will appear
     }
     
   }
@@ -41,9 +41,10 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  function buzzerClick() {
+  function buzzerClick() { //when a player clicks the buzzer, the time it took them to click the buzzer will be made into a constant to be called by HTML
 
-    let stopwatch = Date().getTime() - startTime;
+    const stopwatchTime = Date().getTime()
+    const stopwatch = stopwatchTime - startTime;
     
   }
   
