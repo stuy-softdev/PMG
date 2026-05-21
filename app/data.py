@@ -119,13 +119,26 @@ def get_board_text(title):
     board_text = clean_list_2d(board_text)
     return board_text
 
-def edit_slot_contents(board, row, column, question, points, correct, wrong1, wrong2, wrong3):
+def edit_question(board, row, column, question, points, correct, wrong1, wrong2, wrong3):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
 
     c.execute(
         'UPDATE board SET (quest_cat, point_value, answer, wrong1, wrong2, wrong3) = (?, ?, ?, ?, ?, ?) WHERE (title, row, column) = (?, ?, ?)',
         (question, int(points), correct, wrong1, wrong2, wrong3, board, row, column,)
+    )
+
+    db.commit()
+    db.close()
+    return
+
+def edit_category(board, row, column, category):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    c.execute(
+        'UPDATE board SET (quest_cat) = (?) WHERE (title, row, column) = (?, ?, ?)',
+        (category, board, row, column,)
     )
 
     db.commit()
