@@ -159,11 +159,27 @@ def game():
 def profile():
     username = session["user"]
     desc = "Hello, It's Me Crewmate I am the good guy on the spaceship. And I complete, all the tasks"
-    gc = 0
+    tp = 0
     wc = 0
     lc = 0
         
-    return render_template("profile.html", username=username, description = desc, game_count=gc, win_count=wc, lose_count=lc)
+    conn = sqlite3.connect("data.db")
+    c = conn.cursor()
+
+    c.execute("SELECT bio FROM users WHERE username = ?", (username,))
+    desc = c.fetchone()
+    
+    c.execute("SELECT total_points FROM users WHERE username = ?", (username,))
+    tp = c.fetchone()
+    c.execute("SELECT wins FROM users WHERE username = ?", (username,))
+    wc = c.fetchone()
+    c.execute("SELECT losses FROM users WHERE username = ?", (username,))
+    lc = c.fetchone()
+    
+    
+    conn.close()
+    
+    return render_template("profile.html", username=username, description=desc, total_points=tp, win_count=wc, lose_count=lc)
 
 
 if __name__ == "__main__":
