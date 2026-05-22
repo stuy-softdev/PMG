@@ -1,6 +1,7 @@
 import sqlite3                      # enable control of an sqlite database
 import hashlib                      # for consistent hashes
 import secrets                      # to generate ids
+from werkzeug.security import generate_password_hash, check_password_hash
 
 DB_FILE="data.db"
 
@@ -43,7 +44,7 @@ def auth(username, password):
         print("22")
 
         return False
-
+    '''
     # use ? for unsafe/user provided variables
     passpointer = c.execute('SELECT password FROM users WHERE username = ?', (username,))
     real_pass = passpointer.fetchone()[0]
@@ -56,6 +57,11 @@ def auth(username, password):
     # hash password here
     if real_pass != str(hashlib.sha256(password).hexdigest()):
         print("33")
+        return False
+    '''
+    hashed_password = c.execute("SELECT password FROM users WHERE username = ?", (username,)).fetchone()
+    if not check_password_hash(hashed_password[0], password):
+        print("55")
         return False
 
     print("44")
