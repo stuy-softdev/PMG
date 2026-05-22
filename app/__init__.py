@@ -120,6 +120,37 @@ def edit(board, row, column):
 
     return render_template("edit.html", board = board, row = row, column = column)
 
+@app.route("/new_game", methods=["GET", "POST"])
+def new_game():
+    if request.method == "POST":
+        username1 = request.form["username1"]
+        username2 = request.form["username2"]
+        username3 = request.form["username3"]
+        password1 = request.form["password1"]
+        password2 = request.form["password2"]
+        password3 = request.form["password3"]
+
+        print(username1)
+        print(username2)
+        print(username3)
+        print(password1)
+        print(password2)
+        print(password3)
+
+        if not username1 == "":
+            if not data.auth(username1, password1):
+                return render_template("new_game.html", invalid="Username or password is incorrect for Player 1")
+        if not username2 == "":
+            if not data.auth(username2, password2):
+                return render_template("new_game.html", invalid="Username or password is incorrect for Player 2")
+        if not username3 == "":
+            if not data.auth(username3, password3):
+                return render_template("new_game.html", invalid="Username or password is incorrect for Player 3")
+
+        return redirect(url_for("game"))
+
+    return render_template("new_game.html")
+
 @app.route("/game", methods=["GET", "POST"])
 def game():
     return render_template("game.html")

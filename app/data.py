@@ -1,6 +1,7 @@
 import sqlite3                      # enable control of an sqlite database
 import hashlib                      # for consistent hashes
 import secrets                      # to generate ids
+from werkzeug.security import generate_password_hash, check_password_hash
 
 DB_FILE="data.db"
 
@@ -35,13 +36,15 @@ def auth(username, password):
 
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
+    print("11")
 
     if not user_exists(username):
         db.commit()
         db.close()
+        print("22")
 
         return False
-
+    '''
     # use ? for unsafe/user provided variables
     passpointer = c.execute('SELECT password FROM users WHERE username = ?', (username,))
     real_pass = passpointer.fetchone()[0]
@@ -53,8 +56,15 @@ def auth(username, password):
 
     # hash password here
     if real_pass != str(hashlib.sha256(password).hexdigest()):
+        print("33")
+        return False
+    '''
+    hashed_password = c.execute("SELECT password FROM users WHERE username = ?", (username,)).fetchone()
+    if not check_password_hash(hashed_password[0], password):
+        print("55")
         return False
 
+    print("44")
     return True
 
 
@@ -84,7 +94,18 @@ def add_user(username, password):
 
 #=============================GAME==============================#
 
+# upon start of a new game, resets board
+def setup_new_game(board):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
 
+    c.execute(
+        'UPDATE board SET chosen = 0 WHERE title = ?',
+        (board,)
+    )
+
+    db.commit()
+    db.close()
 
 #=============================BOARD==============================#
 
@@ -119,6 +140,7 @@ def get_board_text(title):
     board_text = clean_list_2d(board_text)
     return board_text
 
+# updates the board db with user inputted clues, with null values added for some vars if not inputted
 def edit_question(board, row, column, question, points, correct, wrong1, wrong2, wrong3):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
@@ -127,9 +149,6 @@ def edit_question(board, row, column, question, points, correct, wrong1, wrong2,
         wrong2 = None
     if wrong3 == "":
         wrong3 = None
-
-    if wrong2 == None:
-        print("yay")
 
     c.execute(
         'UPDATE board SET (quest_cat, point_value, answer, wrong1, wrong2, wrong3) = (?, ?, ?, ?, ?, ?) WHERE (title, row, column) = (?, ?, ?)',
@@ -140,6 +159,7 @@ def edit_question(board, row, column, question, points, correct, wrong1, wrong2,
     db.close()
     return
 
+# updates the board db with user inputted categories
 def edit_category(board, row, column, category):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
