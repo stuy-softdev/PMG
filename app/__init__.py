@@ -13,6 +13,35 @@ DB_FILE="data.db"
 db = sqlite3.connect(DB_FILE) #open if file exists, otherwise create
 c = db.cursor()               #facilitate db ops -- you will use cursor to trigger db events
 
+# ==================== ENSURE TABLES HAVE ALL COLUMNS ====================
+conn = sqlite3.connect(DB_FILE)
+c = conn.cursor()
+
+# Add missing columns safely
+try:
+    c.execute("ALTER TABLE users ADD COLUMN bio TEXT NOT NULL DEFAULT 'No bio'")
+except sqlite3.OperationalError:
+    pass
+try:
+    c.execute("ALTER TABLE users ADD COLUMN total_points INTEGER NOT NULL DEFAULT 0")
+except sqlite3.OperationalError:
+    pass
+try:
+    c.execute("ALTER TABLE users ADD COLUMN wins INTEGER NOT NULL DEFAULT 0")
+except sqlite3.OperationalError:
+    pass
+try:
+    c.execute("ALTER TABLE users ADD COLUMN runnerups INTEGER NOT NULL DEFAULT 0")
+except sqlite3.OperationalError:
+    pass
+try:
+    c.execute("ALTER TABLE users ADD COLUMN losses INTEGER NOT NULL DEFAULT 0")
+except sqlite3.OperationalError:
+    pass
+
+conn.commit()
+conn.close()
+
 # create tables
 data_setup.create_users_table()
 data_setup.create_board_table()
@@ -157,29 +186,33 @@ def game():
     
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
-    username = session["user"]
-    desc = "Hello, It's Me Crewmate I am the good guy on the spaceship. And I complete, all the tasks"
-    tp = 0
-    wc = 0
-    lc = 0
-        
-    conn = sqlite3.connect("data.db")
-    c = conn.cursor()
 
-    c.execute("SELECT bio FROM users WHERE username = ?", (username,))
-    desc = c.fetchone()
+        
+    try: 
+        conn = sqlite3.connect("data.db")
+        c = conn.cursor()
+        
+        un = session["username"]
+        
+        c.execute("SELECT bio FROM users WHERE username = ?", (un,))
+        desc = c.fetchone()[0]
     
-    c.execute("SELECT total_points FROM users WHERE username = ?", (username,))
-    tp = c.fetchone()
-    c.execute("SELECT wins FROM users WHERE username = ?", (username,))
-    wc = c.fetchone()
-    c.execute("SELECT losses FROM users WHERE username = ?", (username,))
-    lc = c.fetchone()
+        c.execute("SELECT total_points FROM users WHERE username = ?", (un,))
+        tp = c.fetchone()[0]
+        c.execute("SELECT wins FROM users WHERE username = ?", (un,))
+        wc = c.fetchone()[0]
+        c.execute("SELECT losses FROM users WHERE username = ?", (un,))
+        lc = c.fetchone()[0]
+        conn.close()
+        
+    except: 
+        un = "Unknown User"
+        desc = "I'm a user that didn't log in or smth"
+        tp = 0
+        wc = 0
+        lc = 0
     
-    
-    conn.close()
-    
-    return render_template("profile.html", username=username, description=desc, total_points=tp, win_count=wc, lose_count=lc)
+    return render_template("profile.html", username=un, description=desc, total_points=tp, win_count=wc, lose_count=lc)
 
 
 if __name__ == "__main__":
