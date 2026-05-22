@@ -207,7 +207,7 @@ def profile():
         
     except: 
         un = "Unknown User"
-        desc = "I'm a user that didn't log in or smth"
+        desc = "I'm a user that didn't log in. Make an account!"
         tp = 0
         wc = 0
         lc = 0

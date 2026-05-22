@@ -112,3 +112,8 @@ jasonC -- 2026-05-21 12:28
 
 jasonC -- 2026-05-22 12:51
 	completed being able to log in as players when starting a new game or playing as guest
+    
+ethanC -- 2026-05-22 9:56
+    fixed register
+    made profile actually display the real stats of each person
+    
