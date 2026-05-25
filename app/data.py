@@ -124,6 +124,36 @@ def create_new_board(title):
     db.commit()
     db.close()
 
+# creates a new board with the given data as the parameter. this board is deleted after the game using it ends
+def create_board_from_api(data, title):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    #create_new_board("pp")
+    #print(title)
+    create_new_board(title)
+
+    for column in range(6):
+        edit_question(
+            title, 0, column, data[column][0]["category"], 0, None, None, None, None
+        )
+
+    for column in range(6): # column first bc data is sorted by category
+        for row in range(5):
+            if (data[column][row]["type"] == "boolean"):
+                edit_question(
+                    title, row + 1, column, data[column][row]["question"], (row + 1) * 200, data[column][row]["correct_answer"], data[column][row]["incorrect_answers"][0], None, None
+                )
+            else:
+                edit_question(
+                    title, row + 1, column, data[column][row]["question"], (row + 1) * 200, data[column][row]["correct_answer"], data[column][row]["incorrect_answers"][0], data[column][row]["incorrect_answers"][1], data[column][row]["incorrect_answers"][2]
+                )
+            #print(data[column][row])
+            #print("\n\n\n\n\nawawsdasdugyewgfuygfhdiuguitgu\n\n\n\n\n")
+
+    db.commit()
+    db.close()
+
 # returns a 2d array of all of the text in a board
 def get_board_text(title):
     db = sqlite3.connect(DB_FILE)

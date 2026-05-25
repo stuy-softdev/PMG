@@ -120,18 +120,6 @@ def register():
 
 @app.route("/home", methods=["GET", "POST"])
 def home():
-    category_list = list(range(9, 33))
-    for i in range(6):
-        random_index = random.randrange(len(category_list))
-        category = category_list.pop(random_index)
-        print("randomally chosen category: ")
-        print(category)
-        refill_pool(category)
-        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-        print(TRIVIA_POOL)
-        print(i)
-        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-    print(category_list)
     return render_template("home.html")
 
 @app.route("/create_new", methods=["GET", "POST"])
@@ -293,7 +281,23 @@ def profile():
 
     return render_template("profile.html", username=un, description=desc, total_points=tp, win_count=wc, lose_count=lc)
 
-
+'''
+################################################################################################################CODE TO CREATE API BOARD################################################################################################################
+category_list = list(range(9, 33))
+for i in range(6):
+    random_index = random.randrange(len(category_list))
+    category = category_list.pop(random_index)
+    print("randomally chosen category: ")
+    print(category)
+    refill_pool(category)
+    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    print(TRIVIA_POOL)
+    print(i)
+    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+print(category_list)
+title = str(int(time.time() * 1000)) # title of board is the current time
+data.create_board_from_api(TRIVIA_POOL, title)
+'''
 if __name__ == "__main__":
     #refill_pool()
     #time.sleep(OPENTDB_COOLDOWN)
