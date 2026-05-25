@@ -120,6 +120,18 @@ def register():
 
 @app.route("/home", methods=["GET", "POST"])
 def home():
+    category_list = list(range(9, 33))
+    for i in range(6):
+        random_index = random.randrange(len(category_list))
+        category = category_list.pop(random_index)
+        print("randomally chosen category: ")
+        print(category)
+        refill_pool(category)
+        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+        print(TRIVIA_POOL)
+        print(i)
+        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    print(category_list)
     return render_template("home.html")
 
 @app.route("/create_new", methods=["GET", "POST"])
@@ -144,9 +156,10 @@ def get_data(url):
         response = urllib.request.urlopen(url) # This sends the HTTP GET request to Nasa API and urlopen returns a response obj.
         data = json.loads(response.read().decode()) # This decodes the response, which is in bytes, into string and then loads the json string into a python dictionary: data.
         return data
-    except urllib.error.URLError as e:
-        #return url_err
-        return f"URL Error: {e}"
+    #except urllib.error.URLError as e:
+        #return f"URL Error: {e}"
+    except urllib.error.URLError:
+        return url_err
 
 def opentdb_get(url):
     global trivia_opentdb_call  # Global so it can update trivia_opentdb_call
@@ -157,33 +170,33 @@ def opentdb_get(url):
     trivia_opentdb_call = time.monotonic()
     return get_data(url) # fetches json if cooldown expires
 
-def refill_pool():
+def refill_pool(category):
     amount = 5
-    category = random.randint(9, 32) # the category numbers range from 9 to 32 for some reason
+    #category = random.randint(9, 32) # the category numbers range from 9 to 32 for some reason
     url = f"https://opentdb.com/api.php?amount={amount}&category={category}" # api endpoint
     print("restarting\n\n")
 
-    for i in range(6):
-        for _ in range(3): # a for loop to error handle, we send OpenTDB a request up to 3  times if  an error is hit, if not we continue and refill the pool
-            data = opentdb_get(url)
-            print(data)
-            print("asdasdasdasdasdasdasdasdasdasd\n")
-            #print(data.get("response_code"))
-            if data == url_err: #if there's any error fetching the json we continue
-                continue
-            if data.get("response_code") == 5:
-                time.sleep(OPENTDB_COOLDOWN) #  If this is hit it means a ratelimit occured
-                continue
-            if data.get("response_code") == 0 and data.get("results"):
-                #TRIVIA_POOL[difficulty].extend(data["results"]) # Response code 0 indicates success
-                print("YESSSSS!!!!")
-                TRIVIA_POOL.append(data["results"])
-                print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-                print(TRIVIA_POOL)
-                print(i)
-                print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-                return True
-            time.sleep(OPENTDB_COOLDOWN)
+    #for i in range(6):
+    for _ in range(3): # a for loop to error handle, we send OpenTDB a request up to 3  times if  an error is hit, if not we continue and refill the pool
+        data = opentdb_get(url)
+        print(data)
+        print("asdasdasdasdasdasdasdasdasdasd\n")
+        #print(data.get("response_code"))
+        if data == url_err: #if there's any error fetching the json we continue
+            continue
+        if data.get("response_code") == 5:
+            time.sleep(OPENTDB_COOLDOWN) #  If this is hit it means a ratelimit occured
+            continue
+        if data.get("response_code") == 0 and data.get("results"):
+            #TRIVIA_POOL[difficulty].extend(data["results"]) # Response code 0 indicates success
+            print("YESSSSS!!!!")
+            TRIVIA_POOL.append(data["results"])
+            #print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+            #print(TRIVIA_POOL)
+            #print(i)
+            #print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+            return True
+        time.sleep(OPENTDB_COOLDOWN)
     print("bad bad bad!")
     return False # If true isn't returned that means OpenTDB did not refill the pool of questions, we need to try again.
 
