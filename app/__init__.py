@@ -8,6 +8,23 @@ import data_setup
 import data
 from werkzeug.security import generate_password_hash, check_password_hash
 
+# for OpenTDB api
+import time
+import random
+import json
+import urllib.request
+import urllib.error
+#import ssl
+#context = ssl._create_unverified_context()
+#response = urllib.request.urlopen("https://opentdb.com", context=context)
+
+TRIVIA_POOL = [] # 2d array to create pre-generated boards
+file_err = "file not found error"
+url_err = "url error"
+
+OPENTDB_COOLDOWN = 5.1 # Cooldown to avoid hitting rate limits
+trivia_opentdb_call = 0.0 # stores the last OpenTDB call
+
 DB_FILE="data.db"
 
 db = sqlite3.connect(DB_FILE) #open if file exists, otherwise create
@@ -121,6 +138,55 @@ def create(board):
     board_text = data.get_board_text(board)
     return render_template("create.html", board_text = board_text, board = board)
 
+# return the data string from the api url, or "url error"
+def get_data(url):
+    try:
+        response = urllib.request.urlopen(url) # This sends the HTTP GET request to Nasa API and urlopen returns a response obj.
+        data = json.loads(response.read().decode()) # This decodes the response, which is in bytes, into string and then loads the json string into a python dictionary: data.
+        return data
+    except urllib.error.URLError as e:
+        #return url_err
+        return f"URL Error: {e}"
+
+def opentdb_get(url):
+    global trivia_opentdb_call  # Global so it can update trivia_opentdb_call
+    now = time.monotonic() # time_opentdb_call uses time.monotonic(). It's ideal to use this since we only need to track elapsed time
+    wait = OPENTDB_COOLDOWN - (now - trivia_opentdb_call)
+    if wait > 0:
+        time.sleep(wait)
+    trivia_opentdb_call = time.monotonic()
+    return get_data(url) # fetches json if cooldown expires
+
+def refill_pool():
+    amount = 5
+    category = random.randint(9, 32) # the category numbers range from 9 to 32 for some reason
+    url = f"https://opentdb.com/api.php?amount={amount}&category={category}" # api endpoint
+    print("restarting\n\n")
+
+    for i in range(6):
+        for _ in range(3): # a for loop to error handle, we send OpenTDB a request up to 3  times if  an error is hit, if not we continue and refill the pool
+            data = opentdb_get(url)
+            print(data)
+            print("asdasdasdasdasdasdasdasdasdasd\n")
+            #print(data.get("response_code"))
+            if data == url_err: #if there's any error fetching the json we continue
+                continue
+            if data.get("response_code") == 5:
+                time.sleep(OPENTDB_COOLDOWN) #  If this is hit it means a ratelimit occured
+                continue
+            if data.get("response_code") == 0 and data.get("results"):
+                #TRIVIA_POOL[difficulty].extend(data["results"]) # Response code 0 indicates success
+                print("YESSSSS!!!!")
+                TRIVIA_POOL.append(data["results"])
+                print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+                print(TRIVIA_POOL)
+                print(i)
+                print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+                return True
+            time.sleep(OPENTDB_COOLDOWN)
+    print("bad bad bad!")
+    return False # If true isn't returned that means OpenTDB did not refill the pool of questions, we need to try again.
+
 @app.route("/edit_profile", methods=["GET", "POST"])
 def edit_profile():
     return render_template("edit.html")
@@ -183,20 +249,20 @@ def new_game():
 @app.route("/game", methods=["GET", "POST"])
 def game():
     return render_template("game.html")
-    
+
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
 
-        
-    try: 
+
+    try:
         conn = sqlite3.connect("data.db")
         c = conn.cursor()
-        
+
         un = session["username"]
-        
+
         c.execute("SELECT bio FROM users WHERE username = ?", (un,))
         desc = c.fetchone()[0]
-    
+
         c.execute("SELECT total_points FROM users WHERE username = ?", (un,))
         tp = c.fetchone()[0]
         c.execute("SELECT wins FROM users WHERE username = ?", (un,))
@@ -204,17 +270,19 @@ def profile():
         c.execute("SELECT losses FROM users WHERE username = ?", (un,))
         lc = c.fetchone()[0]
         conn.close()
-        
-    except: 
+
+    except:
         un = "Unknown User"
         desc = "I'm a user that didn't log in. Make an account!"
         tp = 0
         wc = 0
         lc = 0
-    
+
     return render_template("profile.html", username=un, description=desc, total_points=tp, win_count=wc, lose_count=lc)
 
 
 if __name__ == "__main__":
+    #refill_pool()
+    #time.sleep(OPENTDB_COOLDOWN)
     app.debug=True
     app.run(host='0.0.0.0')
