@@ -117,3 +117,7 @@ ethanC -- 2026-05-22 9:56
     fixed register
     made profile actually display the real stats of each person
     
+jasonC -- 2026-05-26 00:08
+	completed making the boards from api
+		the code is saved but not offically used yet, we need to create the game itself first
+	our group decided that we will use socket.io to create multiplayer games. we will see how far that can get us with our website. if it fails, we will resort to using keyboard inputs, which is very very easy to do
