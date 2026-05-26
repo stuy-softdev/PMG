@@ -165,7 +165,7 @@ def refill_pool(category):
     print("restarting\n\n")
 
     #for i in range(6):
-    for _ in range(3): # a for loop to error handle, we send OpenTDB a request up to 3  times if  an error is hit, if not we continue and refill the pool
+    for _ in range(3): # a for loop to error handle, we sendata.setup_new_game()d OpenTDB a request up to 3  times if  an error is hit, if not we continue and refill the pool
         data = opentdb_get(url)
         print(data)
         print("asdasdasdasdasdasdasdasdasdasd\n")
@@ -243,13 +243,35 @@ def new_game():
             if not data.auth(username3, password3):
                 return render_template("new_game.html", invalid="Username or password is incorrect for Player 3")
 
-        return redirect(url_for("game"))
+        if True: #########################CHANGE#######################
+            category_list = list(range(9, 33))
+            for i in range(6):
+                random_index = random.randrange(len(category_list))
+                category = category_list.pop(random_index)
+                #print("randomally chosen category: ")
+                #print(category)
+                refill_pool(category)
+                #print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+                #print(TRIVIA_POOL)
+                #print(i)
+                #print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+            #print(category_list)
+            title = str(int(time.time() * 1000)) # title of board is the current time
+            data.create_board_from_api(TRIVIA_POOL, title)
+
+        return redirect(url_for("game", board = title, player1 = username1, player2 = username2, player3 = username3, temporary = 1))
 
     return render_template("new_game.html")
 
-@app.route("/game", methods=["GET", "POST"])
-def game():
-    return render_template("game.html")
+@app.route("/game/<string:board>/<string:player1>/<string:player2>/<string:player3>/<int:temporary>", methods=["GET", "POST"])
+def game(board, player1, player2, player3, temporary):
+    board_text = data.get_board_text(board)
+    board_point_values = data.get_board_point_values(board)
+    print("TEXT")
+    print(board_text)
+    print("VALS")
+    print(board_point_values)
+    return render_template("game.html", board_text = board_text, board = board)
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():

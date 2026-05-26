@@ -170,6 +170,21 @@ def get_board_text(title):
     board_text = clean_list_2d(board_text)
     return board_text
 
+def get_board_point_values(title):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    board_point_values = []
+
+    for row in range(6):
+        board_point_values.append(c.execute(
+                             'SELECT point_value FROM board WHERE (title, row) = (?, ?)',
+                             (title, row,)
+                         ).fetchall()
+                     )
+
+    board_point_values = clean_list_2d(board_point_values)
+    return board_point_values
+
 # updates the board db with user inputted clues, with null values added for some vars if not inputted
 def edit_question(board, row, column, question, points, correct, wrong1, wrong2, wrong3):
     db = sqlite3.connect(DB_FILE)
