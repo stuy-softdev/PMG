@@ -121,3 +121,8 @@ jasonC -- 2026-05-26 00:08
 	completed making the boards from api
 		the code is saved but not offically used yet, we need to create the game itself first
 	our group decided that we will use socket.io to create multiplayer games. we will see how far that can get us with our website. if it fails, we will resort to using keyboard inputs, which is very very easy to do
+
+jasonC -- 2026-05-26 11:45
+	started on making actual game
+		game can now populate entire board
+		need to work on passing the data to the html files
