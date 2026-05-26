@@ -4,10 +4,25 @@
 
   <head>
     <title>Edit</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="edit.css">
   </head>
 
   <body>
 
+      
+      
+
+
+<nav class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between">
+    <a class="font-bold text-xl tracking-tight" href="/home">My Site</a>
+    <div class="flex items-center">
+        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/home">Home</a>
+        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/create_new">Create New Game</a>
+        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/game">Game</a>
+    </div>
+</nav>
+      
     <h1>Edit your Board!</h1>
     {% if row == 0 %}
 

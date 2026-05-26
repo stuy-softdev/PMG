@@ -188,10 +188,6 @@ def refill_pool(category):
     print("bad bad bad!")
     return False # If true isn't returned that means OpenTDB did not refill the pool of questions, we need to try again.
 
-@app.route("/edit_profile", methods=["GET", "POST"])
-def edit_profile():
-    return render_template("edit.html")
-
 @app.route("/edit/<string:board>/<int:row>/<int:column>", methods=["GET", "POST"])
 def edit(board, row, column):
     if request.method == "POST":
@@ -250,36 +246,6 @@ def new_game():
 @app.route("/game", methods=["GET", "POST"])
 def game():
     return render_template("game.html")
-
-@app.route("/profile", methods=["GET", "POST"])
-def profile():
-
-
-    try:
-        conn = sqlite3.connect("data.db")
-        c = conn.cursor()
-
-        un = session["username"]
-
-        c.execute("SELECT bio FROM users WHERE username = ?", (un,))
-        desc = c.fetchone()[0]
-
-        c.execute("SELECT total_points FROM users WHERE username = ?", (un,))
-        tp = c.fetchone()[0]
-        c.execute("SELECT wins FROM users WHERE username = ?", (un,))
-        wc = c.fetchone()[0]
-        c.execute("SELECT losses FROM users WHERE username = ?", (un,))
-        lc = c.fetchone()[0]
-        conn.close()
-
-    except:
-        un = "Unknown User"
-        desc = "I'm a user that didn't log in. Make an account!"
-        tp = 0
-        wc = 0
-        lc = 0
-
-    return render_template("profile.html", username=un, description=desc, total_points=tp, win_count=wc, lose_count=lc)
 
 '''
 ################################################################################################################CODE TO CREATE API BOARD################################################################################################################
