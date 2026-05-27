@@ -107,6 +107,19 @@ def setup_new_game(board):
     db.commit()
     db.close()
 
+# when a clue is chosen, the chosen column in the db is set to 1 to prevent that clue to be chosen again
+def chosen_clue(board, row, column):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    c.execute(
+        'UPDATE board SET chosen = 1 WHERE (title, row, column) = (?, ?, ?)',
+        (board, row, column,)
+    )
+
+    db.commit()
+    db.close()
+
 #=============================BOARD==============================#
 
 # creats a new board with placeholder text and null values for each board

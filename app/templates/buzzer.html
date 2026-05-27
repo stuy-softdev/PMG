@@ -3,7 +3,7 @@
 
 
 <head>
-<title>Game</title>
+<title>Buzzer</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <style>
 /* From Uiverse.io by cssbuttons-io */
@@ -72,27 +72,8 @@
 </head>
 
 <body>
-<ul>
-<li><a href="/home">Home</a></li>
-<li><a href="/create">Create</a></li>
-<li><a href="/profile">Profile</a></li>
-<li><a href="/game">Game</a></li>
-</ul>
 
-<h1> Game </h1>
-
-<div class="grid grid-cols-6 gap-5">
-  {% for row in range(6) %}
-    {% for column in range(6) %}
-      <div><a href="{{ url_for('buzzer', board = board, row = row, column = column, player1 = player1, player2 = player2, player3 = player3, temporary = temporary) }}"><button class="button">{{ board_point_values[row][column] }}</button></a></div>
-    {% endfor %}
-  {% endfor %}
-
-
-
-
-
-</div>
+<h2> {{ clue_text }} </h2>
 
 </body>
 </html>

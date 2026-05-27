@@ -265,13 +265,22 @@ def new_game():
 
 @app.route("/game/<string:board>/<string:player1>/<string:player2>/<string:player3>/<int:temporary>", methods=["GET", "POST"])
 def game(board, player1, player2, player3, temporary):
-    board_text = data.get_board_text(board)
+    #board_text = data.get_board_text(board)
     board_point_values = data.get_board_point_values(board)
-    print("TEXT")
-    print(board_text)
-    print("VALS")
-    print(board_point_values)
-    return render_template("game.html", board_text = board_text, board = board)
+    #print("TEXT")
+    #print(board_text)
+    #print("VALS")
+    #print(board_point_values)
+    return render_template("game.html", board_point_values = board_point_values, board = board, player1 = player1, player2 = player2, player3 = player3, temporary = temporary)
+
+@app.route("/buzzer/<string:board>/<int:row>/<int:column>/<string:player1>/<string:player2>/<string:player3>/<int:temporary>", methods=["GET", "POST"])
+def buzzer(board, row, column, player1, player2, player3, temporary):
+    clue_text = data.get_board_text(board)[row][column]
+    clue_point_value = data.get_board_point_values(board)[row][column]
+
+    data.chosen_clue(board, row, column)
+
+    return render_template("buzzer.html", clue_text = clue_text, clue_point_value = clue_point_value, board = board, player1 = player1, player2 = player2, player3 = player3, temporary = temporary)
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
