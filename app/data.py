@@ -107,6 +107,19 @@ def setup_new_game(board):
     db.commit()
     db.close()
 
+# when a clue is chosen, the chosen column in the db is set to 1 to prevent that clue to be chosen again
+def chosen_clue(board, row, column):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    c.execute(
+        'UPDATE board SET chosen = 1 WHERE (title, row, column) = (?, ?, ?)',
+        (board, row, column,)
+    )
+
+    db.commit()
+    db.close()
+
 #=============================BOARD==============================#
 
 # creats a new board with placeholder text and null values for each board
@@ -169,6 +182,21 @@ def get_board_text(title):
 
     board_text = clean_list_2d(board_text)
     return board_text
+
+def get_board_point_values(title):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    board_point_values = []
+
+    for row in range(6):
+        board_point_values.append(c.execute(
+                             'SELECT point_value FROM board WHERE (title, row) = (?, ?)',
+                             (title, row,)
+                         ).fetchall()
+                     )
+
+    board_point_values = clean_list_2d(board_point_values)
+    return board_point_values
 
 # updates the board db with user inputted clues, with null values added for some vars if not inputted
 def edit_question(board, row, column, question, points, correct, wrong1, wrong2, wrong3):
