@@ -18,8 +18,8 @@
         >
         <a
           class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/create_game"
-          >Create Game</a
+          href="/create_new"
+          >Create Board</a
         >
         <a
           class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
@@ -34,7 +34,16 @@
         <h1 class="text-4xl font-bold text-white mb-8 text-center">Game</h1>
 
         <div class="grid grid-cols-6 gap-4">
-          {% for row in range(6) %} {% for column in range(6) %}
+          {% for cat_i in range(6) %}
+            <button
+              type="button"
+              class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-8 px-4 rounded-lg transition duration-200 text-center text-lg"
+            >
+            {{ board_text[0][cat_i] }}
+          </button>
+          {% endfor %}
+
+          {% for row in range(1,6) %} {% for column in range(6) %}
           <div>
             <a
               href="{{ url_for('buzzer', board = board, row = row, column = column, player1 = player1, player2 = player2, player3 = player3, temporary = temporary) }}"

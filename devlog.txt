@@ -136,3 +136,8 @@ ethanC -- 2026-05-28 1:30
 	added css formatting to all pages
 	add team flag and description to homepage
 	change navbar to paths that work instead of error from the start
+
+jasonC -- 2026-05-28 7:03
+	fixed navbar navigating to an unknown page in create_new
+	fixed displaying categoeires in game.html
+	JESUS CHRIST WE ARE SO COOKED FOR THIS DEMO!!!!!!!!!
