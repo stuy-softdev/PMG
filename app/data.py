@@ -120,6 +120,54 @@ def chosen_clue(board, row, column):
     db.commit()
     db.close()
 
+# gets the correct answer of a clue
+def get_correct_answer(board, row, column):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    answer = c.execute(
+        'SELECT answer FROM board WHERE (title, row, column) = (?, ?, ?)',
+        (board, row, column,)
+    ).fetchone()
+
+    db.commit()
+    db.close()
+
+    answer = answer[0]
+
+    return answer
+
+# returns a list of all possible answers of a clue, including nulls
+def get_all_answers(board, row, column):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    choices = []
+
+    choices.append(c.execute(
+        'SELECT answer FROM board WHERE (title, row, column) = (?, ?, ?)',
+        (board, row, column,)
+    ).fetchone())
+    choices.append(c.execute(
+        'SELECT wrong1 FROM board WHERE (title, row, column) = (?, ?, ?)',
+        (board, row, column,)
+    ).fetchone())
+    choices.append(c.execute(
+        'SELECT wrong2 FROM board WHERE (title, row, column) = (?, ?, ?)',
+        (board, row, column,)
+    ).fetchone())
+    choices.append(c.execute(
+        'SELECT wrong3 FROM board WHERE (title, row, column) = (?, ?, ?)',
+        (board, row, column,)
+    ).fetchone())
+
+    db.commit()
+    db.close()
+
+    choices = clean_list(choices)
+
+    return choices
+
 #=============================BOARD==============================#
 
 # creats a new board with placeholder text and null values for each board

@@ -273,10 +273,14 @@ def game(board, player1, player2, player3, temporary):
 def buzzer(board, row, column, player1, player2, player3, temporary):
     clue_text = data.get_board_text(board)[row][column]
     clue_point_value = data.get_board_point_values(board)[row][column]
+    correct_answer = data.get_correct_answer(board, row, column)
+    answer_choices = data.get_all_answers(board, row, column)
 
     data.chosen_clue(board, row, column)
+    print(correct_answer)
+    print(answer_choices)
 
-    return render_template("buzzer.html", clue_text = clue_text, clue_point_value = clue_point_value, board = board, player1 = player1, player2 = player2, player3 = player3, temporary = temporary)
+    return render_template("buzzer.html", clue_text = clue_text, clue_point_value = clue_point_value, correct_answer = correct_answer, answer_choices = answer_choices, board = board, player1 = player1, player2 = player2, player3 = player3, temporary = temporary)
 
 '''
 ################################################################################################################CODE TO CREATE API BOARD################################################################################################################
