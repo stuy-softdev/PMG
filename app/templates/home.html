@@ -1,27 +1,58 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
-
-<head>
-<title>Home</title>
+  <head>
+    <title>Home</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="home.css">
-</head>
+    <link rel="stylesheet" href="home.css" />
+  </head>
 
-<body>
+  <body>
+    <nav
+      class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between"
+    >
+      <a class="font-bold text-xl tracking-tight" href="/home">Jeopardy</a>
+      <div class="flex items-center">
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/new_game"
+          >New Game</a
+        >
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/create_game"
+          >Create Game</a
+        >
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/logout"
+          >Logout</a
+        >
+      </div>
+    </nav>
 
-<nav class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between">
-    <a class="font-bold text-xl tracking-tight" href="/home">My Site</a>
-    <div class="flex items-center">
-        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/home">Home</a>
-        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/create_new">Create New Game</a>
-        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/game">Game</a>
+    <div class="text-center py-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">
+        THIS IS JEOPARDY!!!!!!!
+      </h1>
+      <h2 class="text-2xl font-semibold text-gray-700 mb-6">
+        A project by Pomegranates
+      </h2>
+      <img src="static/flag.png" alt="Flag" class="mx-auto h-24 w-auto mb-12" />
     </div>
-</nav>
 
-
-<h1> THIS IS JEOPARDY!!!!!!! </h1>
-<h2> A project by Pomegranates </h2>
-
-</body>
+    <div class="max-w-2xl mx-auto px-6 pb-12">
+      <div class="bg-white rounded-lg shadow-md p-8">
+        <p class="text-gray-700 text-base leading-relaxed">
+          Have you ever wanted to compete with your friends, flex your trivia
+          knowledge and gain bragging rights for eternity? Then our website is
+          definitely the best for you! Users will be able to play games of
+          Jeopardy using pre-generated boards and they will compete with each
+          other to see who gets to brag. There are several all-time leaderboards
+          to see the which players are the best of the best. Users will also be
+          able to create and edit their own custom boards and publish them for
+          others to play.
+        </p>
+      </div>
+    </div>
+  </body>
 </html>

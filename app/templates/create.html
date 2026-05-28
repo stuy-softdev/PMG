@@ -1,45 +1,70 @@
-<!DOCTYPE html>
-<html>
-
-
-<head>
-<title>Game</title>
+<!doctype html>
+<html class="h-full bg-gray-900">
+  <head>
+    <title>Create Board</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="create.css">
+  </head>
 
-</head>
+  <body class="h-full">
+    <nav
+      class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between"
+    >
+      <a class="font-bold text-xl tracking-tight" href="/home">Jeopardy</a>
+      <div class="flex items-center">
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/new_game"
+          >New Game</a
+        >
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/create_game"
+          >Create Game</a
+        >
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/logout"
+          >Logout</a
+        >
+      </div>
+    </nav>
 
-<body>
+    <div class="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto">
+        <h1 class="text-4xl font-bold text-white mb-2">Create Board</h1>
+        <p class="text-gray-300 mb-8">
+          Click on categories and questions to add clues to your board
+        </p>
 
-<nav class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between">
-    <a class="font-bold text-xl tracking-tight" href="/home">My Site</a>
-    <div class="flex items-center">
-        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/home">Home</a>
-        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/create_new">Create New Game</a>
-        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/game">Game</a>
+        <div class="grid grid-cols-6 gap-4">
+          <!-- Category Row -->
+          {% for col in range(6) %}
+          <div class="bg-indigo-600 rounded-lg p-4">
+            <button
+              class="w-full bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-3 px-2 rounded-lg text-center transition duration-200"
+            >
+              Category {{ col + 1 }}
+            </button>
+          </div>
+          {% endfor %}
+
+          <!-- Question Grid -->
+          {% for row in range(6) %} {% for column in range(6) %}
+          <div>
+            <a
+              href="{{ url_for('edit', board = board, row = row, column = column) }}"
+            >
+              <button
+                type="button"
+                class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-6 px-4 rounded-lg transition duration-200 text-center"
+              >
+                {{ board_text[row][column] }}
+              </button>
+            </a>
+          </div>
+          {% endfor %} {% endfor %}
+        </div>
+      </div>
     </div>
-</nav>
-
-<h1> Game </h1>
-
-<div class="grid grid-cols-6 gap-5">
-
-  <div><button class="button">Category1</button></div>
-  <div><button class="button">Category2</button></div>
-  <div><button class="button">Category3</button></div>
-  <div><button class="button">Category4</button></div>
-  <div><button class="button">Category5</button></div>
-  <div><button class="button">Category6</button></div>
-
-  {% for row in range(6) %}
-    {% for column in range(6) %}
-      <div><a href="{{ url_for('edit', board = board, row = row, column = column) }}"><button class="button">{{ board_text[row][column] }}</button></a></div>
-    {% endfor %}
-  {% endfor %}
-
-</div>
-
-
-
-</body>
+  </body>
 </html>
