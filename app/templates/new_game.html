@@ -1,58 +1,152 @@
-<!DOCTYPE html>
-<html>
-
-
-<head>
-<title>New Game</title>
+<!doctype html>
+<html class="h-full bg-gray-900">
+  <head>
+    <title>New Game</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="new_game.css">
-</head>
+  </head>
 
-<body>
+  <body class="h-full">
+    <nav
+      class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between"
+    >
+      <a class="font-bold text-xl tracking-tight" href="/home">Jeopardy</a>
+      <div class="flex items-center">
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/new_game"
+          >New Game</a
+        >
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/create_game"
+          >Create Game</a
+        >
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/logout"
+          >Logout</a
+        >
+      </div>
+    </nav>
 
-<nav class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between">
-    <a class="font-bold text-xl tracking-tight" href="/home">My Site</a>
-    <div class="flex items-center">
-        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/home">Home</a>
-        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/create_new">Create New Game</a>
-        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/game">Game</a>
+    <div class="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl mx-auto">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-8">
+          <h1 class="text-4xl font-bold text-white mb-2">New Game</h1>
+          <p class="text-gray-300 mb-8">
+            Enter usernames and passwords for three players. Leave blank to play
+            as guest.
+          </p>
+
+          <form method="POST" class="space-y-8">
+            <!-- Player 1 -->
+            <div class="bg-gray-700 rounded-lg p-6 space-y-4">
+              <h2 class="text-xl font-semibold text-indigo-400">Player 1</h2>
+              <div>
+                <label
+                  for="username1"
+                  class="block text-sm font-medium text-gray-200 mb-2"
+                  >Username</label
+                >
+                <input
+                  type="text"
+                  id="username1"
+                  name="username1"
+                  class="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label
+                  for="password1"
+                  class="block text-sm font-medium text-gray-200 mb-2"
+                  >Password</label
+                >
+                <input
+                  type="password"
+                  id="password1"
+                  name="password1"
+                  class="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
+            <!-- Player 2 -->
+            <div class="bg-gray-700 rounded-lg p-6 space-y-4">
+              <h2 class="text-xl font-semibold text-indigo-400">Player 2</h2>
+              <div>
+                <label
+                  for="username2"
+                  class="block text-sm font-medium text-gray-200 mb-2"
+                  >Username</label
+                >
+                <input
+                  type="text"
+                  id="username2"
+                  name="username2"
+                  class="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label
+                  for="password2"
+                  class="block text-sm font-medium text-gray-200 mb-2"
+                  >Password</label
+                >
+                <input
+                  type="password"
+                  id="password2"
+                  name="password2"
+                  class="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
+            <!-- Player 3 -->
+            <div class="bg-gray-700 rounded-lg p-6 space-y-4">
+              <h2 class="text-xl font-semibold text-indigo-400">Player 3</h2>
+              <div>
+                <label
+                  for="username3"
+                  class="block text-sm font-medium text-gray-200 mb-2"
+                  >Username</label
+                >
+                <input
+                  type="text"
+                  id="username3"
+                  name="username3"
+                  class="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label
+                  for="password3"
+                  class="block text-sm font-medium text-gray-200 mb-2"
+                  >Password</label
+                >
+                <input
+                  type="password"
+                  id="password3"
+                  name="password3"
+                  class="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
+            {% if invalid %}
+            <div class="bg-red-500/10 border border-red-500 rounded-lg p-4">
+              <p class="text-red-400 font-medium">{{ invalid }}</p>
+            </div>
+            {% endif %}
+
+            <button
+              type="submit"
+              class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+            >
+              Start Game
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
-</nav>
-<h1>New Game</h1>
-    <br>
-    <h2>Enter usernames and passwords for three players. If playing as guest, leave blank.
-    <form method="POST">
-      <h3>Player 1's Username:</h3>
-      <input class="a" type="text" name="username1" />
-      <br>
-      <br>
-      <h3>Player 1's Password:</h3>
-      <input class="a" type="password" name="password1" />
-      <br>
-      <br>
-
-      <h3>Player 2's Username:</h3>
-      <input class="a" type="text" name="username2" />
-      <br>
-      <br>
-      <h3>Player 2's Password:</h3>
-      <input class="a" type="password" name="password2" />
-      <br>
-      <br>
-
-      <h3>Player 3's Username:</h3>
-      <input class="a" type="text" name="username3" />
-      <br>
-      <br>
-      <h3>Player 3's Password:</h3>
-      <input class="a" type="password" name="password3" />
-      <br>
-      <br>
-      <input class="b" type="submit" name="sub1" />
-    </form>
-    <br>
-    <h5>{{invalid}}</h5>
-    <br>
-
-</body>
+  </body>
 </html>

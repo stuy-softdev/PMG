@@ -1,12 +1,44 @@
 <!doctype html>
-<html>
+<html class="h-full bg-gray-900">
   <head>
     <title>Buzzer</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="buzzer.css" />
   </head>
 
-  <body>
-    <h2>{{ clue_text }}</h2>
+  <body class="h-full bg-gray-900">
+    <nav
+      class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between"
+    >
+      <a class="font-bold text-xl tracking-tight" href="/home">Jeopardy</a>
+      <div class="flex items-center">
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/new_game"
+          >New Game</a
+        >
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/create_game"
+          >Create Game</a
+        >
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/logout"
+          >Logout</a
+        >
+      </div>
+    </nav>
+
+    <div
+      class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+    >
+      <div class="max-w-3xl w-full">
+        <div class="bg-gray-800 rounded-lg shadow-2xl p-12 text-center">
+          <h2 class="text-5xl font-bold text-white leading-tight">
+            {{ clue_text }}
+          </h2>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
