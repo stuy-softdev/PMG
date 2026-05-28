@@ -1,27 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
-
-<head>
-<title>Home</title>
+  <head>
+    <title>Home</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="home.css">
-</head>
+    <link rel="stylesheet" href="home.css" />
+  </head>
 
-<body>
+  <body>
+    <nav
+      class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between"
+    >
+      <a class="font-bold text-xl tracking-tight" href="/home">My Site</a>
+      <div class="flex items-center">
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/home"
+          >Home</a
+        >
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/create_new"
+          >Create New Game</a
+        >
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/game"
+          >Game</a
+        >
+      </div>
+    </nav>
 
-<nav class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between">
-    <a class="font-bold text-xl tracking-tight" href="/home">My Site</a>
-    <div class="flex items-center">
-        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/home">Home</a>
-        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/create_new">Create New Game</a>
-        <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/game">Game</a>
-    </div>
-</nav>
-
-
-<h1> THIS IS JEOPARDY!!!!!!! </h1>
-<h2> A project by Pomegranates </h2>
-
-</body>
+    <h1>THIS IS JEOPARDY!!!!!!!</h1>
+    <h2>A project by Pomegranates</h2>
+  </body>
 </html>

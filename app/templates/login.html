@@ -1,37 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
-
-<head>
-<title>Login</title>
+  <head>
+    <title>Login</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="login.css">
-</head>
+    <link rel="stylesheet" href="login.css" />
+  </head>
 
-<body>
-
-<h1>Login</h1>
-    <br>
+  <body>
+    <h1>Login</h1>
+    <br />
     <form action="/" method="POST">
       <h3>Username:</h3>
       <input class="a" type="text" name="username" required />
-      <br>
-      <br>
+      <br />
+      <br />
       <h3>Password:</h3>
       <input class="a" type="password" name="password" required />
-      <br>
-      <br>
+      <br />
+      <br />
       <input class="b" type="submit" name="sub1" value="Login" />
     </form>
-    <br>
+    <br />
     <h5>{{invalid}}</h5>
-    <br>
+    <br />
     <div>
       <p>Click the button below to register.</p>
       <a href="{{url_for('register')}}">
         <button class="b">Register</button>
       </a>
     </div>
-
-</body>
+  </body>
 </html>
