@@ -61,6 +61,7 @@ function buzzerClick() {
 
 function createanswerForm() {
 
+  answerForm.id = "ansForm";
 
   const formInput = document.createElement("input");
   formInput.type = "text";
@@ -69,14 +70,25 @@ function createanswerForm() {
   subButton.type = "submit";
   subButton.textContent = "Send";
 
-  answerForm.addEventListener('submit', event.preventDefault());  //i needed a way to stop everything from refreshing after form submission and appr this is the main way to keep a site from refreshing
+  answerForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    checkAnswer();
+  });  //i needed a way to stop everything from refreshing after form submission and appr this is the main way to keep a site from refreshing
 
+  
+  
   answerForm.appendChild(formInput);
   answerForm.appendChild(subButton);
   document.body.appendChild(answerForm);
 
 
 }
+
+
+  function checkAnswer() {
+    if (document.getElementById("ansForm").value == "correctAnswer";
+    
+  }
 
 
 displayquestion();
