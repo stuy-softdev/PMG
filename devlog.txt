@@ -141,3 +141,7 @@ jasonC -- 2026-05-28 7:03
 	fixed navbar navigating to an unknown page in create_new
 	fixed displaying categoeires in game.html
 	JESUS CHRIST WE ARE SO COOKED FOR THIS DEMO!!!!!!!!!
+
+jasonC -- 2026-06-02 7:12
+	DEVELOPER PREVIEWS: The Aftermath
+		we did not get any feedback bc we were on a trip during demos :(
