@@ -3,6 +3,8 @@ from flask import Flask, render_template, request, session, redirect, url_for, j
 import sqlite3
 import datetime   #enable control of an sqlite database
 
+import re
+
 # our helper db files
 import data_setup
 import data
@@ -126,7 +128,6 @@ def home():
 def create_new():
     if request.method == "POST":
         title = request.form["title"]
-
         data.create_new_board(title)
 
         return redirect(url_for("create", board = title))
