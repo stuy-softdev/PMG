@@ -122,8 +122,8 @@ def register():
 def home():
     return render_template("home.html")
 
-@app.route("/create_new", methods=["GET", "POST"])
-def create_new():
+@app.route("/create_board", methods=["GET", "POST"])
+def create_board():
     if request.method == "POST":
         title = request.form["title"]
 
@@ -131,7 +131,7 @@ def create_new():
 
         return redirect(url_for("create", board = title))
 
-    return render_template("create_new.html")
+    return render_template("create_board.html")
 
 @app.route("/create/<string:board>", methods=["GET", "POST"])
 def create(board):
