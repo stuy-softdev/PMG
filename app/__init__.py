@@ -1,3 +1,30 @@
+'''
+TO DO LIST:
+
+    HIGH PRIORITY
+    figure out how socketio works
+        make joining lobbies work
+        alternate redirect users from the game board (game.html) to the clue (buzzer.html)
+            ofc make the button work
+            and ofc make answer choices work
+
+    modify game table by adding two more rows
+        game id
+        board name (useful for tieing to board table)
+
+
+
+    LOWER PRIORITY
+    implement edit profile
+
+    make custom boards playable in game
+
+    when ending game, check if the board title starts with "randomally_generated_board" and if so, delete it
+
+    leaderboards
+'''
+
+
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 
 import sqlite3
@@ -127,7 +154,7 @@ def create_board():
     if request.method == "POST":
         title = request.form["title"]
 
-        data.create_new_board(title)
+        data.create_new_board(title) # creates new board with the given title
 
         return redirect(url_for("create", board = title))
 
@@ -137,6 +164,11 @@ def create_board():
 def create(board):
     board_text = data.get_board_text(board)
     return render_template("create.html", board_text = board_text, board = board)
+
+############### get_data, opentdb_get, and refill_pool are the functions needed to generate the board from api. this works so don't worry about it. if you really need to know lmk. - jason ###############
+############### get_data, opentdb_get, and refill_pool are the functions needed to generate the board from api. this works so don't worry about it. if you really need to know lmk. - jason ###############
+############### get_data, opentdb_get, and refill_pool are the functions needed to generate the board from api. this works so don't worry about it. if you really need to know lmk. - jason ###############
+############### get_data, opentdb_get, and refill_pool are the functions needed to generate the board from api. this works so don't worry about it. if you really need to know lmk. - jason ###############
 
 # return the data string from the api url, or "url error"
 def get_data(url):
@@ -165,7 +197,7 @@ def refill_pool(category):
     print("restarting\n\n")
 
     #for i in range(6):
-    for _ in range(3): # a for loop to error handle, we sendata.setup_new_game()d OpenTDB a request up to 3  times if  an error is hit, if not we continue and refill the pool
+    for _ in range(3): # a for loop to error handle, we sendata.setup_new_game()d OpenTDB a request up to 3 times if  an error is hit, if not we continue and refill the pool
         data = opentdb_get(url)
         print(data)
         print("asdasdasdasdasdasdasdasdasdasd\n")
@@ -239,11 +271,15 @@ def new_game():
             if not data.auth(username3, password3):
                 return render_template("new_game.html", invalid="Username or password is incorrect for Player 3")
 
-        if True: #########################CHANGE#######################
-            category_list = list(range(9, 33))
+        ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
+        ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
+        ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
+
+        if True:
+            category_list = list(range(9, 33)) # in the trivia api, the category variable is an int between 9 and 32 for some reason
             for i in range(6):
                 random_index = random.randrange(len(category_list))
-                category = category_list.pop(random_index)
+                category = category_list.pop(random_index) # randomally chooses and pops a category
                 #print("randomally chosen category: ")
                 #print(category)
                 refill_pool(category)
@@ -252,7 +288,7 @@ def new_game():
                 #print(i)
                 #print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
             #print(category_list)
-            title = str(int(time.time() * 1000)) # title of board is the current time
+            title = "randomally_generated_board" + str(int(time.time() * 1000)) # title of board "is randomally_generated_board" + the current time
             data.create_board_from_api(TRIVIA_POOL, title)
 
         return redirect(url_for("game", board = title, player1 = username1, player2 = username2, player3 = username3, temporary = 1))
@@ -282,25 +318,6 @@ def buzzer(board, row, column, player1, player2, player3, temporary):
 
     return render_template("buzzer.html", clue_text = clue_text, clue_point_value = clue_point_value, correct_answer = correct_answer, answer_choices = answer_choices, board = board, player1 = player1, player2 = player2, player3 = player3, temporary = temporary)
 
-'''
-################################################################################################################CODE TO CREATE API BOARD################################################################################################################
-category_list = list(range(9, 33))
-for i in range(6):
-    random_index = random.randrange(len(category_list))
-    category = category_list.pop(random_index)
-    print("randomally chosen category: ")
-    print(category)
-    refill_pool(category)
-    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-    print(TRIVIA_POOL)
-    print(i)
-    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-print(category_list)
-title = str(int(time.time() * 1000)) # title of board is the current time
-data.create_board_from_api(TRIVIA_POOL, title)
-'''
 if __name__ == "__main__":
-    #refill_pool()
-    #time.sleep(OPENTDB_COOLDOWN)
     app.debug=True
     app.run(host='0.0.0.0')
