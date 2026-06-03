@@ -145,3 +145,6 @@ jasonC -- 2026-05-28 7:03
 jasonC -- 2026-06-02 7:12
 	DEVELOPER PREVIEWS: The Aftermath
 		we did not get any feedback bc we were on a trip during demos :(
+
+jasonC -- 2026-06-03 10:11
+	changed how the db should work on the game
