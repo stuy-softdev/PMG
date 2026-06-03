@@ -361,6 +361,30 @@ def buzzer(gameid, row, column):
 
     return render_template("buzzer.html", clue_text = clue_text, clue_point_value = clue_point_value, correct_answer = correct_answer, answer_choices = answer_choices, board = board, player1 = player1, player2 = player2, player3 = player3, temporary = temporary)
 
+'''
+@app.route("/<int:gameid>/<int:row>/<int:column>", methods=["GET", "POST"])
+def buzzer(gameid, row, column):
+
+    #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM GAMEID ####################
+    #################### REFER TO COMMENT IN data.get_game_data ####################
+
+    current_game_data = data.get_gama_data(gameid)
+
+
+
+    clue_text = data.get_board_text(board)[row][column]
+    clue_point_value = data.get_board_point_values(board)[row][column]
+    correct_answer = data.get_correct_answer(board, row, column)
+    answer_choices = data.get_all_answers(board, row, column)
+
+    data.chosen_clue(board, row, column)
+    print(correct_answer)
+    print(answer_choices)
+
+    return render_template("buzzer.html", clue_text = clue_text, clue_point_value = clue_point_value, correct_answer = correct_answer, answer_choices = answer_choices, board = board, current_game_data = current_game_data)
+
+'''
+
 if __name__ == "__main__":
     app.debug=True
     app.run(host='0.0.0.0')
