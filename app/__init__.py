@@ -316,6 +316,28 @@ def game(gameid):
     print(board_point_values)
     return render_template("game.html", board_text = board_text, board_point_values = board_point_values, board = board, player1 = player1, player2 = player2, player3 = player3, temporary = temporary)
 
+'''
+@app.route("/<int:gameid>", methods=["GET", "POST"])
+def game(gameid):
+
+    #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM GAMEID ####################
+    #################### REFER TO COMMENT IN data.get_game_data ####################
+
+    current_game_data = data.get_gama_data(gameid)
+
+
+
+    board = current_game_data[0]
+    board_text = data.get_board_text(board)
+    board_point_values = data.get_board_point_values(board)
+    #print("TEXT")
+    #print(board_text)
+    print("VALS")
+    print(board_point_values)
+    return render_template("game.html", board_text = board_text, board_point_values = board_point_values, board = board, current_game_data = current_game_data)
+
+'''
+
 @app.route("/buzzer/<int:gameid>/<int:row>/<int:column>", methods=["GET", "POST"])
 def buzzer(gameid, row, column):
 
