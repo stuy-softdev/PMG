@@ -126,3 +126,22 @@ jasonC -- 2026-05-26 11:45
 	started on making actual game
 		game can now populate entire board
 		need to work on passing the data to the html files
+
+ethanC -- 2026-05-26 11:50
+	added css files to not disturb other files that others are changing
+	remove profile stuff
+
+ethanC -- 2026-05-28 1:30 
+	moved stuff in style tags to its css file
+	added css formatting to all pages
+	add team flag and description to homepage
+	change navbar to paths that work instead of error from the start
+
+jasonC -- 2026-05-28 7:03
+	fixed navbar navigating to an unknown page in create_new
+	fixed displaying categoeires in game.html
+	JESUS CHRIST WE ARE SO COOKED FOR THIS DEMO!!!!!!!!!
+
+jasonC -- 2026-06-02 7:12
+	DEVELOPER PREVIEWS: The Aftermath
+		we did not get any feedback bc we were on a trip during demos :(

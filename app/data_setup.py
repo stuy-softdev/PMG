@@ -41,6 +41,7 @@ def create_board_table():
 def create_game_table():
     contents = """
                CREATE TABLE IF NOT EXISTS game (
+                   gameid           INTEGER      NOT NULL   PRIMARY KEY,
                    board            TEXT         NOT NULL,
                    player1	        TEXT	     NOT NULL,
                    player2          TEXT,
