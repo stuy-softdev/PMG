@@ -155,12 +155,7 @@ def home():
 def create_board():
     if request.method == "POST":
         title = request.form["title"]
-<<<<<<< HEAD
-        data.create_new_board(title)
-=======
-
         data.create_new_board(title) # creates new board with the given title
->>>>>>> 707352f8cfe00a5be8740891e7a7407c5919800d
 
         return redirect(url_for("create", board = title))
 
