@@ -291,12 +291,23 @@ def new_game():
             title = "randomally_generated_board" + str(int(time.time() * 1000)) # title of board "is randomally_generated_board" + the current time
             data.create_board_from_api(TRIVIA_POOL, title)
 
-        return redirect(url_for("game", board = title, player1 = username1, player2 = username2, player3 = username3, temporary = 1))
+        gameid = int(time.time() * 1000)
+        return redirect(url_for("game", gameid = gameid))
 
     return render_template("new_game.html")
 
-@app.route("/game/<string:board>/<string:player1>/<string:player2>/<string:player3>/<int:temporary>", methods=["GET", "POST"])
-def game(board, player1, player2, player3, temporary):
+@app.route("/<int:gameid>", methods=["GET", "POST"])
+def game(gameid):
+
+    #################### NEED TO GET BOARD FROM THE GAMEID ####################
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    board = c.execute('SELECT board FROM (?)', (gameid,))
+
+    db.commit()
+    db.close()
+
     board_text = data.get_board_text(board)
     board_point_values = data.get_board_point_values(board)
     #print("TEXT")
@@ -305,8 +316,18 @@ def game(board, player1, player2, player3, temporary):
     print(board_point_values)
     return render_template("game.html", board_text = board_text, board_point_values = board_point_values, board = board, player1 = player1, player2 = player2, player3 = player3, temporary = temporary)
 
-@app.route("/buzzer/<string:board>/<int:row>/<int:column>/<string:player1>/<string:player2>/<string:player3>/<int:temporary>", methods=["GET", "POST"])
-def buzzer(board, row, column, player1, player2, player3, temporary):
+@app.route("/buzzer/<int:gameid>/<int:row>/<int:column>", methods=["GET", "POST"])
+def buzzer(gameid, row, column):
+
+    #################### NEED TO GET BOARD FROM THE GAMEID ####################
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    board = c.execute('SELECT board FROM (?)', (gameid,))
+
+    db.commit()
+    db.close()
+
     clue_text = data.get_board_text(board)[row][column]
     clue_point_value = data.get_board_point_values(board)[row][column]
     correct_answer = data.get_correct_answer(board, row, column)

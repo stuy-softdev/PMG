@@ -94,14 +94,19 @@ def add_user(username, password):
 
 #=============================GAME==============================#
 
-# upon start of a new game, resets board
-def setup_new_game(board):
+# upon start of a new game, resets board and creates a game id with that board tied to it
+def setup_new_game(board, gameid, user1, user2, user3):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
 
     c.execute(
         'UPDATE board SET chosen = 0 WHERE title = ?',
         (board,)
+    )
+
+    c.execute(
+        'INSERT INTO game VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        (gameid, board, user1, user2, user3, 0, 0, 0,)
     )
 
     db.commit()
