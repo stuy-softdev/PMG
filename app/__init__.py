@@ -26,6 +26,7 @@ TO DO LIST:
 
 
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from flask_socketio import SocketIO, send, emit, join_room, leave_room
 
 import sqlite3
 import datetime   #enable control of an sqlite database
@@ -94,7 +95,9 @@ data_setup.create_board_table()
 data_setup.create_game_table()
 
 app = Flask(__name__)
-app.secret_key = "secret"
+app.secret_key = "sussy key"
+
+socketio = SocketIO(app)
 
 @app.route("/logout")
 def logout():
@@ -387,5 +390,4 @@ def buzzer(gameid, row, column):
 '''
 
 if __name__ == "__main__":
-    app.debug=True
-    app.run(host='0.0.0.0')
+    socketio.run(app, debug=True, host='0.0.0.0')
