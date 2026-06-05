@@ -26,12 +26,9 @@ TO DO LIST:
 
 
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
-from flask_socketio import SocketIO, send, emit, join_room, leave_room
 
 import sqlite3
 import datetime   #enable control of an sqlite database
-
-import re
 
 # our helper db files
 import data_setup
@@ -95,9 +92,7 @@ data_setup.create_board_table()
 data_setup.create_game_table()
 
 app = Flask(__name__)
-app.secret_key = "sussy key"
-
-socketio = SocketIO(app)
+app.secret_key = "secret"
 
 @app.route("/logout")
 def logout():
@@ -158,6 +153,7 @@ def home():
 def create_board():
     if request.method == "POST":
         title = request.form["title"]
+
         data.create_new_board(title) # creates new board with the given title
 
         return redirect(url_for("create", board = title))
@@ -354,4 +350,5 @@ def buzzer(game_id, row, column):
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, host='0.0.0.0')
+    app.debug=True
+    app.run(host='0.0.0.0')
