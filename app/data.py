@@ -173,44 +173,43 @@ def get_all_answers(board, row, column):
 
     return choices
 
-'''
 # given the gameid, returns an array of the data in the game table except for the gameid, in that order
 # for example, board is the first item in the array, player1 is the second item, etc.
-def get_gama_data(gameid):
+def get_game_data(gameid):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
 
-    data = []
+    game_data = []
 
-    data.append(c.execute(
+    game_data.append(c.execute(
         'SELECT board FROM game WHERE gameid = ?', (gameid,)
-    ).fetchone()
-    data.append(c.execute(
+    ).fetchone())
+    game_data.append(c.execute(
         'SELECT player1 FROM game WHERE gameid = ?', (gameid,)
-    ).fetchone()
-    data.append(c.execute(
+    ).fetchone())
+    game_data.append(c.execute(
         'SELECT player2 FROM game WHERE gameid = ?', (gameid,)
-    ).fetchone()
-    data.append(c.execute(
+    ).fetchone())
+    game_data.append(c.execute(
         'SELECT player3 FROM game WHERE gameid = ?', (gameid,)
-    ).fetchone()
-    data.append(c.execute(
+    ).fetchone())
+    game_data.append(c.execute(
         'SELECT points1 FROM game WHERE gameid = ?', (gameid,)
-    ).fetchone()
-    data.append(c.execute(
+    ).fetchone())
+    game_data.append(c.execute(
         'SELECT points2 FROM game WHERE gameid = ?', (gameid,)
-    ).fetchone()
-    data.append(c.execute(
+    ).fetchone())
+    game_data.append(c.execute(
         'SELECT points3 FROM game WHERE gameid = ?', (gameid,)
-    ).fetchone()
+    ).fetchone())
 
     db.commit()
     db.close()
 
-    data = clean_list(data)
+    game_data = clean_list(game_data)
 
-    return data
-'''
+    return game_data
+
 
 #=============================BOARD==============================#
 

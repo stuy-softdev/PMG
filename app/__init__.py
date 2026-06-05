@@ -291,7 +291,8 @@ def new_game():
             title = "randomally_generated_board" + str(int(time.time() * 1000)) # title of board "is randomally_generated_board" + the current time
             data.create_board_from_api(TRIVIA_POOL, title)
 
-        gameid = int(time.time() * 1000)
+        gameid = int(time.time() * 1000) # THIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARY
+        data.setup_new_game(title, gameid, username1, username2, username3)
         return redirect(url_for("game", gameid = gameid))
 
     return render_template("new_game.html")
@@ -299,31 +300,12 @@ def new_game():
 @app.route("/<int:gameid>", methods=["GET", "POST"])
 def game(gameid):
 
-    #################### NEED TO GET BOARD FROM THE GAMEID ####################
-    db = sqlite3.connect(DB_FILE)
-    c = db.cursor()
-
-    board = c.execute('SELECT board FROM (?)', (gameid,))
-
-    db.commit()
-    db.close()
-
-    board_text = data.get_board_text(board)
-    board_point_values = data.get_board_point_values(board)
-    #print("TEXT")
-    #print(board_text)
-    print("VALS")
-    print(board_point_values)
-    return render_template("game.html", board_text = board_text, board_point_values = board_point_values, board = board, player1 = player1, player2 = player2, player3 = player3, temporary = temporary)
-
-'''
-@app.route("/<int:gameid>", methods=["GET", "POST"])
-def game(gameid):
-
     #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM GAMEID ####################
     #################### REFER TO COMMENT IN data.get_game_data ####################
 
-    current_game_data = data.get_gama_data(gameid)
+    current_game_data = data.get_game_data(gameid)
+    print("CURRENT GAME DATA")
+    print(current_game_data)
 
 
 
@@ -334,44 +316,24 @@ def game(gameid):
     #print(board_text)
     print("VALS")
     print(board_point_values)
-    return render_template("game.html", board_text = board_text, board_point_values = board_point_values, board = board, current_game_data = current_game_data)
+    return render_template(
+        "game.html", gameid = gameid, board = board, current_game_data = current_game_data, # game data variables
+        board_text = board_text, board_point_values = board_point_values # variables only to display in the html, no purpose in other stuff
+    )
 
-'''
 
-@app.route("/buzzer/<int:gameid>/<int:row>/<int:column>", methods=["GET", "POST"])
-def buzzer(gameid, row, column):
-
-    #################### NEED TO GET BOARD FROM THE GAMEID ####################
-    db = sqlite3.connect(DB_FILE)
-    c = db.cursor()
-
-    board = c.execute('SELECT board FROM (?)', (gameid,))
-
-    db.commit()
-    db.close()
-
-    clue_text = data.get_board_text(board)[row][column]
-    clue_point_value = data.get_board_point_values(board)[row][column]
-    correct_answer = data.get_correct_answer(board, row, column)
-    answer_choices = data.get_all_answers(board, row, column)
-
-    data.chosen_clue(board, row, column)
-    print(correct_answer)
-    print(answer_choices)
-
-    return render_template("buzzer.html", clue_text = clue_text, clue_point_value = clue_point_value, correct_answer = correct_answer, answer_choices = answer_choices, board = board, player1 = player1, player2 = player2, player3 = player3, temporary = temporary)
-
-'''
 @app.route("/<int:gameid>/<int:row>/<int:column>", methods=["GET", "POST"])
 def buzzer(gameid, row, column):
 
     #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM GAMEID ####################
     #################### REFER TO COMMENT IN data.get_game_data ####################
 
-    current_game_data = data.get_gama_data(gameid)
+    current_game_data = data.get_game_data(gameid)
+    print("CURRENT GAME DATA")
+    print(current_game_data)
 
 
-
+    board = current_game_data[0]
     clue_text = data.get_board_text(board)[row][column]
     clue_point_value = data.get_board_point_values(board)[row][column]
     correct_answer = data.get_correct_answer(board, row, column)
@@ -381,9 +343,11 @@ def buzzer(gameid, row, column):
     print(correct_answer)
     print(answer_choices)
 
-    return render_template("buzzer.html", clue_text = clue_text, clue_point_value = clue_point_value, correct_answer = correct_answer, answer_choices = answer_choices, board = board, current_game_data = current_game_data)
+    return render_template(
+        "buzzer.html", gameid = gameid, row = row, column = column, board = board, current_game_data = current_game_data, correct_answer = correct_answer, answer_choices = answer_choices, # game data variables
+        clue_text = clue_text, clue_point_value = clue_point_value # variables only to display in the html, no purpose in other stuff
+    )
 
-'''
 
 if __name__ == "__main__":
     app.debug=True
