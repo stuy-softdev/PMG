@@ -1,0 +1,7 @@
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script>
+    const socket = io();
+    const lobbyId = "{{ lobby_id }}";
+
+    socket.emit('join', { lobby_id: lobbyId }); //if player joins, call "join" in python with data set as lobbyid
+</script>

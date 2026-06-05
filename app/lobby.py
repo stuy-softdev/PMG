@@ -6,9 +6,9 @@ socket = SocketIO(async_mode='gevent')
 
 def define_lobby(lobbyid): #makes array with lobbyid, player1 name, player2 name, player3 name, player4 name in that order
 
-    lobby_array = [lobbyid, "NA", "NA", "NA", "NA"]
+    lobby_array = [lobbyid, "NA", "NA", "NA"]
     lobby_array_string = ", ".join(lobby_array)
-    c.execute("INSERT INTO lobbies (" + lobbyid "," + user1 + "," + user2 + "," + user3 + "," + user4 + ") VALUES (?, ?, ?, ?, ?)") #creates a row in SQLite with lobby data
+    c.execute("INSERT INTO lobbies (" + lobbyid "," + user1 + "," + user2 + "," + user3 + ") VALUES (?, ?, ?, ?, ?)") #creates a row in SQLite with lobby data
     
     return lobby_array
 
@@ -26,9 +26,21 @@ def join_lobby(userid, lobby_array):
 
 @socketio.on('join')
 def create_lobby_socket():
-    lobby_id = on_join
-    username = session[username]
+    #check to see if lobbyid already exists, if not, add to sqlite
+    lobby_id = data['lobby_id']
+    username = session['username']
     
     join_room(lobby_id)
-    emit('status', f"{username} has entered the room.", to=room)
+    emit('message', f"{username} has entered the room.", to=lobby_id)
+    #have to
+    
+@app.route("/lobby/<lobby_id>", methods=['GET', 'POST'])
+def join_lobby_socket():
+    
+    
+    
+#NEED TO LEARN HOW TO DISCONNECT FROM A ROOM
+    
+    
+@socketio.on('buzzer_pressed')
     
