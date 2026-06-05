@@ -342,6 +342,7 @@ def buzzer(game_id, row, column):
     data.chosen_clue(board, row, column)
     print(correct_answer)
     print(answer_choices)
+    print("CLUE TEXT: " + clue_text)
 
     return render_template(
         "buzzer.html", game_id = game_id, row = row, column = column, board = board, current_game_data = current_game_data, correct_answer = correct_answer, answer_choices = answer_choices, # game data variables

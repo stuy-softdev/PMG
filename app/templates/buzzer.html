@@ -38,15 +38,17 @@
 
             <script>
             let questionDQ = "{{ clue_text }}";
-            let answer = "{{correct_answer}}";
-            let points = "{{clue_point_value}}";
+            let answer = "{{ correct_answer }}";
+            let answer_choices = "{{ answer_choices }}"
+            let points = "{{ clue_point_value }}";
             </script>
 
             <script src="{{ url_for('static', filename='buzzer.js') }}"></script>
-            
+
           </h2>
           <p id="demo"></p>
           <p id="time"></p>
+          <div id = "display_answer_choices"></div>
         </div>
       </div>
     </div>
