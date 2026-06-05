@@ -95,7 +95,7 @@ def add_user(username, password):
 #=============================GAME==============================#
 
 # upon start of a new game, resets board and creates a game id with that board tied to it
-def setup_new_game(board, gameid, user1, user2, user3):
+def setup_new_game(board, game_id, user1, user2, user3):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
 
@@ -106,7 +106,7 @@ def setup_new_game(board, gameid, user1, user2, user3):
 
     c.execute(
         'INSERT INTO game VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-        (gameid, board, user1, user2, user3, 0, 0, 0,)
+        (game_id, board, user1, user2, user3, 0, 0, 0,)
     )
 
     db.commit()
@@ -173,44 +173,43 @@ def get_all_answers(board, row, column):
 
     return choices
 
-'''
-# given the gameid, returns an array of the data in the game table except for the gameid, in that order
+# given the game_id, returns an array of the data in the game table except for the game_id, in that order
 # for example, board is the first item in the array, player1 is the second item, etc.
-def get_gama_data(gameid):
+def get_game_data(game_id):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
 
-    data = []
+    game_data = []
 
-    data.append(c.execute(
-        'SELECT board FROM game WHERE gameid = ?', (gameid,)
-    ).fetchone()
-    data.append(c.execute(
-        'SELECT player1 FROM game WHERE gameid = ?', (gameid,)
-    ).fetchone()
-    data.append(c.execute(
-        'SELECT player2 FROM game WHERE gameid = ?', (gameid,)
-    ).fetchone()
-    data.append(c.execute(
-        'SELECT player3 FROM game WHERE gameid = ?', (gameid,)
-    ).fetchone()
-    data.append(c.execute(
-        'SELECT points1 FROM game WHERE gameid = ?', (gameid,)
-    ).fetchone()
-    data.append(c.execute(
-        'SELECT points2 FROM game WHERE gameid = ?', (gameid,)
-    ).fetchone()
-    data.append(c.execute(
-        'SELECT points3 FROM game WHERE gameid = ?', (gameid,)
-    ).fetchone()
+    game_data.append(c.execute(
+        'SELECT board FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    game_data.append(c.execute(
+        'SELECT player1 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    game_data.append(c.execute(
+        'SELECT player2 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    game_data.append(c.execute(
+        'SELECT player3 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    game_data.append(c.execute(
+        'SELECT points1 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    game_data.append(c.execute(
+        'SELECT points2 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    game_data.append(c.execute(
+        'SELECT points3 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
 
     db.commit()
     db.close()
 
-    data = clean_list(data)
+    game_data = clean_list(game_data)
 
-    return data
-'''
+    return game_data
+
 
 #=============================BOARD==============================#
 
