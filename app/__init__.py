@@ -291,19 +291,19 @@ def new_game():
             title = "randomally_generated_board" + str(int(time.time() * 1000)) # title of board "is randomally_generated_board" + the current time
             data.create_board_from_api(TRIVIA_POOL, title)
 
-        gameid = int(time.time() * 1000) # THIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARY
-        data.setup_new_game(title, gameid, username1, username2, username3)
-        return redirect(url_for("game", gameid = gameid))
+        game_id = int(time.time() * 1000) # THIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARY
+        data.setup_new_game(title, game_id, username1, username2, username3)
+        return redirect(url_for("game", game_id = game_id))
 
     return render_template("new_game.html")
 
-@app.route("/<int:gameid>", methods=["GET", "POST"])
-def game(gameid):
+@app.route("/<int:game_id>", methods=["GET", "POST"])
+def game(game_id):
 
-    #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM GAMEID ####################
+    #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM game_id ####################
     #################### REFER TO COMMENT IN data.get_game_data ####################
 
-    current_game_data = data.get_game_data(gameid)
+    current_game_data = data.get_game_data(game_id)
     print("CURRENT GAME DATA")
     print(current_game_data)
 
@@ -317,18 +317,18 @@ def game(gameid):
     print("VALS")
     print(board_point_values)
     return render_template(
-        "game.html", gameid = gameid, board = board, current_game_data = current_game_data, # game data variables
+        "game.html", game_id = game_id, board = board, current_game_data = current_game_data, # game data variables
         board_text = board_text, board_point_values = board_point_values # variables only to display in the html, no purpose in other stuff
     )
 
 
-@app.route("/<int:gameid>/<int:row>/<int:column>", methods=["GET", "POST"])
-def buzzer(gameid, row, column):
+@app.route("/<int:game_id>/<int:row>/<int:column>", methods=["GET", "POST"])
+def buzzer(game_id, row, column):
 
-    #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM GAMEID ####################
+    #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM game_id ####################
     #################### REFER TO COMMENT IN data.get_game_data ####################
 
-    current_game_data = data.get_game_data(gameid)
+    current_game_data = data.get_game_data(game_id)
     print("CURRENT GAME DATA")
     print(current_game_data)
 
@@ -344,7 +344,7 @@ def buzzer(gameid, row, column):
     print(answer_choices)
 
     return render_template(
-        "buzzer.html", gameid = gameid, row = row, column = column, board = board, current_game_data = current_game_data, correct_answer = correct_answer, answer_choices = answer_choices, # game data variables
+        "buzzer.html", game_id = game_id, row = row, column = column, board = board, current_game_data = current_game_data, correct_answer = correct_answer, answer_choices = answer_choices, # game data variables
         clue_text = clue_text, clue_point_value = clue_point_value # variables only to display in the html, no purpose in other stuff
     )
 
