@@ -39,7 +39,7 @@
             <script>
             let questionDQ = "{{ clue_text }}";
             let answer = "{{ correct_answer }}";
-            let answer_choices = "{{ answer_choices }}"
+            let answer_choices = {{ answer_choices|tojson }};
             let points = "{{ clue_point_value }}";
             </script>
 

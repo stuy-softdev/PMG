@@ -64,6 +64,15 @@ function createanswerForm() {
   console.log(answer_choices)
   console.log(answer_choices[0])
   console.log(answer_choices[1])
+  console.log(typeof answer_choices === 'string');
+
+  // Shuffling the list of answer choices using the Knuth Shuffle (reordering elements by iterating from the end and swapping each element with a random one)
+  for (var i = answer_choices.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = answer_choices[i];
+    answer_choices[i] = answer_choices[j];
+    answer_choices[j] = tmp;
+  }
 
   for (var i = 0; i < answer_choices.length; i++) {
     document.getElementById("display_answer_choices").innerHTML += `

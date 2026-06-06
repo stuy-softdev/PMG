@@ -338,6 +338,7 @@ def buzzer(game_id, row, column):
     clue_point_value = data.get_board_point_values(board)[row][column]
     correct_answer = data.get_correct_answer(board, row, column)
     answer_choices = data.get_all_answers(board, row, column)
+    print(answer_choices)
 
     data.chosen_clue(board, row, column)
     print(correct_answer)
