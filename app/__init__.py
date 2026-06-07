@@ -11,6 +11,16 @@ TO DO LIST:
             and ofc make answer choices work
         DONE
         now need to handle the db for answering the questions
+            when a question is already answered,
+                change that on the board db
+                change button color
+                make button not clickable anymore
+            edit the points for if you get it correct or not
+
+            ******************************************************************************************************************************************
+            if someone gets it wrong, run the question again (pretty much refreshing the page), and run the process again, but the first person that answered can't buzz in anymore
+                if all three players get it wrong, display the correct answer and just move on to game.html
+            ******************************************************************************************************************************************
 
     modify game table by adding two more rows
         game id

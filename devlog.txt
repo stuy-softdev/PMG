@@ -154,3 +154,8 @@ ethanC -- 2026-06-03 12:09
 
 ethanC -- 2026-06-05 11:13
 	fix merge stuff back
+
+jasonC -- 2026-06-07 16:21
+	67676767676767
+	answering questions now function
+	now need to handle the database for it
