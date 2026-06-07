@@ -74,12 +74,60 @@ function createanswerForm() {
     answer_choices[j] = tmp;
   }
 
+  // This prevents user from submitting multiple answers
+  var already_answered = false;
+  var answers_div = document.getElementById("display_answer_choices");
+
+  function disableAllAnswers() {
+    var btns = answers_div.querySelectorAll("button");
+    btns.forEach(function(b) { b.disabled = true; });
+  }
+
+  // Creates a submit button for each answer choice
+  answer_choices.forEach(function(choice) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    // btn.textContent = decodeHtml(ansRaw);  //DECODEHTML WILL GET RID OF THE WEIRD SYMBOLS IN THE TEXT, WE WILL DO THAT LATER
+    btn.textContent = choice;
+    btn.className = "w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-8 px-4 rounded-lg transition duration-200 text-center text-lg";
+
+    // when you click one of the choices, checks if it's correct, displays message about that, and makes NEXT button clickable
+    btn.onclick = function() {
+      if (already_answered) return;
+      already_answered = true;
+
+      // var pickedDecoded = decodeHtml(ansRaw); //DECODEHTML WILL GET RID OF THE WEIRD SYMBOLS IN THE TEXT, WE WILL DO THAT LATER
+      var pickedDecoded = choice;
+      document.getElementById("user_selected_answer").value = pickedDecoded;
+
+      if (pickedDecoded === correct_answer) {
+        document.getElementById("message").textContent = "Correct";
+      } else {
+        document.getElementById("message").textContent =
+          "Incorrect. Correct answer: " + correct_answer;
+      }
+
+      disableAllAnswers();
+      var nextBtn = document.getElementById("nextBtn");
+      nextBtn.disabled = false;
+      nextBtn.classList.remove("bg-gray-500", "cursor-not-allowed");
+      nextBtn.classList.add("bg-indigo-500", "hover:bg-indigo-600", "cursor-pointer");
+    };
+    console.log("hi")
+    console.log(btn)
+    // adds to the HTML
+    answers_div.appendChild(btn);
+    answers_div.appendChild(document.createTextNode(" "));
+    // answers_div.innerHTML += btn
+  });
+  /*
   for (var i = 0; i < answer_choices.length; i++) {
     document.getElementById("display_answer_choices").innerHTML += `
       <button type="button" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-8 px-4 rounded-lg transition duration-200 text-center text-lg">` +
         answer_choices[i] +
       `</button>`
   }
+  */
   /*
   answerForm.id = "ansForm";
 
@@ -92,7 +140,7 @@ function createanswerForm() {
   subButton.type = "submit";
   subButton.textContent = "Send";
   */
-
+  /*
   answerForm.addEventListener('submit', (event) => {
     event.preventDefault();
     checkAnswer();
@@ -103,7 +151,7 @@ function createanswerForm() {
   answerForm.appendChild(formInput);
   answerForm.appendChild(subButton);
   document.body.appendChild(answerForm);
-
+  */
 
 }
 

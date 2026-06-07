@@ -4,9 +4,13 @@ TO DO LIST:
     HIGH PRIORITY
     figure out how socketio works
         make joining lobbies work
+
+        DONE
         alternate redirect users from the game board (game.html) to the clue (buzzer.html)
             ofc make the button work
             and ofc make answer choices work
+        DONE
+        now need to handle the db for answering the questions
 
     modify game table by adding two more rows
         game id
@@ -316,6 +320,20 @@ def game(game_id):
     #print(board_text)
     print("VALS")
     print(board_point_values)
+
+    # THE FORM TO ANSWER A QUESTION GOES TO game.html, SO HANDLING THE DB FOR GETTING THE QUESTION RIGHT/WRONG HAS TO GO HERE
+    picked = request.form.get("answer")  # Get the selected answer from the form
+    print("HELL YEAHH 3")
+    if picked:  # Score the submitted answer, picked = the answer  submitted
+        correct = session.get("correct_answer")  # trivia_correct grabs the actual answer
+        #print("a")
+        #print(picked)
+        #print(correct)
+        if correct and picked == correct:  # If the answer is correct, then award points
+            #data.add_to_score(user, clue_point_value) # WILL BE THE NEXT THING I IMPLEMENT! WILL BE THE NEXT THING I IMPLEMENT! WILL BE THE NEXT THING I IMPLEMENT! WILL BE THE NEXT THING I IMPLEMENT!
+            print("HELL YEAH!!!!")
+        print("HELL YEAHH 2")
+
     return render_template(
         "game.html", game_id = game_id, board = board, current_game_data = current_game_data, # game data variables
         board_text = board_text, board_point_values = board_point_values # variables only to display in the html, no purpose in other stuff
@@ -338,12 +356,17 @@ def buzzer(game_id, row, column):
     clue_point_value = data.get_board_point_values(board)[row][column]
     correct_answer = data.get_correct_answer(board, row, column)
     answer_choices = data.get_all_answers(board, row, column)
+
+    session["correct_answer"] = correct_answer # putting correct answer in session so we can use it later to check if player gets question right
     print(answer_choices)
 
     data.chosen_clue(board, row, column)
     print(correct_answer)
+    #print(session["correct_answer"])
     print(answer_choices)
     print("CLUE TEXT: " + clue_text)
+
+
 
     return render_template(
         "buzzer.html", game_id = game_id, row = row, column = column, board = board, current_game_data = current_game_data, correct_answer = correct_answer, answer_choices = answer_choices, # game data variables
