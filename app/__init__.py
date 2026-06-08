@@ -36,6 +36,8 @@ TO DO LIST:
     when ending game, check if the board title starts with "randomally_generated_board" and if so, delete it
 
     leaderboards
+
+    add "True or False: " to true/false questions
 '''
 
 
@@ -258,9 +260,20 @@ def edit(board, row, column):
 
     return render_template("edit.html", board = board, row = row, column = column)
 
+@app.route("/find_or_create_room", methods=["GET", "POST"])
+def find_or_create_room():
+    if request.method == "POST":
+        room_code = request.form["room_code"]
+        print(room_code)
+
+        #return something here idk
+
+    return render_template("find_or_create_room.html")
+
 @app.route("/new_game", methods=["GET", "POST"])
 def new_game():
     if request.method == "POST":
+        '''
         username1 = request.form["username1"]
         username2 = request.form["username2"]
         username3 = request.form["username3"]
@@ -284,7 +297,7 @@ def new_game():
         if not username3 == "":
             if not data.auth(username3, password3):
                 return render_template("new_game.html", invalid="Username or password is incorrect for Player 3")
-
+        '''
         ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
         ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
         ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
