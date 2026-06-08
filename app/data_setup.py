@@ -52,6 +52,15 @@ def create_game_table():
                )"""
     create_table(contents)
 
+def create_lobbies_table():
+    contents = """
+               CREATE TABLE IF NOT EXISTS lobbies (
+                   lobby_id         INTEGER      NOT NULL   PRIMARY KEY,
+                   player1          TEXT         NOT NULL,
+                   player2	        TEXT	     NOT NULL,
+                   player3          TEXT         NOT NULL
+               )"""
+    create_table(contents)
 
 #=============================GENERAL=HELPERS=============================#
 
