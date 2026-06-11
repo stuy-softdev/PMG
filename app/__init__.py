@@ -266,7 +266,7 @@ def edit(board, row, column):
 def find_or_create_room():
     if request.method == "POST":
         room_code = request.form["room_code"]
-        emit('join', { lobby_id : room_code })
+        emit('join', { lobby_id : room_code, username : session["username"] })
         print(room_code)
 
         return redirect(url_for("lobby", lobby_id = room_code))
@@ -284,6 +284,18 @@ def join_lobby_socket():
 
     join_room(lobby_id)
     emit('message', username + "has entered the room.", to=lobby_id)
+    
+@socketio.on('message')
+def 
+    
+@app.route("/lobby/<string:lobby_id>", methods=["GET", "POST"])
+def lobby(lobby_id):
+    lobbyid = lobby_array[0]
+
+    if userid not in lobby_array:
+        if x != lobbyid and x == None:
+            x = userid
+    c.execute("SELECT * FROM lobbies WHERE lobby_id = ?" , lobby_id) #assign to array
 
 
 @app.route("/new_game", methods=["GET", "POST"])
@@ -411,6 +423,24 @@ def buzzer(game_id, row, column):
         "buzzer.html", game_id = game_id, row = row, column = column, board = board, current_game_data = current_game_data, correct_answer = correct_answer, answer_choices = answer_choices, # game data variables
         clue_text = clue_text, clue_point_value = clue_point_value # variables only to display in the html, no purpose in other stuff
     )
+
+
+#HELPER FUNCTIONS
+def define_lobby(lobbyid): #makes array with lobbyid, player1 name, player2 name, player3 name in that order
+
+    lobby_array = [lobbyid, None, None, None]
+    lobby_array_string = ", ".join(lobby_array)
+    c.execute("INSERT INTO lobbies (" + lobbyid "," + user1 + "," + user2 + "," + user3 + ") VALUES (?, ?, ?, ?, ?)") #creates a row in SQLite with lobby data
+
+    return lobby_array
+
+
+def join_lobby(userid, lobby_array):
+    lobbyid = lobby_array[0]
+
+    if userid not in lobby_array:
+        if x != lobbyid and x == None:
+            x = userid
 
 
 if __name__ == "__main__":
