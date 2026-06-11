@@ -37,15 +37,14 @@ def join_lobby_socket():
 @app.route("/lobby", methods=['GET', 'POST'])
 def lobby():
     if request.method == "POST":
-        emit('join', { lobby_id : request.form["lobby_id"] }) #this should/could maybe work?????? idk if app functions can call emits but if they can this is literally all i need to do hopefully
-    
+        emit('join', { lobby_id : request.form["room_code"] }) #this should/could maybe work?????? idk if app functions can call emits but if they can this is literally all i need to do hopefully
+        return redirect
+
 
 
 
 
 @socketio.on('buzzer_pressed')
 def buzzer_pressed_socket(data):
-    
+
     if data['answer'] == session["correct_answer"]:
-        
-    

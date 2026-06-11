@@ -43,6 +43,8 @@ TO DO LIST:
 
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 
+from flask_socketio import SocketIO, join_room, leave_room, emit
+
 import sqlite3
 import datetime   #enable control of an sqlite database
 
@@ -264,11 +266,25 @@ def edit(board, row, column):
 def find_or_create_room():
     if request.method == "POST":
         room_code = request.form["room_code"]
+        emit('join', { lobby_id : room_code })
         print(room_code)
+
+        return redirect(url_for("lobby", lobby_id = room_code))
 
         #return something here idk
 
     return render_template("find_or_create_room.html")
+
+
+@socketio.on('join')
+def join_lobby_socket():
+    #check to see if lobbyid already exists, if not, add to sqlite
+    lobby_id = data['lobby_id']
+    username = session['username']
+
+    join_room(lobby_id)
+    emit('message', username + "has entered the room.", to=lobby_id)
+
 
 @app.route("/new_game", methods=["GET", "POST"])
 def new_game():
