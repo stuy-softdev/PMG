@@ -53,7 +53,7 @@ function buzzerClick() {
   clickTime = Date.now() - startTime;
   document.getElementById("time").innerHTML = String(clickTime);
 
-  socket.emit("buzzer_clicked", { click_time : clickTime, user_name = username }); //sure hope this works
+  socket.emit("buzzer_clicked", { click_time : clickTime, user_name : username }); //sure hope this works
   
       
   if (clickTime > 1000) { // SET TO IN IF STATEMENT CHECKING IF YOU PRESSED THE BUTTON FIRST
@@ -176,9 +176,15 @@ function createanswerForm() {
     
     playersAnswered++; //notes that one extra person has clicked the buzzer 
     
-    if playersAnswered == 4 && username == fastestPlayer{ //REMEMBER TO SEND USERNAME DATA FROM PYTHON -- once the entire lobby has answered, the fastest player is allowed to submit an answer
+    if playersAnswered == 3 { //REMEMBER TO SEND USERNAME DATA FROM PYTHON -- once the entire lobby has answered, the fastest player is allowed to submit an answer
+      if username == fastestPlayer{
+
+        createanswerForm();
+        
+      }
+    }
+
       
-      createanswerForm();
       
   });
 
