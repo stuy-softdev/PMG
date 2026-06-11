@@ -151,7 +151,18 @@ jasonC -- 2026-06-03 10:11
 
 ethanC -- 2026-06-03 12:09
     added buzzer images
+<<<<<<< HEAD
     
 ethanC -- 2026-06-11 11:29
     completed css animation on homepage
     changed game name to Jeffpardy
+=======
+
+ethanC -- 2026-06-05 11:13
+	fix merge stuff back
+
+jasonC -- 2026-06-07 16:21
+	67676767676767
+	answering questions now function
+	now need to handle the database for it
+>>>>>>> 4792552ef408d433ec9a873ba7725a58bac3948e

@@ -4,9 +4,23 @@ TO DO LIST:
     HIGH PRIORITY
     figure out how socketio works
         make joining lobbies work
+
+        DONE
         alternate redirect users from the game board (game.html) to the clue (buzzer.html)
             ofc make the button work
             and ofc make answer choices work
+        DONE
+        now need to handle the db for answering the questions
+            when a question is already answered,
+                change that on the board db
+                change button color
+                make button not clickable anymore
+            edit the points for if you get it correct or not
+
+            ******************************************************************************************************************************************
+            if someone gets it wrong, run the question again (pretty much refreshing the page), and run the process again, but the first person that answered can't buzz in anymore
+                if all three players get it wrong, display the correct answer and just move on to game.html
+            ******************************************************************************************************************************************
 
     modify game table by adding two more rows
         game id
@@ -22,16 +36,17 @@ TO DO LIST:
     when ending game, check if the board title starts with "randomally_generated_board" and if so, delete it
 
     leaderboards
+
+    add "True or False: " to true/false questions
 '''
 
 
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
-from flask_socketio import SocketIO, send, emit, join_room, leave_room
+
+from flask_socketio import SocketIO, join_room, leave_room, emit
 
 import sqlite3
 import datetime   #enable control of an sqlite database
-
-import re
 
 # our helper db files
 import data_setup
@@ -95,9 +110,7 @@ data_setup.create_board_table()
 data_setup.create_game_table()
 
 app = Flask(__name__)
-app.secret_key = "sussy key"
-
-socketio = SocketIO(app)
+app.secret_key = "secret"
 
 @app.route("/logout")
 def logout():
@@ -158,6 +171,7 @@ def home():
 def create_board():
     if request.method == "POST":
         title = request.form["title"]
+
         data.create_new_board(title) # creates new board with the given title
 
         return redirect(url_for("create", board = title))
@@ -248,9 +262,34 @@ def edit(board, row, column):
 
     return render_template("edit.html", board = board, row = row, column = column)
 
+@app.route("/find_or_create_room", methods=["GET", "POST"])
+def find_or_create_room():
+    if request.method == "POST":
+        room_code = request.form["room_code"]
+        emit('join', { lobby_id : room_code })
+        print(room_code)
+
+        return redirect(url_for("lobby", lobby_id = room_code))
+
+        #return something here idk
+
+    return render_template("find_or_create_room.html")
+
+
+@socketio.on('join')
+def join_lobby_socket():
+    #check to see if lobbyid already exists, if not, add to sqlite
+    lobby_id = data['lobby_id']
+    username = session['username']
+
+    join_room(lobby_id)
+    emit('message', username + "has entered the room.", to=lobby_id)
+
+
 @app.route("/new_game", methods=["GET", "POST"])
 def new_game():
     if request.method == "POST":
+        '''
         username1 = request.form["username1"]
         username2 = request.form["username2"]
         username3 = request.form["username3"]
@@ -274,7 +313,7 @@ def new_game():
         if not username3 == "":
             if not data.auth(username3, password3):
                 return render_template("new_game.html", invalid="Username or password is incorrect for Player 3")
-
+        '''
         ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
         ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
         ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
@@ -320,6 +359,20 @@ def game(game_id):
     #print(board_text)
     print("VALS")
     print(board_point_values)
+
+    # THE FORM TO ANSWER A QUESTION GOES TO game.html, SO HANDLING THE DB FOR GETTING THE QUESTION RIGHT/WRONG HAS TO GO HERE
+    picked = request.form.get("answer")  # Get the selected answer from the form
+    print("HELL YEAHH 3")
+    if picked:  # Score the submitted answer, picked = the answer  submitted
+        correct = session.get("correct_answer")  # trivia_correct grabs the actual answer
+        #print("a")
+        #print(picked)
+        #print(correct)
+        if correct and picked == correct:  # If the answer is correct, then award points
+            #data.add_to_score(user, clue_point_value) # WILL BE THE NEXT THING I IMPLEMENT! WILL BE THE NEXT THING I IMPLEMENT! WILL BE THE NEXT THING I IMPLEMENT! WILL BE THE NEXT THING I IMPLEMENT!
+            print("HELL YEAH!!!!")
+        print("HELL YEAHH 2")
+
     return render_template(
         "game.html", game_id = game_id, board = board, current_game_data = current_game_data, # game data variables
         board_text = board_text, board_point_values = board_point_values # variables only to display in the html, no purpose in other stuff
@@ -343,9 +396,16 @@ def buzzer(game_id, row, column):
     correct_answer = data.get_correct_answer(board, row, column)
     answer_choices = data.get_all_answers(board, row, column)
 
+    session["correct_answer"] = correct_answer # putting correct answer in session so we can use it later to check if player gets question right
+    print(answer_choices)
+
     data.chosen_clue(board, row, column)
     print(correct_answer)
+    #print(session["correct_answer"])
     print(answer_choices)
+    print("CLUE TEXT: " + clue_text)
+
+
 
     return render_template(
         "buzzer.html", game_id = game_id, row = row, column = column, board = board, current_game_data = current_game_data, correct_answer = correct_answer, answer_choices = answer_choices, # game data variables
@@ -354,4 +414,5 @@ def buzzer(game_id, row, column):
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, host='0.0.0.0')
+    app.debug=True
+    app.run(host='0.0.0.0')
