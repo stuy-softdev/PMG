@@ -25,21 +25,27 @@ def join_lobby(userid, lobby_array):
 
 
 @socketio.on('join')
-def create_lobby_socket():
+def join_lobby_socket():
     #check to see if lobbyid already exists, if not, add to sqlite
     lobby_id = data['lobby_id']
     username = session['username']
 
     join_room(lobby_id)
-    emit('message', f"{username} has entered the room.", to=lobby_id)
-    #have to
-
-@app.route("/lobby/<lobby_id>", methods=['GET', 'POST'])
-def join_lobby_socket():
+    emit('message', username + "has entered the room.", to=lobby_id)
 
 
+@app.route("/lobby", methods=['GET', 'POST'])
+def lobby():
+    if request.method == "POST":
+        emit('join', { lobby_id : request.form["lobby_id"] }) #this should/could maybe work?????? idk if app functions can call emits but if they can this is literally all i need to do hopefully
+    
 
-#NEED TO LEARN HOW TO DISCONNECT FROM A ROOM
+
 
 
 @socketio.on('buzzer_pressed')
+def buzzer_pressed_socket(data):
+    
+    if data['answer'] == session["correct_answer"]:
+        
+    
