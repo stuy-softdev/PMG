@@ -159,3 +159,7 @@ jasonC -- 2026-06-07 16:21
 	67676767676767
 	answering questions now function
 	now need to handle the database for it
+
+ethanC -- 2026-06-11 11:29
+    completed css animation on homepage
+    changed game name to Jeffpardy
