@@ -7,6 +7,7 @@ let clickTime;
 let displayInterval;
 let buttonBuzzer = document.createElement('button');
 let answerForm = document.createElement('form');
+const socket = io();
 
 
 function displayquestion() {
@@ -51,6 +52,10 @@ function buzzerClick() {
 
   clickTime = Date.now() - startTime;
   document.getElementById("time").innerHTML = String(clickTime);
+
+  socket.emit("buzzer_clicked", { click_time : clickTime, user_name = username }); //sure hope this works
+  
+      
   if (clickTime > 1000) { // SET TO IN IF STATEMENT CHECKING IF YOU PRESSED THE BUTTON FIRST
 
     createanswerForm();
@@ -102,9 +107,16 @@ function createanswerForm() {
 
       if (pickedDecoded === correct_answer) {
         document.getElementById("message").textContent = "Correct";
+        
+        let addPointsEvent = new CustomEvent('addPoints', { points : questionPoints}); //event that sends the amount of points a player has won, MAKE LISTENER IN PYTHON AND SEND POINT DATA TO JS
+        document.dispatchEvent(addPointsEvent);
+        
       } else {
         document.getElementById("message").textContent =
           "Incorrect. Correct answer: " + correct_answer;
+
+          //make socket function that emits to lobby that player was wrong and runs the buzzer command again for someone else to try -- MAKE TIMES AND USER INTO ARRAY
+          
       }
 
       disableAllAnswers();
@@ -156,12 +168,21 @@ function createanswerForm() {
 }
 
 
-  function checkAnswer() {
-    if (document.getElementById("ansForm").value == "correctAnswer");
-      console.log("hey this is correct")
-  }
+  socket.(on)("buzzer_clicked", (data) => { //Data should include the name of the person that just pressed the buzzer, and the time it took them to press it
+    if !fastestClickTime || data["click_time"] < fastestClickTime{
+      fastestClickTime = data["click_time"];
+      fastestPlayer = data["user_name"];
+    }
+    
+    playersAnswered++; //notes that one extra person has clicked the buzzer 
+    
+    if playersAnswered == 4 && username == fastestPlayer{ //REMEMBER TO SEND USERNAME DATA FROM PYTHON -- once the entire lobby has answered, the fastest player is allowed to submit an answer
+      
+      createanswerForm();
+      
+  });
 
-displayquestion();
+  displayquestion();
 
 
 });
