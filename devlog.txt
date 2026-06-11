@@ -151,3 +151,7 @@ jasonC -- 2026-06-03 10:11
 
 ethanC -- 2026-06-03 12:09
     added buzzer images
+    
+ethanC -- 2026-06-11 11:29
+    completed css animation on homepage
+    changed game name to Jeffpardy
