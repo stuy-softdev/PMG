@@ -166,3 +166,6 @@ ethanC -- 2026-06-11 11:29
 
 jasonC -- 2026-06-12 01:22
 	cleaned up artemis's code and now joining lobbies work let's go!
+
+jasonC -- 2026-06-12 11:46
+	joining lobby notifications work, need to test with multiple browsers
