@@ -108,9 +108,11 @@ conn.close()
 data_setup.create_users_table()
 data_setup.create_board_table()
 data_setup.create_game_table()
+data_setup.create_lobbies_table()
 
 app = Flask(__name__)
 app.secret_key = "secret"
+socketio = SocketIO(app)
 
 @app.route("/logout")
 def logout():
@@ -131,7 +133,7 @@ def login():
         conn.close()
 
         if result and check_password_hash(result[0], password):
-            session["user"] = username
+            session["username"] = username
             return redirect(url_for("home"))
         else:
             return render_template("login.html", invalid="Invalid username or password")
@@ -266,7 +268,7 @@ def edit(board, row, column):
 def find_or_create_room():
     if request.method == "POST":
         room_code = request.form["room_code"]
-        emit('join', { lobby_id : room_code, username : session["username"] })
+        #emit('join', { lobby_id : room_code, username : session["username"] })
         print(room_code)
 
         return redirect(url_for("lobby", lobby_id = room_code))
@@ -277,18 +279,21 @@ def find_or_create_room():
 
 
 @socketio.on('join')
-def join_lobby_socket():
+def join_lobby_socket(data):
     #check to see if lobbyid already exists, if not, add to sqlite
     lobby_id = data['lobby_id']
-    username = session['username']
+    username = session.get('username')
 
     join_room(lobby_id)
-    
-    emit('join_notif', { username_joined : username, lobby_id : lobby_id }, to=lobby_id)
-    
 
-socketio.on('join_notif')
-def join_notif_socket():
+    emit('join_notif', { "username_joined" : username, "lobby_id" : lobby_id }, to=lobby_id)
+
+
+@socketio.on('join_notif')
+def join_notif_socket(data):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
     c.execute("SELECT * FROM lobbies WHERE lobby_id = ?" , lobby_id) #assign to array
     lobby_array = list(c.fetchone())
     if data["username_joined"] not in lobby_array:
@@ -296,29 +301,70 @@ def join_notif_socket():
             if x != lobbyid and x == None:
                 x = data["username_joined"]
     c.execute("UPDATE lobbies SET lobbyid = ? user1 = ?, user2 = ?, user3 = ? WHERE lobbyid = " + lobbyid, lobby_array)
+
+    db.commit()
+    db.close()
+
     return render_template("lobby.html", lobbyid = lobbyid, user1 = lobby_array[1], user2 = lobby_array[2], user3 = lobby_array[3])
-    
-    
-    
+
+
+
 @app.route("/lobby/<string:lobby_id>", methods=["GET", "POST"])
 def lobby(lobby_id):
-    c.execute("SELECT * FROM lobbies WHERE lobby_id = ?" , lobby_id) #assign to array
-    lobby_array = list(c.fetchone())
-    if session[username] not in lobby_array:
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    #c.execute("SELECT * FROM lobbies WHERE lobby_id = ?" , (lobby_id,)) #assign to array
+
+    lobby_array = data.get_lobby_array(lobby_id)
+    print("Thre return is")
+    print(lobby_array)
+
+    # if there isn't an existing lobby with that given code, it inserts one into the lobbies table
+    if lobby_array == "No lobby found":
+        lobby_array = define_lobby(lobby_id)
+
+    # adds the user into the given lobby
+    #lobby_array = list(c.fetchone())
+    '''
+    if session.get('username') not in lobby_array:
         for x in lobby_array:
-            if x != lobbyid and x == None:
+            if x != lobby_id and x == None:
                 x = session[username]
-    c.execute("UPDATE lobbies SET lobbyid = ? user1 = ?, user2 = ?, user3 = ? WHERE lobbyid = " + lobbyid, lobby_array)
-    if request.method = "POST" && None not in lobby_array:
+    '''
+    #print(session.get('username'))
+    if session.get('username') not in lobby_array:
+        for i in range(4):
+            print('www')
+            if lobby_array[i] != lobby_id and lobby_array[i] == None:
+                print("xxx")
+                lobby_array[i] = session.get('username')
+
+                break
+    #c.execute("UPDATE lobbies SET lobby_id = ? user1 = ?, user2 = ?, user3 = ? WHERE lobby_id = " + lobby_id, lobby_array)
+
+    c.execute(
+        "UPDATE lobbies SET (lobby_id, player1, player2, player3) = (?, ?, ?, ?) WHERE lobby_id = ?",
+        (lobby_id, lobby_array[1], lobby_array[2], lobby_array[3], lobby_id)
+    )
+
+
+    db.commit()
+    db.close()
+
+    print("the lobby array is")
+    print(lobby_array)
+
+    if request.method == "POST" and None not in lobby_array:
         return redirect(url_for("new_game", lobby_array = lobby_array))
-    return render_template("lobby.html", lobbyid = lobbyid, user1 = lobby_array[1], user2 = lobby_array[2], user3 = lobby_array[3])
-    
-    
+    return render_template("lobby.html", lobby_id = lobby_id, player1 = lobby_array[1], player2 = lobby_array[2], player3 = lobby_array[3])
+
+
 
 @app.route("/new_game", methods=["GET", "POST"])
 def new_game():
     if request.method == "POST":
-        
+
         '''
         username1 = request.form["username1"]
         username2 = request.form["username2"]
@@ -445,10 +491,16 @@ def buzzer(game_id, row, column):
 
 #HELPER FUNCTIONS
 def define_lobby(lobbyid): #makes array with lobbyid, player1 name, player2 name, player3 name in that order
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
 
     lobby_array = [lobbyid, None, None, None]
-    lobby_array_string = ", ".join(lobby_array)
-    c.execute("INSERT INTO lobbies (" + lobbyid "," + user1 + "," + user2 + "," + user3 + ") VALUES (?, ?, ?, ?, ?)") #creates a row in SQLite with lobby data
+    #lobby_array_string = ", ".join(lobby_array)
+    #c.execute("INSERT INTO lobbies (" + lobbyid "," + user1 + "," + user2 + "," + user3 + ") VALUES (?, ?, ?, ?, ?)") #creates a row in SQLite with lobby data
+    c.execute("INSERT INTO lobbies VALUES (?, ?, ?, ?)", (lobbyid, lobby_array[1], lobby_array[2], lobby_array[3],))
+
+    db.commit()
+    db.close()
 
     return lobby_array
 
@@ -463,4 +515,4 @@ def join_lobby(userid, lobby_array):
 
 if __name__ == "__main__":
     app.debug=True
-    app.run(host='0.0.0.0')
+    socketio.run(app)

@@ -322,6 +322,31 @@ def edit_category(board, row, column, category):
     db.close()
     return
 
+#=============================LOBBIES=============================#
+
+# returns an array of a lobby given the lobby_id. returns "No lobby found" if there isn't a lobby by that lobby_id
+def get_lobby_array(lobby_id):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    lobby_array = c.execute("SELECT * FROM lobbies WHERE lobby_id = ?" , (lobby_id,)).fetchone()
+
+    print("456456456456")
+    print(lobby_array)
+
+    if lobby_array == None:
+        return "No lobby found"
+
+    # clean_list doesn't work when there's a None in the array, so i'm doing this instead
+    returning_the_lobby_array = []
+    for item in lobby_array:
+        returning_the_lobby_array.append(item)
+    print("returning_the_lobby_array")
+    print(returning_the_lobby_array)
+    #lobby_array = clean_list(lobby_array)
+
+    return returning_the_lobby_array
+
 #=============================HELPERS=============================#
 
 
