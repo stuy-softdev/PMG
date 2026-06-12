@@ -403,6 +403,8 @@ def new_game():
     
     d = data.get_lobby_array("a")
     print(d)
+    title = "aaa"
+    game_id = d[0]
     username1 = d[1]
     username2 = d[2]
     username3 = d[3]
