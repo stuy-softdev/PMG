@@ -1,8 +1,51 @@
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-<script>
+<!doctype html>
+<html class="h-full bg-gray-900">
+  <head>
+    <title>Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+  </head>
+
+  <body class="h-full">
+   
+      <h1> Room Code: {{room_code}} </h1>
+      
+        <table class="bg-gray-100">
+          <tr>
+            <th>Players</th>
+          </tr>
+          
+          <tr>
+              <td> {{player1}} </td>
+          </tr>
+                    
+          <tr>
+              <td> {{player2}} </td>
+          </tr>
+                    
+          <tr>
+              <td> {{player3}} </td>
+          </tr>
+          
+        </table>
+      
+          <a
+            href="{{url_for('new_game')}}"
+            class="font-semibold text-indigo-400 hover:text-indigo-300"
+            >Start the Game!</a
+          >
+        
+    <div id="join_notifications">
+    
+    </div>
+      
+    <script>
     const socket = io();
     const lobbyId = "{{ lobby_id }}";
 
+<<<<<<< HEAD
     console.log("javascript socket is working")
 
     socket.on('connect', () => {
@@ -16,3 +59,9 @@
       document.getElementById("join_notifications").innerHTML += username_joined + " has joined the room!";
     })
 </script>
+=======
+    socket.emit('join', { lobby_id: lobbyId }); //if player joins, call "join" in python with data set as lobbyid
+    </script>
+  </body>
+</html>
+>>>>>>> 834f4e42d0e229fb568dca50cfdb16a17dd7ac8e

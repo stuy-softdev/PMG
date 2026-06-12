@@ -371,52 +371,57 @@ def lobby(lobby_id):
 
 @app.route("/new_game", methods=["GET", "POST"])
 def new_game():
-    if request.method == "POST":
 
-        '''
-        username1 = request.form["username1"]
-        username2 = request.form["username2"]
-        username3 = request.form["username3"]
-        password1 = request.form["password1"]
-        password2 = request.form["password2"]
-        password3 = request.form["password3"]
+    '''
+    username1 = request.form["username1"]
+    username2 = request.form["username2"]
+    username3 = request.form["username3"]
+    password1 = request.form["password1"]
+    password2 = request.form["password2"]
+    password3 = request.form["password3"]
 
-        print(username1)
-        print(username2)
-        print(username3)
-        print(password1)
-        print(password2)
-        print(password3)
+    print(username1)
+    print(username2)
+    print(username3)
+    print(password1)
+    print(password2)
+    print(password3)
 
-        if not username1 == "":
-            if not data.auth(username1, password1):
-                return render_template("new_game.html", invalid="Username or password is incorrect for Player 1")
-        if not username2 == "":
-            if not data.auth(username2, password2):
-                return render_template("new_game.html", invalid="Username or password is incorrect for Player 2")
-        if not username3 == "":
-            if not data.auth(username3, password3):
-                return render_template("new_game.html", invalid="Username or password is incorrect for Player 3")
-        '''
-        ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
-        ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
-        ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
-
-        if True:
-            category_list = list(range(9, 33)) # in the trivia api, the category variable is an int between 9 and 32 for some reason
-            for i in range(6):
-                random_index = random.randrange(len(category_list))
-                category = category_list.pop(random_index) # randomally chooses and pops a category
-                #print("randomally chosen category: ")
-                #print(category)
-                refill_pool(category)
-                #print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-                #print(TRIVIA_POOL)
-                #print(i)
-                #print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-            #print(category_list)
-            title = "randomally_generated_board" + str(int(time.time() * 1000)) # title of board "is randomally_generated_board" + the current time
-            data.create_board_from_api(TRIVIA_POOL, title)
+    if not username1 == "":
+        if not data.auth(username1, password1):
+            return render_template("new_game.html", invalid="Username or password is incorrect for Player 1")
+    if not username2 == "":
+        if not data.auth(username2, password2):
+            return render_template("new_game.html", invalid="Username or password is incorrect for Player 2")
+    if not username3 == "":
+        if not data.auth(username3, password3):
+            return render_template("new_game.html", invalid="Username or password is incorrect for Player 3")
+    '''
+    ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
+    ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
+    ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
+    
+    d = data.get_lobby_array("a")
+    print(d)
+    username1 = d[1]
+    username2 = d[2]
+    username3 = d[3]
+    
+    if True:
+        category_list = list(range(9, 33)) # in the trivia api, the category variable is an int between 9 and 32 for some reason
+        for i in range(6):
+            random_index = random.randrange(len(category_list))
+            category = category_list.pop(random_index) # randomally chooses and pops a category
+            #print("randomally chosen category: ")
+            #print(category)
+            refill_pool(category)
+            #print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+            #print(TRIVIA_POOL)
+            #print(i)
+            #print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+        #print(category_list)
+        title = "randomally_generated_board" + str(int(time.time() * 1000)) # title of board "is randomally_generated_board" + the current time
+        data.create_board_from_api(TRIVIA_POOL, title)
 
         game_id = int(time.time() * 1000) # THIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARY
         data.setup_new_game(title, game_id, username1, username2, username3)
@@ -433,8 +438,6 @@ def game(game_id):
     current_game_data = data.get_game_data(game_id)
     print("CURRENT GAME DATA")
     print(current_game_data)
-
-
 
     board = current_game_data[0]
     board_text = data.get_board_text(board)
