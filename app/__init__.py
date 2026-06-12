@@ -283,8 +283,9 @@ def join_lobby_socket(data):
     print("socket is working join_lobby_socket")
 
     #check to see if lobbyid already exists, if not, add to sqlite
-    lobby_id = data['lobby_id']
+    lobby_id = data["lobby_array"][0]
     username = session.get('username')
+    lobby_array = data["lobby_array"] # need the lobby array itself to update the list of players
 
     print("lobby_id:")
     print(lobby_id)
@@ -293,9 +294,11 @@ def join_lobby_socket(data):
 
     join_room(lobby_id)
 
-    emit('join_notif', { "username_joined" : username, "lobby_id" : lobby_id }, to=lobby_id)
+    print(lobby_array)
 
+    emit('join_notif', { "username_joined" : username, "lobby_id" : lobby_id , "lobby_array" : lobby_array }, to=lobby_id)
 
+'''
 @socketio.on('join_notif')
 def join_notif_socket(data):
     print("socket is working join_notif_socket")
@@ -314,7 +317,7 @@ def join_notif_socket(data):
     db.close()
 
     return render_template("lobby.html", lobbyid = lobbyid, user1 = lobby_array[1], user2 = lobby_array[2], user3 = lobby_array[3])
-
+'''
 
 
 @app.route("/lobby/<string:lobby_id>", methods=["GET", "POST"])
@@ -400,7 +403,7 @@ def new_game():
     ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
     ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
     ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
-    
+
     d = data.get_lobby_array("a")
     print(d)
     title = "aaa"
@@ -408,7 +411,7 @@ def new_game():
     username1 = d[1]
     username2 = d[2]
     username3 = d[3]
-    
+
     if True:
         category_list = list(range(9, 33)) # in the trivia api, the category variable is an int between 9 and 32 for some reason
         for i in range(6):

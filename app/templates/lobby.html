@@ -12,7 +12,7 @@
 
       <h1> Room Code: {{room_code}} </h1>
 
-        <table class="bg-gray-100">
+        <table id = "list_of_players" class="bg-gray-100">
           <tr>
             <th>Players</th>
           </tr>
@@ -43,20 +43,52 @@
 
     <script>
       const socket = io();
-      const lobbyId = "{{ lobby_id }}";
+      //const lobbyId = "{{ lobby_id }}";
+      //const player1 = "{{ player1 }}";
+      //const player2 = "{{ player2 }}";
+      //const player3 = "{{ player3 }}";
+      const lobby_array = ["{{ lobby_id }}", "{{ player1 }}", "{{ player2 }}", "{{ player3 }}"]
 
       console.log("javascript socket is working")
+      //console.log(player1)
+      //console.log(player2)
+      //console.log(player3)
 
       socket.on('connect', () => {
         console.log("javascript socket is working join")
-        socket.emit('join', { "lobby_id": lobbyId }); //if player joins, call "join" in python with data set as lobbyid
+        socket.emit('join', { "lobby_array": lobby_array }); //if player joins, call "join" in python with data set as lobbyid
       })
 
       socket.on('join_notif', (data) => {
         console.log("javascript socket is working joinnotif")
         let username_joined = data['username_joined']
+        let lobby_array = data['lobby_array']
+        console.log(lobby_array)
 
-        document.getElementById("join_notifications").innerHTML += username_joined + " has joined the room!";
+        let test = document.getElementById("list_of_players")
+        console.log(test)
+        test.innerHTML = `
+          <table id = "list_of_players" class="bg-gray-100">
+            <tr>
+              <th>Players</th>
+            </tr>
+
+            <tr>
+                <td> ` + lobby_array[1] + ` </td>
+            </tr>
+
+            <tr>
+                <td> ` + lobby_array[2] + ` </td>
+            </tr>
+
+            <tr>
+                <td> ` + lobby_array[3] + ` </td>
+            </tr>
+          </table>
+        `;
+        console.log(test)
+
+        document.getElementById("join_notifications").innerHTML += username_joined + " has joined the room! <br>";
       })
     </script>
   </body>
