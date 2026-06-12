@@ -3,5 +3,16 @@
     const socket = io();
     const lobbyId = "{{ lobby_id }}";
 
-    socket.emit('join', { lobby_id: lobbyId }); //if player joins, call "join" in python with data set as lobbyid
+    console.log("javascript socket is working")
+
+    socket.on('connect', () => {
+      console.log("javascript socket is working join")
+      socket.emit('join', { "lobby_id": lobbyId }); //if player joins, call "join" in python with data set as lobbyid
+    })
+
+    socket.on('join_notif', (data) => {
+      let username_joined = data['username_joined']
+
+      document.getElementById("join_notifications").innerHTML += username_joined + " has joined the room!";
+    })
 </script>

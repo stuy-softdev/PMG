@@ -280,9 +280,16 @@ def find_or_create_room():
 
 @socketio.on('join')
 def join_lobby_socket(data):
+    print("socket is working join_lobby_socket")
+
     #check to see if lobbyid already exists, if not, add to sqlite
     lobby_id = data['lobby_id']
     username = session.get('username')
+
+    print("lobby_id:")
+    print(lobby_id)
+    print("username:")
+    print(username)
 
     join_room(lobby_id)
 
@@ -291,6 +298,7 @@ def join_lobby_socket(data):
 
 @socketio.on('join_notif')
 def join_notif_socket(data):
+    print("socket is working join_notif_socket")
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
 
