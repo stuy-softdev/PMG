@@ -169,3 +169,6 @@ jasonC -- 2026-06-12 01:22
 
 jasonC -- 2026-06-12 11:46
 	joining lobby notifications work, need to test with multiple browsers
+
+ethanC -- 2026-06-12 11:47
+	lobby stuff has headers and player list and button to start game
