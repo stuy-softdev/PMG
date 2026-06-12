@@ -283,24 +283,42 @@ def join_lobby_socket():
     username = session['username']
 
     join_room(lobby_id)
-    emit('message', username + "has entered the room.", to=lobby_id)
     
-@socketio.on('message')
-def 
+    emit('join_notif', { username_joined : username, lobby_id : lobby_id }, to=lobby_id)
+    
+
+socketio.on('join_notif')
+def join_notif_socket():
+    c.execute("SELECT * FROM lobbies WHERE lobby_id = ?" , lobby_id) #assign to array
+    lobby_array = list(c.fetchone())
+    if data["username_joined"] not in lobby_array:
+        for x in lobby_array:
+            if x != lobbyid and x == None:
+                x = data["username_joined"]
+    c.execute("UPDATE lobbies SET lobbyid = ? user1 = ?, user2 = ?, user3 = ? WHERE lobbyid = " + lobbyid, lobby_array)
+    return render_template("lobby.html", lobbyid = lobbyid, user1 = lobby_array[1], user2 = lobby_array[2], user3 = lobby_array[3])
+    
+    
     
 @app.route("/lobby/<string:lobby_id>", methods=["GET", "POST"])
 def lobby(lobby_id):
-    lobbyid = lobby_array[0]
-
-    if userid not in lobby_array:
-        if x != lobbyid and x == None:
-            x = userid
     c.execute("SELECT * FROM lobbies WHERE lobby_id = ?" , lobby_id) #assign to array
-
+    lobby_array = list(c.fetchone())
+    if session[username] not in lobby_array:
+        for x in lobby_array:
+            if x != lobbyid and x == None:
+                x = session[username]
+    c.execute("UPDATE lobbies SET lobbyid = ? user1 = ?, user2 = ?, user3 = ? WHERE lobbyid = " + lobbyid, lobby_array)
+    if request.method = "POST" && None not in lobby_array:
+        return redirect(url_for("new_game", lobby_array = lobby_array))
+    return render_template("lobby.html", lobbyid = lobbyid, user1 = lobby_array[1], user2 = lobby_array[2], user3 = lobby_array[3])
+    
+    
 
 @app.route("/new_game", methods=["GET", "POST"])
 def new_game():
     if request.method == "POST":
+        
         '''
         username1 = request.form["username1"]
         username2 = request.form["username2"]
