@@ -2,10 +2,10 @@
 TO DO LIST:
 
     HIGH PRIORITY
-    figure out how socketio works
-        make joining lobbies work
 
         DONE
+        figure out how socketio works
+            make joining lobbies work
         alternate redirect users from the game board (game.html) to the clue (buzzer.html)
             ofc make the button work
             and ofc make answer choices work
@@ -22,9 +22,7 @@ TO DO LIST:
                 if all three players get it wrong, display the correct answer and just move on to game.html
             ******************************************************************************************************************************************
 
-    modify game table by adding two more rows
-        game id
-        board name (useful for tieing to board table)
+
 
 
 
@@ -38,6 +36,8 @@ TO DO LIST:
     leaderboards
 
     add "True or False: " to true/false questions
+
+    prevent users from making an account with username "None", it will break it
 '''
 
 

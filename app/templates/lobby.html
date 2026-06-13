@@ -10,6 +10,8 @@
 
   <body class="h-full">
 
+      <h1 class = "font-bold text-xl tracking-tight">Waiting for more players...</h1>
+      <h1 class = "font-bold text-xl tracking-tight">There must be three players to start the game.</h1>
       <h1> Room Code: {{room_code}} </h1>
 
         <table id = "list_of_players" class="bg-gray-100">
@@ -31,11 +33,11 @@
 
         </table>
 
-          <a
-            href="{{url_for('new_game')}}"
-            class="font-semibold text-indigo-400 hover:text-indigo-300"
-            >Start the Game!</a
-          >
+        <form action="{{ url_for('new_game') }}" method="get">
+          <button id = "start_game_button" type="submit" class="font-semibold text-indigo-400 hover:text-indigo-300" disabled>
+            Start the Game!
+          </button>
+        </form>
 
     <div id="join_notifications">
 
@@ -65,10 +67,8 @@
         let lobby_array = data['lobby_array']
         console.log(lobby_array)
 
-        let test = document.getElementById("list_of_players")
-        console.log(test)
-        test.innerHTML = `
-          <table id = "list_of_players" class="bg-gray-100">
+        // changes the display of list of players based on the updated lobby array
+        document.getElementById("list_of_players").innerHTML = `
             <tr>
               <th>Players</th>
             </tr>
@@ -84,12 +84,18 @@
             <tr>
                 <td> ` + lobby_array[3] + ` </td>
             </tr>
-          </table>
         `;
-        console.log(test)
 
+        // join notification
         document.getElementById("join_notifications").innerHTML += username_joined + " has joined the room! <br>";
+
+        // if there are 3 players in the lobby, the button to start game becomes clickable
+        if (!lobby_array.includes("None")){
+          console.log("button is clickable now")
+          document.getElementById("start_game_button").disabled = false;
+        }
       })
+
     </script>
   </body>
 </html>
