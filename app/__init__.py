@@ -273,11 +273,11 @@ def find_or_create_room():
 
         return redirect(url_for("lobby", lobby_id = room_code))
 
-        #return something here idk
+    was_user_in_room = data.remove_user_from_lobby(session.get('username'))
 
     return render_template("find_or_create_room.html")
 
-
+# when a user joins a lobby, it emits this function. it emits back the notification function back into lobby.html
 @socketio.on('join')
 def join_lobby_socket(data):
     print("socket is working join_lobby_socket")
@@ -298,27 +298,25 @@ def join_lobby_socket(data):
 
     emit('join_notif', { "username_joined" : username, "lobby_id" : lobby_id , "lobby_array" : lobby_array }, to=lobby_id)
 
-'''
-@socketio.on('join_notif')
-def join_notif_socket(data):
-    print("socket is working join_notif_socket")
-    db = sqlite3.connect(DB_FILE)
-    c = db.cursor()
+# same as above but for leaving
+@socketio.on('leave')
+def leave_lobby_socket(data):
+    print("socket is working on leave_lobby_socket")
 
-    c.execute("SELECT * FROM lobbies WHERE lobby_id = ?" , lobby_id) #assign to array
-    lobby_array = list(c.fetchone())
-    if data["username_joined"] not in lobby_array:
-        for x in lobby_array:
-            if x != lobbyid and x == None:
-                x = data["username_joined"]
-    c.execute("UPDATE lobbies SET lobbyid = ? user1 = ?, user2 = ?, user3 = ? WHERE lobbyid = " + lobbyid, lobby_array)
+    lobby_id = data["lobby_array"][0]
+    username = session.get('username')
+    lobby_array = data["lobby_array"] # need the lobby array itself to update the list of players
 
-    db.commit()
-    db.close()
+    # i believe that lobby_array is not updated yet because the leave_room_button calls find_or_create_room (which handles the db) AFTER all this socket stuff, so to be safe, i'm removing it manually from lobby_array
+    username_index = lobby_array.index(username)
+    lobby_array[username_index] = "None"
 
-    return render_template("lobby.html", lobbyid = lobbyid, user1 = lobby_array[1], user2 = lobby_array[2], user3 = lobby_array[3])
-'''
+    print("the lobby array when LEAVING is")
+    print(lobby_array)
 
+    leave_room(lobby_id)
+
+    emit('leave_notif', { "username_left" : username, "lobby_id" : lobby_id , "lobby_array" : lobby_array }, to=lobby_id)
 
 @app.route("/lobby/<string:lobby_id>", methods=["GET", "POST"])
 def lobby(lobby_id):

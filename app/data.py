@@ -339,13 +339,35 @@ def get_lobby_array(lobby_id):
 
     # clean_list doesn't work when there's a None in the array, so i'm doing this instead
     returning_the_lobby_array = []
+
     for item in lobby_array:
         returning_the_lobby_array.append(item)
-    print("returning_the_lobby_array")
-    print(returning_the_lobby_array)
-    #lobby_array = clean_list(lobby_array)
 
     return returning_the_lobby_array
+
+# removes the user from the room that they are connected in and returns True. if the user is not in any room in the first place, returns False.
+def remove_user_from_lobby(username):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    is_user_in_room = c.execute(
+        "SELECT * FROM lobbies WHERE player1 = ? OR player2 = ? OR player3 = ?",
+        (username, username, username,)
+    ).fetchone()
+
+    if is_user_in_room == None:
+        return False
+
+    else:
+        for i in range(1,4):
+            if is_user_in_room[i] == username:
+                c.execute("UPDATE lobbies SET " + "player" + str(i) + " = ? WHERE lobby_id = ?",
+                    (None, is_user_in_room[0],)
+                )
+
+    db.commit()
+    db.close()
+    return True
 
 #=============================HELPERS=============================#
 
