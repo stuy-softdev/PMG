@@ -172,3 +172,8 @@ jasonC -- 2026-06-12 11:46
 
 ethanC -- 2026-06-12 11:47
 	lobby stuff has headers and player list and button to start game
+
+ethanC -- 2026-06-12 22:27
+	add css to find and create game
+	fix navbar to be consistent
+	remove not needed stuff 
