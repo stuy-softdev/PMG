@@ -1,101 +1,172 @@
 <!doctype html>
 <html class="h-full bg-gray-900">
   <head>
-    <title>Login</title>
+    <title>Lobby</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-
   </head>
 
-  <body class="h-full">
+  <body class="h-full text-white">
+    <nav
+      class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between"
+    >
+      <a class="font-bold text-xl tracking-tight" href="/home">Jeffpardy</a>
+      <div class="flex items-center">
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/find_or_create_room"
+          >New Game</a
+        >
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/create_board"
+          >Create Board</a
+        >
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/logout"
+          >Logout</a
+        >
+      </div>
+    </nav>
 
-      <h1 class = "font-bold text-xl tracking-tight">Waiting for more players...</h1>
-      <h1 class = "font-bold text-xl tracking-tight">There must be three players to start the game.</h1>
-      <h1> Room Code: {{room_code}} </h1>
+    <div class="min-h-full bg-gray-900 py-10 px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-3xl">
+        <div
+          class="rounded-3xl bg-gray-800/95 border border-white/10 p-8 shadow-2xl shadow-black/40"
+        >
+          <div
+            class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between"
+          >
+            <div>
+              <h1 class="text-3xl font-bold tracking-tight text-white">
+                Game Lobby
+              </h1>
+              <p class="mt-3 text-gray-400">
+                Waiting for players to join. The game can begin once three
+                players are ready.
+              </p>
+            </div>
+            <div
+              class="rounded-2xl bg-gray-900/80 px-5 py-4 text-sm text-gray-300 border border-white/10"
+            >
+              <p class="text-gray-400">Room Code</p>
+              <p class="mt-1 text-xl font-semibold text-indigo-300">
+                {{ room_code }}
+              </p>
+            </div>
+          </div>
 
-        <table id = "list_of_players" class="bg-gray-100">
-          <tr>
-            <th>Players</th>
-          </tr>
+          <div class="mt-8 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+            <div class="rounded-3xl bg-gray-900/90 p-6 border border-white/10">
+              <h2 class="text-xl font-semibold text-indigo-300">Players</h2>
+              <p class="mt-2 text-sm text-gray-400">
+                Connected players appear below.
+              </p>
 
-          <tr>
-              <td> {{player1}} </td>
-          </tr>
+              <ul id="list_of_players" class="mt-6 space-y-3">
+                <li
+                  class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100"
+                >
+                  {{ player1 if player1 else 'Waiting for Player 1...' }}
+                </li>
+                <li
+                  class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100"
+                >
+                  {{ player2 if player2 else 'Waiting for Player 2...' }}
+                </li>
+                <li
+                  class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100"
+                >
+                  {{ player3 if player3 else 'Waiting for Player 3...' }}
+                </li>
+              </ul>
+            </div>
 
-          <tr>
-              <td> {{player2}} </td>
-          </tr>
+            <div
+              class="rounded-3xl bg-gray-900/90 p-6 border border-white/10 flex flex-col justify-between"
+            >
+              <div>
+                <h2 class="text-xl font-semibold text-indigo-300">
+                  Ready to Start
+                </h2>
+                <p class="mt-2 text-sm text-gray-400">
+                  The start button is locked until all three players have
+                  joined.
+                </p>
+              </div>
 
-          <tr>
-              <td> {{player3}} </td>
-          </tr>
+              <div class="mt-6">
+                <form action="{{ url_for('new_game') }}" method="get">
+                  <button
+                    id="start_game_button"
+                    type="submit"
+                    class="w-full rounded-2xl bg-indigo-600 px-5 py-3 text-base font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-600"
+                    {%
+                    if
+                    not
+                    player1
+                    or
+                    not
+                    player2
+                    or
+                    not
+                    player3
+                    %}disabled{%
+                    endif
+                    %}
+                  >
+                    Start Game
+                  </button>
+                </form>
 
-        </table>
-
-        <form action="{{ url_for('new_game') }}" method="get">
-          <button id = "start_game_button" type="submit" class="font-semibold text-indigo-400 hover:text-indigo-300" disabled>
-            Start the Game!
-          </button>
-        </form>
-
-    <div id="join_notifications">
-
+                <div
+                  id="join_notifications"
+                  class="mt-5 rounded-2xl bg-gray-800/90 border border-white/10 p-4 text-sm text-gray-300"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
       const socket = io();
-      //const lobbyId = "{{ lobby_id }}";
-      //const player1 = "{{ player1 }}";
-      //const player2 = "{{ player2 }}";
-      //const player3 = "{{ player3 }}";
-      const lobby_array = ["{{ lobby_id }}", "{{ player1 }}", "{{ player2 }}", "{{ player3 }}"]
+      const lobby_array = [
+        "{{ lobby_id }}",
+        "{{ player1 }}",
+        "{{ player2 }}",
+        "{{ player3 }}",
+      ];
 
-      console.log("javascript socket is working")
-      //console.log(player1)
-      //console.log(player2)
-      //console.log(player3)
+      socket.on("connect", () => {
+        socket.emit("join", { lobby_array: lobby_array });
+      });
 
-      socket.on('connect', () => {
-        console.log("javascript socket is working join")
-        socket.emit('join', { "lobby_array": lobby_array }); //if player joins, call "join" in python with data set as lobbyid
-      })
+      socket.on("join_notif", (data) => {
+        const username_joined = data["username_joined"];
+        const lobby_array = data["lobby_array"];
 
-      socket.on('join_notif', (data) => {
-        console.log("javascript socket is working joinnotif")
-        let username_joined = data['username_joined']
-        let lobby_array = data['lobby_array']
-        console.log(lobby_array)
-
-        // changes the display of list of players based on the updated lobby array
         document.getElementById("list_of_players").innerHTML = `
-            <tr>
-              <th>Players</th>
-            </tr>
-
-            <tr>
-                <td> ` + lobby_array[1] + ` </td>
-            </tr>
-
-            <tr>
-                <td> ` + lobby_array[2] + ` </td>
-            </tr>
-
-            <tr>
-                <td> ` + lobby_array[3] + ` </td>
-            </tr>
+          <li class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100">
+            ${lobby_array[1]}
+          </li>
+          <li class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100">
+            ${lobby_array[2]}
+          </li>
+          <li class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100">
+            ${lobby_array[3]}
+          </li>
         `;
 
-        // join notification
-        document.getElementById("join_notifications").innerHTML += username_joined + " has joined the room! <br>";
+        document.getElementById("join_notifications").innerHTML +=
+          `${username_joined} has joined the room! <br>`;
 
-        // if there are 3 players in the lobby, the button to start game becomes clickable
-        if (!lobby_array.includes("None")){
-          console.log("button is clickable now")
+        if (!lobby_array.includes("None")) {
           document.getElementById("start_game_button").disabled = false;
         }
-      })
-
+      });
     </script>
   </body>
 </html>
