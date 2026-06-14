@@ -240,6 +240,8 @@ def refill_pool(category):
     print("bad bad bad!")
     return False # If true isn't returned that means OpenTDB did not refill the pool of questions, we need to try again.
 
+
+
 @app.route("/edit/<string:board>/<int:row>/<int:column>", methods=["GET", "POST"])
 def edit(board, row, column):
     if request.method == "POST":
@@ -432,8 +434,14 @@ def new_game():
 
     return render_template("new_game.html")
 
-@app.route("/<int:game_id>", methods=["GET", "POST"])
-def game(game_id):
+
+@socketio.on('question_chosen')
+def question_chosen_socket(data):
+    emit('redirect_event', {'url': url_for('/buzzer/' + data['game_id'] + '/' + data['lobby_id'] + '/' + data['row'] + '/' + data['column'])}, to=data['lobby_id'])
+
+
+@app.route("/<int:game_id>/<string:lobby_id>", methods=["GET", "POST"])
+def game(game_id, lobby_id):
 
     #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM game_id ####################
     #################### REFER TO COMMENT IN data.get_game_data ####################
@@ -449,6 +457,14 @@ def game(game_id):
     #print(board_text)
     print("VALS")
     print(board_point_values)
+    
+    
+    if choosing_player == None:
+        c.execute("SELECT player1 FROM lobbies WHERE lobby_id = ?", (lobby_id,))
+        choosing_player = c.fetchone()
+    if choosing_player == session.get('username'):
+        choosable_questions = True
+    
 
     # THE FORM TO ANSWER A QUESTION GOES TO game.html, SO HANDLING THE DB FOR GETTING THE QUESTION RIGHT/WRONG HAS TO GO HERE
     picked = request.form.get("answer")  # Get the selected answer from the form
@@ -464,12 +480,12 @@ def game(game_id):
         print("HELL YEAHH 2")
 
     return render_template(
-        "game.html", game_id = game_id, board = board, current_game_data = current_game_data, # game data variables
+        "game.html", game_id = game_id, board = board, current_game_data = current_game_data, choosable_questions = choosable_questions, lobby_id = lobby_id # game data variables
         board_text = board_text, board_point_values = board_point_values # variables only to display in the html, no purpose in other stuff
     )
 
 
-@app.route("/<int:game_id>/<int:row>/<int:column>", methods=["GET", "POST"])
+@app.route("/buzzer/<int:game_id>/<int:row>/<int:column>", methods=["GET", "POST"])
 def buzzer(game_id, row, column):
 
     #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM game_id ####################

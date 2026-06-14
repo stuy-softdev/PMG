@@ -2,10 +2,39 @@
 <html class="h-full bg-gray-900">
   <head>
     <title>Game</title>
+    <style>
+        .unclickable {
+            pointer-events: none;
+            cursor: default;
+        }
+              {% if choosable_questions %}
+                class="unclickable"
+              {% endif %}
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
 
   <body class="h-full">
+        
+    <script>
+
+      const choosebutton = document.getElementById("choose_question");
+
+      choosebutton.addEventListener("click", (event) => {
+        let row = choosebutton.dataset.value1;
+        let column = choosebutton.dataset.value2;
+	let lobby_id = {{ lobby_id }};
+        let game_id = {{ game_id }}
+
+        socket.on('redirect_event', question_chosen_socket(data) { window.location.href = data.url; });
+
+        socket.emit("question_chosen", { row : row, column : column, game_id : game_id. lobby_id : lobby_id });
+
+      });
+
+    </script>
+      
+
     <nav
       class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between"
     >
@@ -37,6 +66,9 @@
           {% for cat_i in range(6) %}
           <button
             type="button"
+            {% if choosable_questions %}
+              disabled
+            {% endif %}
             class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-8 px-4 rounded-lg transition duration-200 text-center text-lg"
           >
             {{ board_text[0][cat_i] }}
@@ -47,7 +79,12 @@
               href="{{ url_for('buzzer', game_id = game_id, row = row, column = column) }}"
             >
               <button
-                type="button"
+                id = "choose_question"
+                data-value1 = {{ row }}
+                data-value2 = {{ column }}
+                {% if choosable_questions %}
+                  disabled
+                {% endif %}
                 class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-8 px-4 rounded-lg transition duration-200 text-center text-lg"
               >
                 {{ board_point_values[row][column] }}
