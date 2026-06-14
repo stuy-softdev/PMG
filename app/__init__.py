@@ -3,13 +3,12 @@ TO DO LIST:
 
     HIGH PRIORITY
 
-        DONE
-        figure out how socketio works
-            make joining lobbies work
+        DONE: figure out how socketio works
+            DONE: make joining lobbies work
         alternate redirect users from the game board (game.html) to the clue (buzzer.html)
             ofc make the button work
             and ofc make answer choices work
-        DONE
+
         now need to handle the db for answering the questions
             when a question is already answered,
                 change that on the board db
@@ -35,9 +34,9 @@ TO DO LIST:
 
     leaderboards
 
-    add "True or False: " to true/false questions
+    DONE: add "True or False: " to true/false questions
 
-    prevent users from making an account with username "None", it will break it
+    DONE: prevent users from making an account with username "None", it will break it
 '''
 
 
@@ -149,6 +148,11 @@ def register():
         conn = sqlite3.connect("data.db")
         c = conn.cursor()
 
+        # edge case bc game will break if username is that
+        if username == "None":
+            conn.close()
+            return render_template("register.html", invalid="Username already exists")
+
         try:
             c.execute("INSERT INTO users (username, password, bio, total_points, wins, runnerups, losses) VALUES (?, ?, ?, ?, ?, ?, ?)",
                       (username, password, "No bio", 0, 0, 0, 0))
@@ -168,6 +172,12 @@ def register():
 @app.route("/home", methods=["GET", "POST"])
 def home():
     return render_template("home.html")
+
+@app.route("/leaderboards", methods=["GET", "POST"])
+def leaderboards():
+    all_stats = data.get_all_user_stats()
+    return render_template("leaderboards.html", all_stats = all_stats)
+
 
 @app.route("/create_board", methods=["GET", "POST"])
 def create_board():

@@ -92,6 +92,26 @@ def add_user(username, password):
 
     return "success"
 
+# returns a 2d array of all usernames and their total_points, wins, runnerups, and losses, in that order
+def get_all_user_stats():
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    all_stats = []
+    everything_in_users_db = c.execute('SELECT * FROM USERS')
+
+    for i in everything_in_users_db:
+        username = i[0]
+        total_points = i[3]
+        wins = i[4]
+        runnerups = i[5]
+        losses = i[6]
+
+        all_stats.append([username, total_points, wins, runnerups, losses])
+
+    print(all_stats)
+    return all_stats
+
 #=============================GAME==============================#
 
 # upon start of a new game, resets board and creates a game id with that board tied to it
@@ -237,6 +257,7 @@ def create_board_from_api(data, title):
     #print(title)
     create_new_board(title)
 
+    # edits category names
     for column in range(6):
         edit_question(
             title, 0, column, data[column][0]["category"], 0, None, None, None, None
@@ -246,7 +267,7 @@ def create_board_from_api(data, title):
         for row in range(5):
             if (data[column][row]["type"] == "boolean"):
                 edit_question(
-                    title, row + 1, column, data[column][row]["question"], (row + 1) * 200, data[column][row]["correct_answer"], data[column][row]["incorrect_answers"][0], None, None
+                    title, row + 1, column, "True or False: " + data[column][row]["question"], (row + 1) * 200, data[column][row]["correct_answer"], data[column][row]["incorrect_answers"][0], None, None
                 )
             else:
                 edit_question(
