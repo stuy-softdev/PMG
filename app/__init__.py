@@ -480,6 +480,7 @@ def game(lobby_id, board):
     username1 = current_game_data[1]
     username2 = current_game_data[2]
     username3 = current_game_data[3]
+    player_in_control = current_game_data[4]
 
     board = current_game_data[0]
     board_text = data.get_board_text(board)
@@ -489,14 +490,15 @@ def game(lobby_id, board):
     print("VALS")
     print(board_point_values)
 
-    # PLAYER 1 IS THE ONLY PLAYER THAT CAN CHOOSE THE BOARD TO START THE GAME, SO THIS FUNCTION ONLY CALLS FOR THEM, MEANING THE WE DON'T NEED THIS PART
     #if choosing_player == None:
         #c.execute("SELECT player1 FROM lobbies WHERE lobby_id = ?", (lobby_id,))
         #choosing_player = c.fetchone()
     #if choosing_player == session.get('username'):
         #choosable_questions = True
-    choosing_player = session.get('username')
-    choosable_questions = True
+
+    choosable_questions = False
+    if player_in_control == session.get('username'):
+        choosable_questions = True
 
 
     # THE FORM TO ANSWER A QUESTION GOES TO game.html, SO HANDLING THE DB FOR GETTING THE QUESTION RIGHT/WRONG HAS TO GO HERE
@@ -512,6 +514,8 @@ def game(lobby_id, board):
             print("HELL YEAH!!!!")
         print("HELL YEAHH 2")
 
+    print("choosable question is")
+    print(choosable_questions)
     return render_template(
         "game.html", lobby_id = lobby_id, board = board, current_game_data = current_game_data, choosable_questions = choosable_questions, # game data variables
         board_text = board_text, board_point_values = board_point_values, # variables only to display in the html, no purpose in other stuff

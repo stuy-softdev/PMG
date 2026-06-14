@@ -128,8 +128,8 @@ def setup_new_game(board, game_id, user1, user2, user3):
     print(game_id)
 
     c.execute(
-        'INSERT INTO game VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-        (game_id, board, user1, user2, user3, 0, 0, 0,)
+        'INSERT INTO game VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        (game_id, board, user1, user2, user3, user1, 0, 0, 0,)
     )
 
     db.commit()
@@ -215,6 +215,9 @@ def get_game_data(game_id):
     ).fetchone())
     game_data.append(c.execute(
         'SELECT player3 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    game_data.append(c.execute(
+        'SELECT player_in_control FROM game WHERE game_id = ?', (game_id,)
     ).fetchone())
     game_data.append(c.execute(
         'SELECT points1 FROM game WHERE game_id = ?', (game_id,)

@@ -46,6 +46,7 @@ def create_game_table():
                    player1	        TEXT	     NOT NULL,
                    player2          TEXT,
                    player3          TEXT,
+                   player_in_control TEXT,
                    points1          INTEGER      NOT NULL,
                    points2          INTEGER,
                    points3          INTEGER
