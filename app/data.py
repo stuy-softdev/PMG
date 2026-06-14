@@ -237,6 +237,7 @@ def create_board_from_api(data, title):
     #print(title)
     create_new_board(title)
 
+    # edits category names
     for column in range(6):
         edit_question(
             title, 0, column, data[column][0]["category"], 0, None, None, None, None
@@ -246,7 +247,7 @@ def create_board_from_api(data, title):
         for row in range(5):
             if (data[column][row]["type"] == "boolean"):
                 edit_question(
-                    title, row + 1, column, data[column][row]["question"], (row + 1) * 200, data[column][row]["correct_answer"], data[column][row]["incorrect_answers"][0], None, None
+                    title, row + 1, column, "True or False: " + data[column][row]["question"], (row + 1) * 200, data[column][row]["correct_answer"], data[column][row]["incorrect_answers"][0], None, None
                 )
             else:
                 edit_question(
