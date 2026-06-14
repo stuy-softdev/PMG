@@ -173,6 +173,12 @@ def register():
 def home():
     return render_template("home.html")
 
+@app.route("/leaderboards", methods=["GET", "POST"])
+def leaderboards():
+    all_stats = data.get_all_user_stats()
+    return render_template("leaderboards.html", all_stats = all_stats)
+
+
 @app.route("/create_board", methods=["GET", "POST"])
 def create_board():
     if request.method == "POST":

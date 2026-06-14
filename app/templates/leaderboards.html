@@ -1,0 +1,96 @@
+<!doctype html>
+<html class="h-full bg-gray-900">
+  <head>
+    <title>Lobby</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+
+  <body class="h-full text-white">
+    <nav
+      class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between"
+    >
+      <a class="font-bold text-xl tracking-tight" href="/home">Jeffpardy</a>
+      <div class="flex items-center">
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/find_or_create_room"
+          >New Game</a
+        >
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/create_board"
+          >Create Board</a
+        >
+        <a
+          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+          href="/logout"
+          >Logout</a
+        >
+      </div>
+    </nav>
+
+    <div class = "text-white grid grid-cols-4 gap-4">
+
+      <div class = "text-center">
+        <h1>Total Overall Points</h1>
+
+        <table>
+          <tr><th>Player</th><th>Points</th></tr>
+          {% for individual_stats in all_stats %}
+          <tr>
+            <td> {{ individual_stats[0] }} </td>
+            <td> {{ individual_stats[1] }} </td>
+          </tr>
+          {% endfor %}
+        </table>
+
+      </div>
+
+      <div class = "text-center">
+        <h1>Total Wins</h1>
+
+        <table>
+          <tr><th>Player</th><th>Wins</th></tr>
+          {% for individual_stats in all_stats %}
+          <tr>
+            <td> {{ individual_stats[0] }} </td>
+            <td> {{ individual_stats[2] }} </td>
+          </tr>
+          {% endfor %}
+        </table>
+
+      </div>
+
+      <div class = "text-center">
+        <h1>Total Runner-Ups</h1>
+
+        <table>
+          <tr><th>Player</th><th>Runner-Ups</th></tr>
+          {% for individual_stats in all_stats %}
+          <tr>
+            <td> {{ individual_stats[0] }} </td>
+            <td> {{ individual_stats[3] }} </td>
+          </tr>
+          {% endfor %}
+        </table>
+
+      </div>
+
+      <div class = "text-center">
+        <h1>Total Losses</h1>
+
+        <table>
+          <tr><th>Player</th><th>Losses</th></tr>
+          {% for individual_stats in all_stats %}
+          <tr>
+            <td> {{ individual_stats[0] }} </td>
+            <td> {{ individual_stats[4] }} </td>
+          </tr>
+          {% endfor %}
+        </table>
+
+      </div>
+
+    </div>
+  </body>
+</html>

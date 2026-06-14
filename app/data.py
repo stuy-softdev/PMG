@@ -92,6 +92,26 @@ def add_user(username, password):
 
     return "success"
 
+# returns a 2d array of all usernames and their total_points, wins, runnerups, and losses, in that order
+def get_all_user_stats():
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    all_stats = []
+    everything_in_users_db = c.execute('SELECT * FROM USERS')
+
+    for i in everything_in_users_db:
+        username = i[0]
+        total_points = i[3]
+        wins = i[4]
+        runnerups = i[5]
+        losses = i[6]
+
+        all_stats.append([username, total_points, wins, runnerups, losses])
+
+    print(all_stats)
+    return all_stats
+
 #=============================GAME==============================#
 
 # upon start of a new game, resets board and creates a game id with that board tied to it
