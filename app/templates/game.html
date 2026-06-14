@@ -15,25 +15,7 @@
   </head>
 
   <body class="h-full">
-        
-    <script>
 
-      const choosebutton = document.getElementById("choose_question");
-
-      choosebutton.addEventListener("click", (event) => {
-        let row = choosebutton.dataset.value1;
-        let column = choosebutton.dataset.value2;
-	let lobby_id = {{ lobby_id }};
-        let game_id = {{ game_id }}
-
-        socket.on('redirect_event', question_chosen_socket(data) { window.location.href = data.url; });
-
-        socket.emit("question_chosen", { row : row, column : column, game_id : game_id. lobby_id : lobby_id });
-
-      });
-
-    </script>
-      
 
     <nav
       class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between"
@@ -75,25 +57,59 @@
           </button>
           {% endfor %} {% for row in range(1,6) %} {% for column in range(6) %}
           <div>
-            <a
-              href="{{ url_for('buzzer', game_id = game_id, row = row, column = column) }}"
+
+            <button
+              id = "choose_question"
+              data-value1 = {{ row }}
+              data-value2 = {{ column }}
+              {% if choosable_questions %}
+                disabled
+              {% endif %}
+              class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-8 px-4 rounded-lg transition duration-200 text-center text-lg"
             >
-              <button
-                id = "choose_question"
-                data-value1 = {{ row }}
-                data-value2 = {{ column }}
-                {% if choosable_questions %}
-                  disabled
-                {% endif %}
-                class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-8 px-4 rounded-lg transition duration-200 text-center text-lg"
-              >
-                {{ board_point_values[row][column] }}
-              </button>
-            </a>
+              {{ board_point_values[row][column] }}
+            </button>
+
           </div>
           {% endfor %} {% endfor %}
         </div>
       </div>
     </div>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+      const socket = io();
+
+      const params = new URLSearchParams(window.location.search);
+      const lobby_id = params.get("lobby_id");
+      let lobby_array = [
+        "{{ lobby_id }}",
+        "{{ username1 }}",
+        "{{ username2 }}",
+        "{{ username3 }}",
+      ];
+
+      socket.on("connect", () => {
+        console.log("IN GAME LOBBY ARRAY")
+        console.log(lobby_array)
+        socket.emit("stay_connected", {"lobby_array" : lobby_array});
+      });
+
+      const choosebutton = document.getElementById("choose_question");
+
+      choosebutton.addEventListener("click", (event) => {
+        let row = choosebutton.dataset.value1;
+        let column = choosebutton.dataset.value2;
+	let lobby_id = {{ lobby_id }};
+        //let game_id = {{ game_id }}
+
+        //socket.on('redirect_event', question_chosen_socket(data) { window.location.href = data.url; });
+
+        //socket.emit("question_chosen", { "row" : row, "column" : column, "lobby_id" : lobby_id });
+
+      });
+
+    </script>
+    
   </body>
 </html>

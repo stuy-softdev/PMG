@@ -105,7 +105,7 @@
               </div>
 
               <div class="mt-6">
-                <form action="{{ url_for('new_game') }}" method="get">
+
                   <button
                     id="start_game_button"
                     type="submit"
@@ -126,7 +126,7 @@
                   >
                     Start Game
                   </button>
-                </form>
+
 
                 <div
                   id="join_notifications"
@@ -153,7 +153,7 @@
 
       // automatically calls this function upon connection to server
       socket.on("connect", () => {
-        socket.emit("join", { lobby_array: lobby_array });
+        socket.emit("join", { "lobby_array": lobby_array });
       });
 
       // when python function for join emits this function, changes the display of the player list and sends a notification
@@ -186,7 +186,7 @@
 
       leave_room_button.addEventListener('click', () => {
         console.log('Button was clicked!');
-        socket.emit("leave", { lobby_array: lobby_array })
+        socket.emit("leave", { "lobby_array": lobby_array })
       });
 
       // same as join_notif but for leaving
@@ -212,6 +212,18 @@
         if (lobby_array.includes("None")) {
           document.getElementById("start_game_button").disabled = true;
         }
+      });
+
+      // listens to when a user starts a game
+      const start_game_button = document.getElementById('start_game_button');
+
+      start_game_button.addEventListener('click', () => {
+        console.log('Start Button was clicked!');
+        socket.emit("start_game", { "lobby_array": lobby_array, "choosing_player": lobby_array[1] })
+      });
+
+      socket.on("redirect_at_start", (data) => {
+        window.location.href = data.url
       });
     </script>
   </body>

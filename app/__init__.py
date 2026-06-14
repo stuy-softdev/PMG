@@ -163,7 +163,7 @@ def register():
 
         conn.close()
 
-        session["user"] = username
+        session["username"] = username
         return redirect(url_for("home"))
 
     return render_template("register.html")
@@ -286,6 +286,8 @@ def find_or_create_room():
         return redirect(url_for("lobby", lobby_id = room_code))
 
     was_user_in_room = data.remove_user_from_lobby(session.get('username'))
+    if was_user_in_room:
+        session['lobby_id'] = None
 
     return render_template("find_or_create_room.html")
 
@@ -345,6 +347,8 @@ def lobby(lobby_id):
     if lobby_array == "No lobby found":
         lobby_array = define_lobby(lobby_id)
 
+    print("The NEW return is")
+    print(lobby_array)
     # adds the user into the given lobby
     #lobby_array = list(c.fetchone())
     '''
@@ -373,92 +377,109 @@ def lobby(lobby_id):
     db.commit()
     db.close()
 
-    print("the lobby array is")
-    print(lobby_array)
+    session['lobby_id'] = lobby_id
 
-    if request.method == "POST" and None not in lobby_array:
-        return redirect(url_for("new_game", lobby_array = lobby_array))
+    #if request.method == "POST" and None not in lobby_array:
+    #    return redirect(url_for("new_game", lobby_array = lobby_array))
     return render_template("lobby.html", lobby_id = lobby_id, player1 = lobby_array[1], player2 = lobby_array[2], player3 = lobby_array[3])
 
 
 
-@app.route("/new_game", methods=["GET", "POST"])
-def new_game():
+@app.route("/new_game/<string:lobby_id>", methods=["GET", "POST"])
+def new_game(lobby_id):
 
-    '''
-    username1 = request.form["username1"]
-    username2 = request.form["username2"]
-    username3 = request.form["username3"]
-    password1 = request.form["password1"]
-    password2 = request.form["password2"]
-    password3 = request.form["password3"]
-
-    print(username1)
-    print(username2)
-    print(username3)
-    print(password1)
-    print(password2)
-    print(password3)
-
-    if not username1 == "":
-        if not data.auth(username1, password1):
-            return render_template("new_game.html", invalid="Username or password is incorrect for Player 1")
-    if not username2 == "":
-        if not data.auth(username2, password2):
-            return render_template("new_game.html", invalid="Username or password is incorrect for Player 2")
-    if not username3 == "":
-        if not data.auth(username3, password3):
-            return render_template("new_game.html", invalid="Username or password is incorrect for Player 3")
-    '''
-    ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
-    ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
-    ################## FOR NOW, ALL GAMES WILL USE A PRE GENERATED BOARD FROM THE API ##################
-
-    d = data.get_lobby_array("a")
+    d = data.get_lobby_array(lobby_id)
+    print("d is ")
     print(d)
     title = "aaa"
-    game_id = d[0]
+    lobby_id = d[0]
     username1 = d[1]
     username2 = d[2]
     username3 = d[3]
 
-    if True:
+    if request.method == "POST":
         category_list = list(range(9, 33)) # in the trivia api, the category variable is an int between 9 and 32 for some reason
         for i in range(6):
             random_index = random.randrange(len(category_list))
             category = category_list.pop(random_index) # randomally chooses and pops a category
-            #print("randomally chosen category: ")
-            #print(category)
+
             refill_pool(category)
-            #print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-            #print(TRIVIA_POOL)
-            #print(i)
-            #print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-        #print(category_list)
+
         title = "randomally_generated_board" + str(int(time.time() * 1000)) # title of board "is randomally_generated_board" + the current time
         data.create_board_from_api(TRIVIA_POOL, title)
 
         game_id = int(time.time() * 1000) # THIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARY
-        data.setup_new_game(title, game_id, username1, username2, username3)
-        return redirect(url_for("game", game_id = game_id))
+        data.setup_new_game(title, lobby_id, username1, username2, username3)
+        return redirect(url_for("game", lobby_id = lobby_id, board = title))
 
-    return render_template("new_game.html")
+    print(lobby_id)
+    print(username1)
+    print(username2)
+    print(username3)
+    return render_template("new_game.html", choosing_player = username1, lobby_id = lobby_id, username1 = username1, username2 = username2, username3 = username3)
 
+@socketio.on('stay_connected')
+def stay_connected_socket(data):
+    join_room(data["lobby_array"][0])
+    print("AFTER STARTING GAME")
+    print(data["lobby_array"])
+
+@socketio.on('start_game')
+def start_game_socket(data):
+    print("start_game_array")
+    print(data["lobby_array"])
+    emit('redirect_at_start', {'url': url_for('new_game', lobby_id = data['lobby_array'][0])}, to=data['lobby_array'][0])
+
+@socketio.on('choose_board')
+def choose_board_socket(socket_data): # the parameter name is different bc i need to call functions from data.py
+    print("CHOOSE BOARD EVENT RECEIVED")
+
+    d = data.get_lobby_array(socket_data["lobby_id"])
+    print(socket_data["lobby_id"])
+    print("d is ")
+    print(d)
+    #title = "aaa"
+    lobby_id = d[0]
+    username1 = d[1]
+    username2 = d[2]
+    username3 = d[3]
+
+    category_list = list(range(9, 33)) # in the trivia api, the category variable is an int between 9 and 32 for some reason
+    for i in range(6):
+        random_index = random.randrange(len(category_list))
+        category = category_list.pop(random_index) # randomally chooses and pops a category
+
+        refill_pool(category)
+
+    title = "randomally_generated_board" + str(int(time.time() * 1000)) # title of board "is randomally_generated_board" + the current time
+    data.create_board_from_api(TRIVIA_POOL, title)
+
+    game_id = int(time.time() * 1000) # THIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARY
+    print("qqqqqqqq")
+    print(lobby_id)
+    data.setup_new_game(title, lobby_id, username1, username2, username3)
+
+    print("should start game now")
+
+    emit('redirect_event', {'url': url_for('game', lobby_id = lobby_id, board = title)}, to=lobby_id)
 
 @socketio.on('question_chosen')
 def question_chosen_socket(data):
-    emit('redirect_event', {'url': url_for('/buzzer/' + data['game_id'] + '/' + data['lobby_id'] + '/' + data['row'] + '/' + data['column'])}, to=data['lobby_id'])
+    emit('redirect_event', {'url': url_for('/buzzer/', lobby_id = data['lobby_id'], row = data['row'], column = data['column'])}, to=data['lobby_id'])
 
 
-@app.route("/<int:game_id>/<string:lobby_id>", methods=["GET", "POST"])
-def game(game_id, lobby_id):
+@app.route("/game/<string:lobby_id>/<string:board>", methods=["GET", "POST"])
+def game(lobby_id, board):
 
     #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM game_id ####################
     #################### REFER TO COMMENT IN data.get_game_data ####################
 
-    current_game_data = data.get_game_data(game_id)
+    current_game_data = data.get_game_data(lobby_id)
     print("CURRENT GAME DATA")
     print(current_game_data)
+    username1 = current_game_data[1]
+    username2 = current_game_data[2]
+    username3 = current_game_data[3]
 
     board = current_game_data[0]
     board_text = data.get_board_text(board)
@@ -467,14 +488,16 @@ def game(game_id, lobby_id):
     #print(board_text)
     print("VALS")
     print(board_point_values)
-    
-    
-    if choosing_player == None:
-        c.execute("SELECT player1 FROM lobbies WHERE lobby_id = ?", (lobby_id,))
-        choosing_player = c.fetchone()
-    if choosing_player == session.get('username'):
-        choosable_questions = True
-    
+
+    # PLAYER 1 IS THE ONLY PLAYER THAT CAN CHOOSE THE BOARD TO START THE GAME, SO THIS FUNCTION ONLY CALLS FOR THEM, MEANING THE WE DON'T NEED THIS PART
+    #if choosing_player == None:
+        #c.execute("SELECT player1 FROM lobbies WHERE lobby_id = ?", (lobby_id,))
+        #choosing_player = c.fetchone()
+    #if choosing_player == session.get('username'):
+        #choosable_questions = True
+    choosing_player = session.get('username')
+    choosable_questions = True
+
 
     # THE FORM TO ANSWER A QUESTION GOES TO game.html, SO HANDLING THE DB FOR GETTING THE QUESTION RIGHT/WRONG HAS TO GO HERE
     picked = request.form.get("answer")  # Get the selected answer from the form
@@ -490,13 +513,14 @@ def game(game_id, lobby_id):
         print("HELL YEAHH 2")
 
     return render_template(
-        "game.html", game_id = game_id, board = board, current_game_data = current_game_data, choosable_questions = choosable_questions, lobby_id = lobby_id # game data variables
-        board_text = board_text, board_point_values = board_point_values # variables only to display in the html, no purpose in other stuff
+        "game.html", lobby_id = lobby_id, board = board, current_game_data = current_game_data, choosable_questions = choosable_questions, # game data variables
+        board_text = board_text, board_point_values = board_point_values, # variables only to display in the html, no purpose in other stuff
+        username1 = username1, username2 = username2, username3 = username3 # store the players as variables to sync the game with socket
     )
 
 
-@app.route("/buzzer/<int:game_id>/<int:row>/<int:column>", methods=["GET", "POST"])
-def buzzer(game_id, row, column):
+@app.route("/buzzer/<string:lobby_id>/<int:row>/<int:column>", methods=["GET", "POST"])
+def buzzer(lobby_id, row, column):
 
     #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM game_id ####################
     #################### REFER TO COMMENT IN data.get_game_data ####################

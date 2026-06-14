@@ -124,6 +124,9 @@ def setup_new_game(board, game_id, user1, user2, user3):
         (board,)
     )
 
+    print("GAGAYGAYGAYG")
+    print(game_id)
+
     c.execute(
         'INSERT INTO game VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
         (game_id, board, user1, user2, user3, 0, 0, 0,)
@@ -364,6 +367,8 @@ def get_lobby_array(lobby_id):
     for item in lobby_array:
         returning_the_lobby_array.append(item)
 
+    print("returning the lobby array")
+    print(returning_the_lobby_array)
     return returning_the_lobby_array
 
 # removes the user from the room that they are connected in and returns True. if the user is not in any room in the first place, returns False.
