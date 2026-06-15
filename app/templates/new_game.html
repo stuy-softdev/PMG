@@ -20,6 +20,11 @@
             href="/create_board"
             >Create Board</a
           >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/leaderboards"
+            >Leaderboards</a
+          >
         </div>
         <div class="flex items-center space-x-4">
           <p class="text-sm">Signed in as {{ username }}</p>
@@ -41,16 +46,36 @@
             random one!
           </p>
 
-          <button id="choose_random_board">Generate a random board!</button>
+          <div class="space-y-6">
+            <button
+              id="choose_random_board"
+              class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+            >
+              Generate a random board
+            </button>
 
-          <br />
-
-          {% for board in all_published_board_list %}
-          <button class="choose_published_board" data-value1="{{ board }}">
-            {{ board }}
-          </button>
-          <br />
-          {% endfor %}
+            <div>
+              <h2 class="text-lg font-semibold text-indigo-300 mb-3">
+                Published Boards
+              </h2>
+              {% if all_published_board_list %}
+              <div class="space-y-3 max-h-64 overflow-auto">
+                {% for board in all_published_board_list %}
+                <button
+                  class="choose_published_board w-full text-left break-words bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-lg transition duration-200"
+                  data-value1="{{ board }}"
+                >
+                  {{ board }}
+                </button>
+                {% endfor %}
+              </div>
+              {% else %}
+              <p class="text-sm text-gray-400">
+                No published boards available.
+              </p>
+              {% endif %}
+            </div>
+          </div>
         </div>
       </div>
     </div>
