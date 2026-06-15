@@ -138,15 +138,19 @@
           console.log(column);
 
           const not_chosen = (chosen_array, [row, column]) => {
-	    let is_chosen = chosen_array.some(rows =>
-	      rows.length === [row, column].length &&
-              rows.every((val, index) => val === [row,column][index])
+            let is_chosen = chosen_array.some(rows =>
+              rows.length === [row, column].length &&
+              rows.every((val, index) => val === [row, column][index])
             );
             return !is_chosen;
-          );
+          };
 
           if (choosable_questions === "True" && not_chosen) {
-            console.log("REDIRECT TO BUZZER HERE");
+            socket.emit("question_chosen", {
+              "lobby_id" : lobby_array[0],
+              "row": row,
+              "column": column,
+            });
           }
         });
       });

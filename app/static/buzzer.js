@@ -7,6 +7,7 @@ let clickTime;
 let displayInterval;
 let buttonBuzzer = document.createElement('button');
 let answerForm = document.createElement('form');
+let playersAnswered = 0;
 const socket = io();
 
 
@@ -54,8 +55,8 @@ function buzzerClick() {
   document.getElementById("time").innerHTML = String(clickTime);
 
   socket.emit("buzzer_clicked", { click_time : clickTime, user_name : username }); //sure hope this works
-  
-      
+
+
   if (clickTime > 1000) { // SET TO IN IF STATEMENT CHECKING IF YOU PRESSED THE BUTTON FIRST
 
     createanswerForm();
@@ -109,17 +110,17 @@ function createanswerForm() {
         document.getElementById("message").textContent = "Correct";
 
         let pointdata = { points : questionPoints, username : username, row : row, column : column };
-        fetch('/add_points', { method: 'POST', headers : { 'Content-Type': 'application/json' }, body: JSON.stringify(pointdata) });
-        .then(response => response.json());
+        fetch('/add_points', { method: 'POST', headers : { 'Content-Type': 'application/json' }, body: JSON.stringify(pointdata) })
+        .then(response => response.json())
         .then(data => console.log('Server response:', data));
         socket.emit("question_answered")
-        
+
       } else {
         document.getElementById("message").textContent =
           "Incorrect. Correct answer: " + correct_answer;
         let pointdata = { points : -questionPoints, username : username, row : row, column : column };
-        fetch('/add_points', { method: 'POST', headers : { 'Content-Type': 'application/json' }, body: JSON.stringify(pointdata) });
-        .then(response => response.json());
+        fetch('/add_points', { method: 'POST', headers : { 'Content-Type': 'application/json' }, body: JSON.stringify(pointdata) })
+        .then(response => response.json())
         .then(data => console.log('Server response:', data));
         socket.emit("question_answered")
       }
@@ -173,24 +174,23 @@ function createanswerForm() {
 }
 
 
-  socket.(on)("buzzer_clicked", (data) => { //Data should include the name of the person that just pressed the buzzer, and the time it took them to press it
-    if !fastestClickTime || data["click_time"] < fastestClickTime{
+  socket.on("buzzer_clicked", (data) => { //Data should include the name of the person that just pressed the buzzer, and the time it took them to press it
+    if (!fastestClickTime || data["click_time"] < fastestClickTime){
       fastestClickTime = data["click_time"];
       fastestPlayer = data["user_name"];
     }
-    
-    playersAnswered++; //notes that one extra person has clicked the buzzer 
-    
-    if playersAnswered == 3 { //REMEMBER TO SEND USERNAME DATA FROM PYTHON -- once the entire lobby has answered, the fastest player is allowed to submit an answer
-      if username == fastestPlayer{
 
+    playersAnswered++; //notes that one extra person has clicked the buzzer
+
+    if (playersAnswered === 3) { //REMEMBER TO SEND USERNAME DATA FROM PYTHON -- once the entire lobby has answered, the fastest player is allowed to submit an answer
+      if (username === fastestPlayer){
         createanswerForm(username);
-        
+
       }
     }
 
-      
-      
+
+
   });
 
   displayquestion();

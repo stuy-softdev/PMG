@@ -495,7 +495,7 @@ def choose_board_socket(socket_data): # the parameter name is different bc i nee
 
 @socketio.on('question_chosen')
 def question_chosen_socket(data):
-    emit('redirect_event', {'url': url_for('/buzzer/', lobby_id = data['lobby_id'], row = data['row'], column = data['column'])}, to=data['lobby_id'])
+    emit('redirect_event', {'url': url_for('buzzer', lobby_id = data['lobby_id'], row = data['row'], column = data['column'])}, to=data['lobby_id'])
 
 
 @app.route("/game/<string:lobby_id>", methods=["GET", "POST"])
@@ -503,7 +503,9 @@ def game(lobby_id):
 
     #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM game_id ####################
     #################### REFER TO COMMENT IN data.get_game_data ####################
-    
+
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
     c.execute("SELECT row, column FROM board WHERE chosen = 1")
     chosen_data = c.fetchall()
     chosen_data_array = [list(unit) for unit in chosen_data]
@@ -550,41 +552,43 @@ def game(lobby_id):
 
     print("choosable question is")
     print(choosable_questions)
+    db.commit()
+    db.close()
     return render_template(
-        "game.html", chosen_array = chosen_data_array lobby_id = lobby_id, board = board, current_game_data = current_game_data, choosable_questions = choosable_questions, # game data variables
+        "game.html", chosen_array = chosen_data_array, lobby_id = lobby_id, board = board, current_game_data = current_game_data, choosable_questions = choosable_questions, # game data variables
         board_text = board_text, board_point_values = board_point_values, # variables only to display in the html, no purpose in other stuff
         username1 = username1, username2 = username2, username3 = username3 # store the players as variables to sync the game with socket
     )
 
 
 @app.route("/add_points", methods = ['POST'])
-def add_points:
+def add_points():
     point_data = request.get_json
     points_added = int(data.get('points'))
     username = data.get('username')
     row = data.get('row')
     column = data.get('column')
-    
+
     lobby_id = rooms()
-    
+
     c.execute("SELECT player1, player2, player3 FROM game WHERE game_id = ?", (lobby_id))
     user_array = c.fetchall()
-    
+
     c.execute("UPDATE game SET chosen = 1 WHERE column = ? AND row = ?", (column, row))
-    
+
     for player_number in range(3):
         if username == user_array[player_number]:
             c.execute("UPDATE game SET points" + str(player_number + 1) + " = " + "points" + str(player_number + 1) + " + ? WHERE game_id = ?", (points_added, lobby_id))
-    
+
     if points_added < 0:
         c.execute("UPDATE game SET player_in_control = ? WHERE game_id = ?", (random.choice(user_array), lobby_id))
-    
+
     c.commit()
     c.close()
-    
+
 
 @socketio.on("question_answered")
-def question_answered_socket:
+def question_answered_socket():
     emit('redirect_event', {'url': url_for('game', lobby_id = lobby_id)})
 
 
@@ -594,7 +598,7 @@ def buzzer(lobby_id, row, column):
     #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM game_id ####################
     #################### REFER TO COMMENT IN data.get_game_data ####################
 
-    current_game_data = data.get_game_data(game_id)
+    current_game_data = data.get_game_data(lobby_id)
     print("CURRENT GAME DATA")
     print(current_game_data)
 
@@ -617,9 +621,9 @@ def buzzer(lobby_id, row, column):
 
 
     return render_template(
-        "buzzer.html", game_id = game_id, row = row, column = column, board = board, current_game_data = current_game_data, correct_answer = correct_answer, answer_choices = answer_choices, # game data variables
+        "buzzer.html", game_id = lobby_id, row = row, column = column, board = board, current_game_data = current_game_data, correct_answer = correct_answer, answer_choices = answer_choices, username = session.get('username'), # game data variables
         clue_text = clue_text, clue_point_value = clue_point_value # variables only to display in the html, no purpose in other stuff
-    )l
+    )
 
 
 #HELPER FUNCTIONS

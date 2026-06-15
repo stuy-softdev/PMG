@@ -43,13 +43,16 @@
       <div class="max-w-3xl w-full">
         <div class="bg-gray-800 rounded-lg shadow-2xl p-12 text-center">
           <h2 class="text-5xl font-bold text-white leading-tight">
+            <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
             <script>
               let questionDQ = "{{ clue_text }}";
               let correct_answer = "{{ correct_answer }}";
               let answer_choices = {{ answer_choices|tojson }};
               let points = "{{ clue_point_value }}";
-	      let row = "{{ row }}";
-	      let column = "{{ column }}";
+      	      let row = "{{ row }}";
+      	      let column = "{{ column }}";
+              let username = "{{ username }}"
+              let questionPoints = "{{ clue_point_value }}"
             </script>
 
             <script src="{{ url_for('static', filename='buzzer.js') }}"></script>
@@ -62,7 +65,7 @@
 
           <!-- the entire answering the question lies on this form. when clicking on an answer it'll do all the work and pass everything to the javascript stuff, then pressing the NEXT button goes back to the game board -->
           <form
-            action="{{ url_for('game', game_id = game_id) }}"
+            action="{{ url_for('game', lobby_id = game_id) }}"
             method="post"
             id="idk"
           >
