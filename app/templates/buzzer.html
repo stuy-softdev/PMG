@@ -40,6 +40,8 @@
               let correct_answer = "{{ correct_answer }}";
               let answer_choices = {{ answer_choices|tojson }};
               let points = "{{ clue_point_value }}";
+	      let row = "{{ row }}";
+	      let column = "{{ column }}";
             </script>
 
             <script src="{{ url_for('static', filename='buzzer.js') }}"></script>

@@ -42,7 +42,7 @@ TO DO LIST:
 
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 
-from flask_socketio import SocketIO, join_room, leave_room, emit
+from flask_socketio import SocketIO, join_room, leave_room, emit, rooms
 
 import sqlite3
 import datetime   #enable control of an sqlite database
@@ -429,7 +429,7 @@ def new_game(lobby_id):
 
         game_id = int(time.time() * 1000) # THIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARY
         data.setup_new_game(title, lobby_id, username1, username2, username3)
-        return redirect(url_for("game", lobby_id = lobby_id, board = title))
+        return redirect(url_for("game", lobby_id = lobby_id))
 
     #print(lobby_id)
     #print(username1)
@@ -485,21 +485,21 @@ def choose_board_socket(socket_data): # the parameter name is different bc i nee
 
         print("should start game now")
 
-        emit('redirect_event', {'url': url_for('game', lobby_id = lobby_id, board = title)}, to=lobby_id)
+        emit('redirect_event', {'url': url_for('game', lobby_id = lobby_id)}, to=lobby_id)
 
     else:
         board = socket_data["board"]
         data.setup_new_game(board, lobby_id, username1, username2, username3)
 
-        emit('redirect_event', {'url': url_for('game', lobby_id = lobby_id, board = board)}, to=lobby_id)
+        emit('redirect_event', {'url': url_for('game', lobby_id = lobby_id)}, to=lobby_id)
 
 @socketio.on('question_chosen')
 def question_chosen_socket(data):
     emit('redirect_event', {'url': url_for('/buzzer/', lobby_id = data['lobby_id'], row = data['row'], column = data['column'])}, to=data['lobby_id'])
 
 
-@app.route("/game/<string:lobby_id>/<string:board>", methods=["GET", "POST"])
-def game(lobby_id, board):
+@app.route("/game/<string:lobby_id>", methods=["GET", "POST"])
+def game(lobby_id):
 
     #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM game_id ####################
     #################### REFER TO COMMENT IN data.get_game_data ####################
@@ -553,6 +553,33 @@ def game(lobby_id, board):
     )
 
 
+@app.route("/add_points", methods = ['POST'])
+def add_points:
+    point_data = request.get_json
+    points_added = int(data.get('points'))
+    username = data.get('username')
+    row = data.get('row')
+    column = data.get('column')
+    
+    lobby_id = rooms()
+    
+    c.execute("SELECT player1, player2, player3 FROM game WHERE game_id = ?", (lobby_id))
+    user_array = c.fetchall()
+    
+    c.execute("UPDATE game SET chosen = 1 WHERE column = ? AND row = ?", (column, row))
+    
+    for player_number in range(3):
+        if username == user_array[player_number]:
+            c.execute("UPDATE game SET points" + str(player_number + 1) + " = " + "points" + str(player_number + 1) + " + ? WHERE game_id = ?", (points_added, lobby_id))
+    c.commit()
+    c.close()
+    
+
+@socketio.on("question_answered")
+def question_answered_socket:
+    emit('redirect_event', {'url': url_for('game', lobby_id = lobby_id)})
+
+
 @app.route("/buzzer/<string:lobby_id>/<int:row>/<int:column>", methods=["GET", "POST"])
 def buzzer(lobby_id, row, column):
 
@@ -584,7 +611,7 @@ def buzzer(lobby_id, row, column):
     return render_template(
         "buzzer.html", game_id = game_id, row = row, column = column, board = board, current_game_data = current_game_data, correct_answer = correct_answer, answer_choices = answer_choices, # game data variables
         clue_text = clue_text, clue_point_value = clue_point_value # variables only to display in the html, no purpose in other stuff
-    )
+    )l
 
 
 #HELPER FUNCTIONS
