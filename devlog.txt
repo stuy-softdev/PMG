@@ -185,3 +185,13 @@ ethanC -- 2026-06-15 00:30
 	add leaderboards to navbar
 	add css to leaderboards page
 	fixed not visible text to be visible
+
+jasonC -- 2026-06-15 05:11
+	fixed extra slots during editing boards
+	added publishing boards and saving boards
+		added published column to board table
+	added being able to play custom boards
+	added end game button and displays the results
+		closes the socket function by not reconnecting like all the other pages
+	idk some other stuff i probably forgot
+	god i am so done
