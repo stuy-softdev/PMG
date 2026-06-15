@@ -6,26 +6,29 @@
   </head>
 
   <body class="h-full">
-    <nav
-      class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between"
-    >
-      <a class="font-bold text-xl tracking-tight" href="/home">Jeffpardy</a>
-      <div class="flex items-center">
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/find_or_create_room"
-          >New Game</a
-        >
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/create_board"
-          >Create Board</a
-        >
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/logout"
-          >Logout</a
-        >
+    <nav class="bg-gray-800 text-white py-3 px-4">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <a class="font-bold text-xl tracking-tight" href="/home">Jeffpardy</a>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/find_or_create_room"
+            >New Game</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/create_board"
+            >Create Board</a
+          >
+        </div>
+        <div class="flex items-center space-x-4">
+          <p class="text-sm">Signed in as {{ username }}</p>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/logout"
+            >Logout</a
+          >
+        </div>
       </div>
     </nav>
 
@@ -36,9 +39,7 @@
           Click on categories and questions to add clues to your board
         </p>
 
-        <p class="text-gray-300 mb-8">
-          {{ error }}
-        </p>
+        <p class="text-gray-300 mb-8">{{ error }}</p>
 
         <div class="grid grid-cols-6 gap-4">
           <!-- Category Row -->
@@ -48,7 +49,7 @@
               href="{{ url_for('edit', board = board, row = 0, column = col) }}"
             >
               <button
-                type = "button"
+                type="button"
                 class="w-full bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-3 px-2 rounded-lg text-center transition duration-200"
               >
                 {{ board_text[0][col] }}
@@ -73,14 +74,11 @@
           </div>
           {% endfor %} {% endfor %}
         </div>
-        <br>
-        <br>
+        <br />
+        <br />
 
-        <div class = "grid grid-cols-2 gap-4">
-
-          <a
-            href="{{ url_for('create_board') }}"
-          >
+        <div class="grid grid-cols-2 gap-4">
+          <a href="{{ url_for('create_board') }}">
             <button
               type="button"
               class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-6 px-4 rounded-lg transition duration-200 text-center"
@@ -90,9 +88,7 @@
           </a>
 
           {% if not already_published %}
-          <a
-            href="{{ url_for('publish_board', title = board) }}"
-          >
+          <a href="{{ url_for('publish_board', title = board) }}">
             <button
               type="button"
               class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-6 px-4 rounded-lg transition duration-200 text-center"
@@ -101,9 +97,7 @@
             </button>
           </a>
           {% endif %}
-
         </div>
-
       </div>
     </div>
   </body>

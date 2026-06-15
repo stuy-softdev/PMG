@@ -113,6 +113,11 @@ app = Flask(__name__)
 app.secret_key = "secret"
 socketio = SocketIO(app)
 
+
+@app.context_processor
+def inject_username():
+    return {"username": session.get('username')}
+
 @app.route("/logout")
 def logout():
     session.pop('username', None) # remove username from session
@@ -171,7 +176,7 @@ def register():
 
 @app.route("/home", methods=["GET", "POST"])
 def home():
-    return render_template("home.html")
+    return render_template("home.html", username=session.get('username'))
 
 @app.route("/leaderboards", methods=["GET", "POST"])
 def leaderboards():
