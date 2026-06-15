@@ -113,6 +113,11 @@ app = Flask(__name__)
 app.secret_key = "secret"
 socketio = SocketIO(app)
 
+
+@app.context_processor
+def inject_username():
+    return {"username": session.get('username')}
+
 @app.route("/logout")
 def logout():
     session.pop('username', None) # remove username from session
@@ -171,7 +176,7 @@ def register():
 
 @app.route("/home", methods=["GET", "POST"])
 def home():
-    return render_template("home.html")
+    return render_template("home.html", username=session.get('username'))
 
 @app.route("/leaderboards", methods=["GET", "POST"])
 def leaderboards():
@@ -549,7 +554,7 @@ def game(lobby_id):
     return render_template(
         "game.html", lobby_id = lobby_id, board = board, current_game_data = current_game_data, choosable_questions = choosable_questions, # game data variables
         board_text = board_text, board_point_values = board_point_values, # variables only to display in the html, no purpose in other stuff
-        username1 = username1, username2 = username2, username3 = username3 # store the players as variables to sync the game with socket
+        username1 = username1, username2 = username2, username3 = username3, points1 = current_game_data[5], points2 = current_game_data[6], points3 = current_game_data[7] # store the players as variables to sync the game with socket
     )
 
 
@@ -638,6 +643,5 @@ def join_lobby(userid, lobby_array):
             x = userid
 
 
-if __name__ == "__main__":
-    app.debug=True
-    socketio.run(app)
+if __name__ == '__main__':
+    socketio.run(app, debug=True, host='0.0.0.0')

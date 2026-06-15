@@ -6,26 +6,34 @@
   </head>
 
   <body class="h-full text-white">
-    <nav
-      class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between"
-    >
-      <a class="font-bold text-xl tracking-tight" href="/home">Jeffpardy</a>
-      <div class="flex items-center">
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/find_or_create_room"
-          >New Game</a
-        >
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/create_board"
-          >Create Board</a
-        >
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/logout"
-          >Logout</a
-        >
+    <nav class="bg-gray-800 text-white py-3 px-4">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <a class="font-bold text-xl tracking-tight" href="/home">Jeffpardy</a>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/find_or_create_room"
+            >New Game</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/create_board"
+            >Create Board</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/leaderboards"
+            >Leaderboards</a
+          >
+        </div>
+        <div class="flex items-center space-x-4">
+          <p class="text-sm">Signed in as {{ username }}</p>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/logout"
+            >Logout</a
+          >
+        </div>
       </div>
     </nav>
 
@@ -57,11 +65,10 @@
               <a
                 id="leave_room_button"
                 href="/find_or_create_room"
-                class="w-full rounded-2xl bg-indigo-600 px-5 py-3 text-base font-semibold text-white transition hover:bg-indigo-500"
+                class="inline-block mt-4 w-full rounded-2xl bg-red-600 px-5 py-3 text-base font-semibold text-white text-center transition hover:bg-red-500"
               >
                 Leave Room
               </a>
-
             </div>
           </div>
 
@@ -105,28 +112,26 @@
               </div>
 
               <div class="mt-6">
-
-                  <button
-                    id="start_game_button"
-                    type="submit"
-                    class="w-full rounded-2xl bg-indigo-600 px-5 py-3 text-base font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-600"
-                    {%
-                    if
-                    not
-                    player1
-                    or
-                    not
-                    player2
-                    or
-                    not
-                    player3
-                    %}disabled{%
-                    endif
-                    %}
-                  >
-                    Start Game
-                  </button>
-
+                <button
+                  id="start_game_button"
+                  type="submit"
+                  class="w-full rounded-2xl bg-indigo-600 px-5 py-3 text-base font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-600"
+                  {%
+                  if
+                  not
+                  player1
+                  or
+                  not
+                  player2
+                  or
+                  not
+                  player3
+                  %}disabled{%
+                  endif
+                  %}
+                >
+                  Start Game
+                </button>
 
                 <div
                   id="join_notifications"
@@ -142,7 +147,6 @@
     <!-- THE ONE AND ONLY, THE LEGENDARY, THE SOCKET STUFF!!!!! -->
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script>
-
       const socket = io();
       let lobby_array = [
         "{{ lobby_id }}",
@@ -153,7 +157,7 @@
 
       // automatically calls this function upon connection to server
       socket.on("connect", () => {
-        socket.emit("join", { "lobby_array": lobby_array });
+        socket.emit("join", { lobby_array: lobby_array });
       });
 
       // when python function for join emits this function, changes the display of the player list and sends a notification
@@ -182,11 +186,11 @@
       });
 
       // listens to when a user leaves a room
-      const leave_room_button = document.getElementById('leave_room_button');
+      const leave_room_button = document.getElementById("leave_room_button");
 
-      leave_room_button.addEventListener('click', () => {
-        console.log('Button was clicked!');
-        socket.emit("leave", { "lobby_array": lobby_array })
+      leave_room_button.addEventListener("click", () => {
+        console.log("Button was clicked!");
+        socket.emit("leave", { lobby_array: lobby_array });
       });
 
       // same as join_notif but for leaving
@@ -215,15 +219,18 @@
       });
 
       // listens to when a user starts a game
-      const start_game_button = document.getElementById('start_game_button');
+      const start_game_button = document.getElementById("start_game_button");
 
-      start_game_button.addEventListener('click', () => {
-        console.log('Start Button was clicked!');
-        socket.emit("start_game", { "lobby_array": lobby_array, "choosing_player": lobby_array[1] })
+      start_game_button.addEventListener("click", () => {
+        console.log("Start Button was clicked!");
+        socket.emit("start_game", {
+          lobby_array: lobby_array,
+          choosing_player: lobby_array[1],
+        });
       });
 
       socket.on("redirect_at_start", (data) => {
-        window.location.href = data.url
+        window.location.href = data.url;
       });
     </script>
   </body>

@@ -6,28 +6,76 @@
   </head>
 
   <body class="h-full">
+    <nav class="bg-gray-800 text-white py-3 px-4">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <a class="font-bold text-xl tracking-tight" href="/home">Jeffpardy</a>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/find_or_create_room"
+            >New Game</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/create_board"
+            >Create Board</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/leaderboards"
+            >Leaderboards</a
+          >
+        </div>
+        <div class="flex items-center space-x-4">
+          <p class="text-sm">Signed in as {{ username }}</p>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/logout"
+            >Logout</a
+          >
+        </div>
+      </div>
+    </nav>
 
     <div class="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div class="max-w-2xl mx-auto">
         <div class="bg-gray-800 rounded-lg shadow-xl p-8">
           <h1 class="text-4xl font-bold text-white mb-2">New Game</h1>
           <p class="text-gray-300 mb-8">
-            {{ choosing_player }}, please select a board to play, or generate a random one!
+            {{ choosing_player }}, please select a board to play, or generate a
+            random one!
           </p>
 
-          <button id="choose_random_board">Generate a random board!</button>
-
-          <br>
-
-          {% for board in all_published_board_list %}
+          <div class="space-y-6">
             <button
-              class = "choose_published_board"
-              data-value1 = "{{ board }}"
+              id="choose_random_board"
+              class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
             >
-              {{ board }}
+              Generate a random board
             </button>
-            <br>
-          {% endfor %}
+
+            <div>
+              <h2 class="text-lg font-semibold text-indigo-300 mb-3">
+                Published Boards
+              </h2>
+              {% if all_published_board_list %}
+              <div class="space-y-3 max-h-64 overflow-auto">
+                {% for board in all_published_board_list %}
+                <button
+                  class="choose_published_board w-full text-left break-words bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-lg transition duration-200"
+                  data-value1="{{ board }}"
+                >
+                  {{ board }}
+                </button>
+                {% endfor %}
+              </div>
+              {% else %}
+              <p class="text-sm text-gray-400">
+                No published boards available.
+              </p>
+              {% endif %}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -46,35 +94,44 @@
         "{{ username3 }}",
       ];
 
-      console.log("why")
-      console.log(lobby_array)
+      console.log("why");
+      console.log(lobby_array);
 
       socket.on("connect", () => {
-        socket.emit("stay_connected", {"lobby_array" : lobby_array});
+        socket.emit("stay_connected", { lobby_array: lobby_array });
       });
 
-      const choose_random_board = document.getElementById("choose_random_board")
+      const choose_random_board = document.getElementById(
+        "choose_random_board",
+      );
 
-      choose_random_board.addEventListener('click', function(event) {
+      choose_random_board.addEventListener("click", function (event) {
         event.preventDefault();
-        console.log('choose_random_board clicked')
-        socket.emit('choose_board', { "lobby_id" : lobby_array[0], "type_of_board" : "random" });
+        console.log("choose_random_board clicked");
+        socket.emit("choose_board", {
+          lobby_id: lobby_array[0],
+          type_of_board: "random",
+        });
       });
 
       // WITH MULTIPLE BUTTONS OF THE SAME ID, NEED TO USE CLASS AND THE FOLLOWING LINE INSTEAD TO MAKE AN INDIVIDUAL EVENT FOR EACH BUTTON
-      document.querySelectorAll(".choose_published_board").forEach(button => {
-        button.addEventListener('click', function(event) {
-          console.log('clicked!')
-          let board = button.dataset.value1
+      document.querySelectorAll(".choose_published_board").forEach((button) => {
+        button.addEventListener("click", function (event) {
+          console.log("clicked!");
+          let board = button.dataset.value1;
           event.preventDefault();
-          console.log('choose_published_board clicked')
-          socket.emit('choose_board', { "lobby_id" : lobby_array[0], "type_of_board" : "published", "board" : board });
+          console.log("choose_published_board clicked");
+          socket.emit("choose_board", {
+            lobby_id: lobby_array[0],
+            type_of_board: "published",
+            board: board,
+          });
         });
       });
 
       socket.on("redirect_event", (data) => {
-        console.log("redirecting...")
-        window.location.href = data.url
+        console.log("redirecting...");
+        window.location.href = data.url;
       });
     </script>
   </body>
