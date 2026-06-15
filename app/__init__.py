@@ -503,6 +503,10 @@ def game(lobby_id):
 
     #################### GETS BOARD, USERNAMES, AND CURRENT POINTS FROM game_id ####################
     #################### REFER TO COMMENT IN data.get_game_data ####################
+    
+    c.execute("SELECT column, row FROM board WHERE chosen = 1")
+    chosen_data = c.fetchall()
+    chosen_data_array = [list(unit) for unit in chosen_data]
 
     current_game_data = data.get_game_data(lobby_id)
     print("CURRENT GAME DATA")
@@ -547,7 +551,7 @@ def game(lobby_id):
     print("choosable question is")
     print(choosable_questions)
     return render_template(
-        "game.html", lobby_id = lobby_id, board = board, current_game_data = current_game_data, choosable_questions = choosable_questions, # game data variables
+        "game.html", chosen_array = chosen_data_array lobby_id = lobby_id, board = board, current_game_data = current_game_data, choosable_questions = choosable_questions, # game data variables
         board_text = board_text, board_point_values = board_point_values, # variables only to display in the html, no purpose in other stuff
         username1 = username1, username2 = username2, username3 = username3 # store the players as variables to sync the game with socket
     )

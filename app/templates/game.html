@@ -99,6 +99,8 @@
     <script>
       const socket = io();
 
+      const chosen_array = JSON.parse('{{ chosen_array | tojson | safe }}');
+
       const params = new URLSearchParams(window.location.search);
       const lobby_id = params.get("lobby_id");
       let lobby_array = [
@@ -128,7 +130,15 @@
           console.log(row);
           console.log(column);
 
-          if (choosable_questions === "True") {
+          const not_chosen = (chosen_array, [row, column]) => {
+	    let is_chosen = chosen_array.some(rows =>
+	      rows.length === [row, column].length &&
+              rows.every((val, index) => val === [row,column][index])
+            );
+            return !is_chosen;
+          );
+
+          if (choosable_questions === "True" && not_chosen) {
             console.log("REDIRECT TO BUZZER HERE");
           }
         });
