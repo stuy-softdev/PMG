@@ -16,6 +16,18 @@
           </p>
 
           <button id="choose_random_board">Generate a random board!</button>
+
+          <br>
+
+          {% for board in all_published_board_list %}
+            <button
+              class = "choose_published_board"
+              data-value1 = "{{ board }}"
+            >
+              {{ board }}
+            </button>
+            <br>
+          {% endfor %}
         </div>
       </div>
     </div>
@@ -46,7 +58,18 @@
       choose_random_board.addEventListener('click', function(event) {
         event.preventDefault();
         console.log('choose_random_board clicked')
-        socket.emit('choose_board', { "lobby_id" : lobby_array[0] });
+        socket.emit('choose_board', { "lobby_id" : lobby_array[0], "type_of_board" : "random" });
+      });
+
+      // WITH MULTIPLE BUTTONS OF THE SAME ID, NEED TO USE CLASS AND THE FOLLOWING LINE INSTEAD TO MAKE AN INDIVIDUAL EVENT FOR EACH BUTTON
+      document.querySelectorAll(".choose_published_board").forEach(button => {
+        button.addEventListener('click', function(event) {
+          console.log('clicked!')
+          let board = button.dataset.value1
+          event.preventDefault();
+          console.log('choose_published_board clicked')
+          socket.emit('choose_board', { "lobby_id" : lobby_array[0], "type_of_board" : "published", "board" : board });
+        });
       });
 
       socket.on("redirect_event", (data) => {

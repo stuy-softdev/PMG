@@ -181,19 +181,38 @@ def leaderboards():
 
 @app.route("/create_board", methods=["GET", "POST"])
 def create_board():
+    saved_board_list = data.get_saved_board_list(session.get('username'))
+    published_board_list = data.get_published_board_list(session.get('username'))
+
     if request.method == "POST":
         title = request.form["title"]
 
-        data.create_new_board(title) # creates new board with the given title
+        # returns error if board already exists, or if the title has "randomally_generated_board", bc that will break the website
+        if data.board_already_exists(title) or "randomally_generated_board" in title:
+            return render_template(
+                "create_board.html", saved_board_list = saved_board_list, published_board_list = published_board_list, error = "Board already exists"
+            )
+
+        data.create_new_board(title, session.get('username')) # creates new board with the given title
 
         return redirect(url_for("create", board = title))
 
-    return render_template("create_board.html")
+    return render_template("create_board.html", saved_board_list = saved_board_list, published_board_list = published_board_list)
+
 
 @app.route("/create/<string:board>", methods=["GET", "POST"])
 def create(board):
     board_text = data.get_board_text(board)
-    return render_template("create.html", board_text = board_text, board = board)
+    already_published = data.already_published(board)
+    #print(board_text)
+    return render_template("create.html", board_text = board_text, board = board, already_published = already_published)
+
+
+@app.route("/publish_board/<string:title>", methods=["GET", "POST"])
+def publish_board(title):
+    data.publish_board(title)
+
+    return redirect(url_for("create_board"))
 
 ############### get_data, opentdb_get, and refill_pool are the functions needed to generate the board from api. this works so don't worry about it. if you really need to know lmk. - jason ###############
 ############### get_data, opentdb_get, and refill_pool are the functions needed to generate the board from api. this works so don't worry about it. if you really need to know lmk. - jason ###############
@@ -412,11 +431,13 @@ def new_game(lobby_id):
         data.setup_new_game(title, lobby_id, username1, username2, username3)
         return redirect(url_for("game", lobby_id = lobby_id, board = title))
 
-    print(lobby_id)
-    print(username1)
-    print(username2)
-    print(username3)
-    return render_template("new_game.html", choosing_player = username1, lobby_id = lobby_id, username1 = username1, username2 = username2, username3 = username3)
+    #print(lobby_id)
+    #print(username1)
+    #print(username2)
+    #print(username3)
+
+    all_published_board_list = data.get_all_published_board_list()
+    return render_template("new_game.html", choosing_player = username1, lobby_id = lobby_id, username1 = username1, username2 = username2, username3 = username3, all_published_board_list = all_published_board_list)
 
 @socketio.on('stay_connected')
 def stay_connected_socket(data):
@@ -444,24 +465,33 @@ def choose_board_socket(socket_data): # the parameter name is different bc i nee
     username2 = d[2]
     username3 = d[3]
 
-    category_list = list(range(9, 33)) # in the trivia api, the category variable is an int between 9 and 32 for some reason
-    for i in range(6):
-        random_index = random.randrange(len(category_list))
-        category = category_list.pop(random_index) # randomally chooses and pops a category
+    type_of_board = socket_data["type_of_board"]
 
-        refill_pool(category)
+    if type_of_board == "random":
+        category_list = list(range(9, 33)) # in the trivia api, the category variable is an int between 9 and 32 for some reason
+        for i in range(6):
+            random_index = random.randrange(len(category_list))
+            category = category_list.pop(random_index) # randomally chooses and pops a category
 
-    title = "randomally_generated_board" + str(int(time.time() * 1000)) # title of board "is randomally_generated_board" + the current time
-    data.create_board_from_api(TRIVIA_POOL, title)
+            refill_pool(category)
 
-    game_id = int(time.time() * 1000) # THIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARY
-    print("qqqqqqqq")
-    print(lobby_id)
-    data.setup_new_game(title, lobby_id, username1, username2, username3)
+        title = "randomally_generated_board" + str(int(time.time() * 1000)) # title of board "is randomally_generated_board" + the current time
+        data.create_board_from_api(TRIVIA_POOL, title)
 
-    print("should start game now")
+        game_id = int(time.time() * 1000) # THIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARYTHIS IS TEMPORARY
+        print("qqqqqqqq")
+        print(lobby_id)
+        data.setup_new_game(title, lobby_id, username1, username2, username3)
 
-    emit('redirect_event', {'url': url_for('game', lobby_id = lobby_id, board = title)}, to=lobby_id)
+        print("should start game now")
+
+        emit('redirect_event', {'url': url_for('game', lobby_id = lobby_id, board = title)}, to=lobby_id)
+
+    else:
+        board = socket_data["board"]
+        data.setup_new_game(board, lobby_id, username1, username2, username3)
+
+        emit('redirect_event', {'url': url_for('game', lobby_id = lobby_id, board = board)}, to=lobby_id)
 
 @socketio.on('question_chosen')
 def question_chosen_socket(data):

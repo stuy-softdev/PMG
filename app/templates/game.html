@@ -91,11 +91,14 @@
 
       const choosebutton = document.getElementById("choose_question");
 
+      // WITH MULTIPLE BUTTONS OF THE SAME ID, NEED TO USE CLASS AND THE FOLLOWING LINE INSTEAD TO MAKE AN INDIVIDUAL EVENT FOR EACH BUTTON
       document.querySelectorAll(".choose_question").forEach(button => {
         button.addEventListener("click", () => {
           console.log("clue picked")
           let row = button.dataset.value1
           let column = button.dataset.value2
+          console.log(row)
+          console.log(column)
 
           if (choosable_questions === "True"){
             console.log("REDIRECT TO BUZZER HERE")

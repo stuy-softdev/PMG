@@ -36,20 +36,29 @@
           Click on categories and questions to add clues to your board
         </p>
 
+        <p class="text-gray-300 mb-8">
+          {{ error }}
+        </p>
+
         <div class="grid grid-cols-6 gap-4">
           <!-- Category Row -->
           {% for col in range(6) %}
           <div class="bg-indigo-600 rounded-lg p-4">
-            <button
-              class="w-full bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-3 px-2 rounded-lg text-center transition duration-200"
+            <a
+              href="{{ url_for('edit', board = board, row = 0, column = col) }}"
             >
-              Category {{ col + 1 }}
-            </button>
+              <button
+                type = "button"
+                class="w-full bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-3 px-2 rounded-lg text-center transition duration-200"
+              >
+                {{ board_text[0][col] }}
+              </button>
+            </a>
           </div>
           {% endfor %}
 
           <!-- Question Grid -->
-          {% for row in range(6) %} {% for column in range(6) %}
+          {% for row in range(1,6) %} {% for column in range(6) %}
           <div>
             <a
               href="{{ url_for('edit', board = board, row = row, column = column) }}"
@@ -64,6 +73,37 @@
           </div>
           {% endfor %} {% endfor %}
         </div>
+        <br>
+        <br>
+
+        <div class = "grid grid-cols-2 gap-4">
+
+          <a
+            href="{{ url_for('create_board') }}"
+          >
+            <button
+              type="button"
+              class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-6 px-4 rounded-lg transition duration-200 text-center"
+            >
+              Save Board
+            </button>
+          </a>
+
+          {% if not already_published %}
+          <a
+            href="{{ url_for('publish_board', title = board) }}"
+          >
+            <button
+              type="button"
+              class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-6 px-4 rounded-lg transition duration-200 text-center"
+            >
+              Publish Board
+            </button>
+          </a>
+          {% endif %}
+
+        </div>
+
       </div>
     </div>
   </body>

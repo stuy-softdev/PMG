@@ -25,6 +25,8 @@ def create_board_table():
     contents =  """
                 CREATE TABLE IF NOT EXISTS board (
                     title           TEXT        NOT NULL,
+                    username        TEXT        NOT NULL,
+                    published       INTEGER,
                     row             INTEGER     NOT NULL,
                     column          INTEGER     NOT NULL,
                     quest_cat       TEXT        NOT NULL,

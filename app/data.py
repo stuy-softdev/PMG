@@ -239,16 +239,16 @@ def get_game_data(game_id):
 
 #=============================BOARD==============================#
 
-# creats a new board with placeholder text and null values for each board
-def create_new_board(title):
+# creats a new board with placeholder text and null values for each board. this board cannot be played until it is published
+def create_new_board(title, username):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
 
     for row in range(6):
         for column in range(6):
             c.execute(
-                'INSERT INTO board VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                (title, row, column, "Placeholder Text", None, None, None, None, None, 0,)
+                'INSERT INTO board VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                (title, username, 0, row, column, "Placeholder Text", None, None, None, None, 0, 0,)
             )
 
     db.commit()
@@ -339,7 +339,8 @@ def edit_question(board, row, column, question, points, correct, wrong1, wrong2,
 def edit_category(board, row, column, category):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-
+    print("CATEFORY")
+    print(category)
     c.execute(
         'UPDATE board SET (quest_cat) = (?) WHERE (title, row, column) = (?, ?, ?)',
         (category, board, row, column,)
@@ -349,6 +350,89 @@ def edit_category(board, row, column, category):
     db.close()
     return
 
+# if there is an existing board by that given title already, returns True
+def board_already_exists(title):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    exists = c.execute('SELECT * FROM board WHERE title = ?', (title,)).fetchone()
+
+    db.commit()
+    db.close()
+
+    if exists != None:
+        return True
+
+    return False
+
+# publishes a board and returns True. if it's already published, returns False
+def publish_board(title):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    for row in range(6):
+        for column in range(6):
+            c.execute(
+                'UPDATE board SET published = ? WHERE title = ?',
+                (1, title,)
+            )
+
+    db.commit()
+    db.close()
+
+    return True
+
+def already_published(title):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    already_published = c.execute('SELECT published FROM board WHERE title = ?', (title,)).fetchone()
+    print("huhuiuihihuihuhiu")
+    print(already_published[0])
+    if already_published[0] == 1:
+        print("already published")
+        return True
+
+    return False
+
+# returns a list of saved boards by the given username (not published)
+def get_saved_board_list(username):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    # i have row and column here to prevent 36 instances of the same board
+    list = c.execute('SELECT title FROM board WHERE (username, published, row, column) = (?, ?, ?, ?)', (username, 0, 0, 0)).fetchall()
+
+    list = clean_list(list)
+    print(list)
+
+    return list
+
+# returns a list of published boards by the given username
+def get_published_board_list(username):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    # i have row and column here to prevent 36 instances of the same board
+    list = c.execute('SELECT title FROM board WHERE (username, published, row, column) = (?, ?, ?, ?)', (username, 1, 0, 0,)).fetchall()
+
+    list = clean_list(list)
+    print(list)
+
+    return list
+
+# returns a list of all published boards
+def get_all_published_board_list():
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    # i have row and column here to prevent 36 instances of the same board
+    list = c.execute('SELECT title FROM board WHERE (published, row, column) = (?, ?, ?)', (1, 0, 0,)).fetchall()
+
+    list = clean_list(list)
+    print(list)
+
+    return list
 #=============================LOBBIES=============================#
 
 # returns an array of a lobby given the lobby_id. returns "No lobby found" if there isn't a lobby by that lobby_id
