@@ -1,5 +1,5 @@
 # THIS IS JEOPARDY!!!!!!! by Pomegranates
-## Team Members: Jason Chan (PM), Artemis Lee, Ethan Cheung  
+## Team Members: Jason Chan (PM/Devo 0), Artemis Lee (Devo 1), Ethan Cheung (Devo 2)
 
 ### Description
 Have you ever wanted to compete with your friends, flex your trivia knowledge and gain bragging rights for eternity? Then our website is definitely the best for you! Users will be able to play games of Jeopardy using pre-generated boards and they will compete with each other to see who gets to brag. There are several all-time leaderboards to see the which players are the best of the best. Users will also be able to create and edit their own custom boards and publish them for others to play.
@@ -17,16 +17,16 @@ cd PMG
 
 ### Set up virtual environment:
 
-``` python -m venv {{venv_path}} ```
+``` python3 -m venv venv ```
 
 
 ### Activate virtual environment:
 
   - Linux/Mac:
-    ``` source {{venv_path}}/bin/activate ```
+    ``` source venv/bin/activate ```
 
   - Windows:
-    ```{{venv_path}}\Scripts\activate ```
+    ```venv\Scripts\activate ```
 
 
 ### Install requirements:
@@ -37,25 +37,18 @@ cd PMG
 
 # Launch Codes:
 
-### Activate virtual environment:
-
-  - Linux/Mac:
-    ``` source {{venv_path}}/bin/activate ```
-
-  - Windows:
-    ``` {{venv_path}}\Scripts\activate ```
-
-
 ### Navigate to app folder:
 
   ``` cd PMG/app ```
 
 ### Run \_\_init\_\_.py
 
-  ``` python __init__.py ```
+  ``` python3 __init__.py ```
 
 
-### Launch Codes:
+### Alternatively, you can just run this instead:
 ```
-python app/__init__.py
+python3 app/__init__.py
 ```
+
+### Also, feel free to check out our live site at https://punicagranatumarepomegranates.me
