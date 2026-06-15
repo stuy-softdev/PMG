@@ -502,6 +502,16 @@ def choose_board_socket(socket_data): # the parameter name is different bc i nee
 def question_chosen_socket(data):
     emit('redirect_event', {'url': url_for('/buzzer/', lobby_id = data['lobby_id'], row = data['row'], column = data['column'])}, to=data['lobby_id'])
 
+@socketio.on('end_game')
+def end_game_socket(socket_data):
+
+    emit('redirect_event', {'url': url_for('end_game', lobby_id = socket_data['lobby_array'][0])}, to=socket_data['lobby_array'][0])
+
+@app.route("/end_game/<string:lobby_id>", methods=["GET", "POST"])
+def end_game(lobby_id):
+    ranked_usernames = data.end_game(lobby_id)
+
+    return render_template("end_game.html", ranked_usernames = ranked_usernames)
 
 @app.route("/game/<string:lobby_id>/<string:board>", methods=["GET", "POST"])
 def game(lobby_id, board):

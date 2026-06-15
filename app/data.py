@@ -2,6 +2,7 @@ import sqlite3                      # enable control of an sqlite database
 import hashlib                      # for consistent hashes
 import secrets                      # to generate ids
 from werkzeug.security import generate_password_hash, check_password_hash
+import random
 
 DB_FILE="data.db"
 
@@ -236,6 +237,77 @@ def get_game_data(game_id):
 
     return game_data
 
+# ends the game and returns an array of the results, with first place at the start of the array
+def end_game(game_id):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    adding_points = []
+    adding_points.append(c.execute(
+        'SELECT points1 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    adding_points.append(c.execute(
+        'SELECT points2 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    adding_points.append(c.execute(
+        'SELECT points3 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+
+    usernames = []
+    usernames.append(c.execute(
+        'SELECT player1 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    usernames.append(c.execute(
+        'SELECT player2 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    usernames.append(c.execute(
+        'SELECT player3 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+
+    usernames = clean_list(usernames)
+
+    current_points = []
+    current_points.append(c.execute(
+        'SELECT total_points FROM users WHERE username = ?', (usernames[0],)
+    ).fetchone())
+    current_points.append(c.execute(
+        'SELECT total_points FROM users WHERE username = ?', (usernames[1],)
+    ).fetchone())
+    current_points.append(c.execute(
+        'SELECT total_points FROM users WHERE username = ?', (usernames[2],)
+    ).fetchone())
+
+    adding_points = clean_list(adding_points)
+    current_points = clean_list(current_points)
+
+    total_pts = [current_points[0] + adding_points[0], current_points[1] + adding_points[1], current_points[2] + adding_points[2]]
+    c.execute('UPDATE users SET total_points = ? WHERE username = ?', (total_pts[0], usernames[0],))
+    c.execute('UPDATE users SET total_points = ? WHERE username = ?', (total_pts[1], usernames[1],))
+    c.execute('UPDATE users SET total_points = ? WHERE username = ?', (total_pts[2], usernames[2],))
+
+    ranked_usernames = rank_players(adding_points, usernames)
+    print(ranked_usernames)
+    stats = [] # wins of first place, runnerups of second place, losses of third place
+
+    stats.append(c.execute('SELECT wins FROM users WHERE username = ?', (ranked_usernames[0],)).fetchone())
+    stats.append(c.execute('SELECT runnerups FROM users WHERE username = ?', (ranked_usernames[1],)).fetchone())
+    stats.append(c.execute('SELECT losses FROM users WHERE username = ?', (ranked_usernames[2],)).fetchone())
+
+    stats = clean_list(stats)
+
+    c.execute('UPDATE users SET wins = ? WHERE username = ?', (stats[0] + 1, ranked_usernames[0],))
+    c.execute('UPDATE users SET runnerups = ? WHERE username = ?', (stats[1] + 1, ranked_usernames[1],))
+    c.execute('UPDATE users SET losses = ? WHERE username = ?', (stats[2] + 1, ranked_usernames[2],))
+
+    board_name = c.execute('SELECT board FROM game WHERE game_id = ?', (game_id,)).fetchone()[0]
+    #if "randomally_generated_board" in board_name:
+    #    c.execute('DELETE FROM board WHERE title = ?', (board_name,))
+
+    #c.execute('DELETE FROM game WHERE game_id = ?', (game_id,))
+
+    db.commit()
+    db.close()
+    return ranked_usernames
 
 #=============================BOARD==============================#
 
@@ -261,7 +333,7 @@ def create_board_from_api(data, title):
 
     #create_new_board("pp")
     #print(title)
-    create_new_board(title)
+    create_new_board(title, "None")
 
     # edits category names
     for column in range(6):
@@ -593,3 +665,10 @@ def delete_row(table, ID_fieldname, id):
 def gen_id():
     # use secrets module to generate a random 32-byte string
     return secrets.token_hex(32)
+
+
+def rank_players(numbers, players):
+    paired = list(zip(players, numbers))
+    random.shuffle(paired)  # randomize tie order
+    paired.sort(key=lambda x: x[1], reverse=True)
+    return [players for players, _ in paired]
