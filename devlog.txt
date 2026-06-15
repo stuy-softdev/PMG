@@ -177,3 +177,11 @@ ethanC -- 2026-06-12 22:27
 	add css to find and create game
 	fix navbar to be consistent
 	remove not needed stuff 
+
+ethanC -- 2026-06-15 00:30
+	add username to navbar
+	move logout button to right
+	move other buttons to left
+	add leaderboards to navbar
+	add css to leaderboards page
+	fixed not visible text to be visible
