@@ -3,9 +3,38 @@
   <head>
     <title>New Game</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      /* Spinner overlay */
+      #loaderOverlay {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 50;
+      }
+      .loader {
+        border: 12px solid #f3f3f3;
+        border-top: 12px solid #3498db;
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
 
   <body class="h-full">
+    <div id="loaderOverlay"><div class="loader"></div></div>
     <nav class="bg-gray-800 text-white py-3 px-4">
       <div class="max-w-6xl mx-auto flex items-center justify-between">
         <div class="flex items-center space-x-4">
@@ -27,12 +56,25 @@
           >
         </div>
         <div class="flex items-center space-x-4">
+          {% if username %}
           <p class="text-sm">Signed in as {{ username }}</p>
           <a
             class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
             href="/logout"
             >Logout</a
           >
+          {% else %}
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/login"
+            >Login</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/register"
+            >Register</a
+          >
+          {% endif %}
         </div>
       </div>
     </nav>
@@ -105,9 +147,26 @@
         "choose_random_board",
       );
 
+      function showLoader() {
+        document.getElementById("loaderOverlay").style.display = "flex";
+        choose_random_board.disabled = true;
+        document
+          .querySelectorAll(".choose_published_board")
+          .forEach((b) => (b.disabled = true));
+      }
+
+      function hideLoader() {
+        document.getElementById("loaderOverlay").style.display = "none";
+        choose_random_board.disabled = false;
+        document
+          .querySelectorAll(".choose_published_board")
+          .forEach((b) => (b.disabled = false));
+      }
+
       choose_random_board.addEventListener("click", function (event) {
         event.preventDefault();
         console.log("choose_random_board clicked");
+        showLoader();
         socket.emit("choose_board", {
           lobby_id: lobby_array[0],
           type_of_board: "random",
@@ -121,6 +180,7 @@
           let board = button.dataset.value1;
           event.preventDefault();
           console.log("choose_published_board clicked");
+          showLoader();
           socket.emit("choose_board", {
             lobby_id: lobby_array[0],
             type_of_board: "published",
@@ -131,6 +191,7 @@
 
       socket.on("redirect_event", (data) => {
         console.log("redirecting...");
+        hideLoader();
         window.location.href = data.url;
       });
     </script>
