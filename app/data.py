@@ -261,7 +261,7 @@ def create_board_from_api(data, title):
 
     #create_new_board("pp")
     #print(title)
-    create_new_board(title)
+    create_new_board(title, None)
 
     # edits category names
     for column in range(6):
