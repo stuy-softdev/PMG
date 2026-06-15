@@ -1,0 +1,61 @@
+<!doctype html>
+<html class="h-full bg-gray-900">
+  <head>
+    <title>Lobby</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+
+  <body class="h-full text-white">
+    <nav class="bg-gray-800 text-white py-3 px-4">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <a class="font-bold text-xl tracking-tight" href="/home">Jeffpardy</a>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/find_or_create_room"
+            >New Game</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/create_board"
+            >Create Board</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/leaderboards"
+            >Leaderboards</a
+          >
+        </div>
+        <div class="flex items-center space-x-4">
+          <p class="text-sm">Signed in as {{ username }}</p>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/logout"
+            >Logout</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <div class="min-h-full bg-gray-900 py-10 px-4 sm:px-6 lg:px-8">
+      <h1>THE GAME HAS ENDED!</h1>
+      <h2>Results:</h2>
+      <br>
+      <br>
+      <h2>IN FIRST PLACE WE HAVE {{ ranked_usernames[0] }}!!!!!!</h2>
+      <h2>IN SECOND PLACE WE HAVE {{ ranked_usernames[1] }}!!!!!!</h2>
+      <h2>AND IN DEAD LAST WE HAVE {{ ranked_usernames[2] }}!!!!!!</h2>
+      <p>{{ ranked_usernames[2] }} you suck :P</p>
+
+      <a href="{{ url_for('home')}}">
+        <button
+          type="button"
+          class="w-full text-left break-words bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-lg transition duration-200"
+        >
+          Return to home
+        </button>
+      </a>
+
+    </div>
+  </body>
+</html>

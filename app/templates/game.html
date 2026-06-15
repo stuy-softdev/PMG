@@ -93,6 +93,13 @@
           {% endfor %} {% endfor %}
         </div>
       </div>
+
+      <button
+        id = "end_game_button"
+        class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-8 px-4 rounded-lg transition duration-200 text-center text-lg"
+      >
+        End Game
+      </button>
     </div>
 
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
@@ -142,6 +149,19 @@
             console.log("REDIRECT TO BUZZER HERE");
           }
         });
+      });
+
+      const end_game_button = document.getElementById("end_game_button");
+
+      end_game_button.addEventListener("click", () => {
+        if (choosable_questions === "True") {
+          socket.emit("end_game", { "lobby_array" : lobby_array });
+        }
+      });
+
+      socket.on("redirect_event", (data) => {
+        console.log("redirecting...");
+        window.location.href = data.url;
       });
 
       /*choosebutton.addEventListener("click", (event) => {
