@@ -83,7 +83,7 @@ function createanswerForm() {
   var already_answered = false;
   var answers_div = document.getElementById("display_answer_choices");
 
-  function disableAllAnswers() {
+  function disableAllAnswers(username) {
     var btns = answers_div.querySelectorAll("button");
     btns.forEach(function(b) { b.disabled = true; });
   }
@@ -107,16 +107,21 @@ function createanswerForm() {
 
       if (pickedDecoded === correct_answer) {
         document.getElementById("message").textContent = "Correct";
-        
-        let addPointsEvent = new CustomEvent('addPoints', { points : questionPoints}); //event that sends the amount of points a player has won, MAKE LISTENER IN PYTHON AND SEND POINT DATA TO JS
-        document.dispatchEvent(addPointsEvent);
+
+        let pointdata = { points : questionPoints, username : username, row : row, column : column };
+        fetch('/add_points', { method: 'POST', headers : { 'Content-Type': 'application/json' }, body: JSON.stringify(pointdata) });
+        .then(response => response.json());
+        .then(data => console.log('Server response:', data));
+        socket.emit("question_answered")
         
       } else {
         document.getElementById("message").textContent =
           "Incorrect. Correct answer: " + correct_answer;
-
-          //make socket function that emits to lobby that player was wrong and runs the buzzer command again for someone else to try -- MAKE TIMES AND USER INTO ARRAY
-          
+        let pointdata = { points : -questionPoints, username : username, row : row, column : column };
+        fetch('/add_points', { method: 'POST', headers : { 'Content-Type': 'application/json' }, body: JSON.stringify(pointdata) });
+        .then(response => response.json());
+        .then(data => console.log('Server response:', data));
+        socket.emit("question_answered")
       }
 
       disableAllAnswers();
@@ -179,7 +184,7 @@ function createanswerForm() {
     if playersAnswered == 3 { //REMEMBER TO SEND USERNAME DATA FROM PYTHON -- once the entire lobby has answered, the fastest player is allowed to submit an answer
       if username == fastestPlayer{
 
-        createanswerForm();
+        createanswerForm(username);
         
       }
     }

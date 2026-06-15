@@ -1,4 +1,4 @@
-from __init__ import app
+from __init__ import app, socketio
 
-if __name__ == "__main__": # BE CAREFUL WITH THIS. IT MIGHT SAVE AS THOSE EVIL FANCY QUOTES WHICH WILL BREAK IT
-	app.run() # <tab> just represents the tab character, as markdown doesn't let me enter a tab there
+if __name__ == "__main__":
+	socketio.run(app,debug=True)

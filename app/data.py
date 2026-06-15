@@ -333,7 +333,11 @@ def create_board_from_api(data, title):
 
     #create_new_board("pp")
     #print(title)
+<<<<<<< HEAD
     create_new_board(title, "None")
+=======
+    create_new_board(title, None)
+>>>>>>> c5907fe39711ad6f04081feecc57742f0b6bc24f
 
     # edits category names
     for column in range(6):
