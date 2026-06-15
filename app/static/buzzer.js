@@ -193,6 +193,11 @@ function createanswerForm() {
 
   });
 
+  socket.on("redirect_event", (data) => {
+    console.log("redirecting...");
+    window.location.href = data.url;
+  });
+
   displayquestion();
 
 
