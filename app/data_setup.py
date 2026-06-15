@@ -25,6 +25,8 @@ def create_board_table():
     contents =  """
                 CREATE TABLE IF NOT EXISTS board (
                     title           TEXT        NOT NULL,
+                    username        TEXT        NOT NULL,
+                    published       INTEGER,
                     row             INTEGER     NOT NULL,
                     column          INTEGER     NOT NULL,
                     quest_cat       TEXT        NOT NULL,
@@ -41,16 +43,27 @@ def create_board_table():
 def create_game_table():
     contents = """
                CREATE TABLE IF NOT EXISTS game (
+                   game_id          TEXT      NOT NULL   PRIMARY KEY,
                    board            TEXT         NOT NULL,
                    player1	        TEXT	     NOT NULL,
                    player2          TEXT,
                    player3          TEXT,
+                   player_in_control TEXT,
                    points1          INTEGER      NOT NULL,
                    points2          INTEGER,
                    points3          INTEGER
                )"""
     create_table(contents)
 
+def create_lobbies_table():
+    contents = """
+               CREATE TABLE IF NOT EXISTS lobbies (
+                   lobby_id         TEXT         NOT NULL   PRIMARY KEY,
+                   player1          TEXT,
+                   player2	        TEXT,
+                   player3          TEXT
+               )"""
+    create_table(contents)
 
 #=============================GENERAL=HELPERS=============================#
 

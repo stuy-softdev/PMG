@@ -2,6 +2,7 @@ import sqlite3                      # enable control of an sqlite database
 import hashlib                      # for consistent hashes
 import secrets                      # to generate ids
 from werkzeug.security import generate_password_hash, check_password_hash
+import random
 
 DB_FILE="data.db"
 
@@ -92,16 +93,44 @@ def add_user(username, password):
 
     return "success"
 
+# returns a 2d array of all usernames and their total_points, wins, runnerups, and losses, in that order
+def get_all_user_stats():
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    all_stats = []
+    everything_in_users_db = c.execute('SELECT * FROM USERS')
+
+    for i in everything_in_users_db:
+        username = i[0]
+        total_points = i[3]
+        wins = i[4]
+        runnerups = i[5]
+        losses = i[6]
+
+        all_stats.append([username, total_points, wins, runnerups, losses])
+
+    print(all_stats)
+    return all_stats
+
 #=============================GAME==============================#
 
-# upon start of a new game, resets board
-def setup_new_game(board):
+# upon start of a new game, resets board and creates a game id with that board tied to it
+def setup_new_game(board, game_id, user1, user2, user3):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
 
     c.execute(
         'UPDATE board SET chosen = 0 WHERE title = ?',
         (board,)
+    )
+
+    print("GAGAYGAYGAYG")
+    print(game_id)
+
+    c.execute(
+        'INSERT INTO game VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        (game_id, board, user1, user2, user3, user1, 0, 0, 0,)
     )
 
     db.commit()
@@ -168,18 +197,130 @@ def get_all_answers(board, row, column):
 
     return choices
 
+# given the game_id, returns an array of the data in the game table except for the game_id, in that order
+# for example, board is the first item in the array, player1 is the second item, etc.
+def get_game_data(game_id):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    game_data = []
+
+    game_data.append(c.execute(
+        'SELECT board FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    game_data.append(c.execute(
+        'SELECT player1 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    game_data.append(c.execute(
+        'SELECT player2 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    game_data.append(c.execute(
+        'SELECT player3 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    game_data.append(c.execute(
+        'SELECT player_in_control FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    game_data.append(c.execute(
+        'SELECT points1 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    game_data.append(c.execute(
+        'SELECT points2 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    game_data.append(c.execute(
+        'SELECT points3 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+
+    db.commit()
+    db.close()
+
+    game_data = clean_list(game_data)
+
+    return game_data
+
+# ends the game and returns an array of the results, with first place at the start of the array
+def end_game(game_id):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    adding_points = []
+    adding_points.append(c.execute(
+        'SELECT points1 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    adding_points.append(c.execute(
+        'SELECT points2 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    adding_points.append(c.execute(
+        'SELECT points3 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+
+    usernames = []
+    usernames.append(c.execute(
+        'SELECT player1 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    usernames.append(c.execute(
+        'SELECT player2 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+    usernames.append(c.execute(
+        'SELECT player3 FROM game WHERE game_id = ?', (game_id,)
+    ).fetchone())
+
+    usernames = clean_list(usernames)
+
+    current_points = []
+    current_points.append(c.execute(
+        'SELECT total_points FROM users WHERE username = ?', (usernames[0],)
+    ).fetchone())
+    current_points.append(c.execute(
+        'SELECT total_points FROM users WHERE username = ?', (usernames[1],)
+    ).fetchone())
+    current_points.append(c.execute(
+        'SELECT total_points FROM users WHERE username = ?', (usernames[2],)
+    ).fetchone())
+
+    adding_points = clean_list(adding_points)
+    current_points = clean_list(current_points)
+
+    total_pts = [current_points[0] + adding_points[0], current_points[1] + adding_points[1], current_points[2] + adding_points[2]]
+    c.execute('UPDATE users SET total_points = ? WHERE username = ?', (total_pts[0], usernames[0],))
+    c.execute('UPDATE users SET total_points = ? WHERE username = ?', (total_pts[1], usernames[1],))
+    c.execute('UPDATE users SET total_points = ? WHERE username = ?', (total_pts[2], usernames[2],))
+
+    ranked_usernames = rank_players(adding_points, usernames)
+    print(ranked_usernames)
+    stats = [] # wins of first place, runnerups of second place, losses of third place
+
+    stats.append(c.execute('SELECT wins FROM users WHERE username = ?', (ranked_usernames[0],)).fetchone())
+    stats.append(c.execute('SELECT runnerups FROM users WHERE username = ?', (ranked_usernames[1],)).fetchone())
+    stats.append(c.execute('SELECT losses FROM users WHERE username = ?', (ranked_usernames[2],)).fetchone())
+
+    stats = clean_list(stats)
+
+    c.execute('UPDATE users SET wins = ? WHERE username = ?', (stats[0] + 1, ranked_usernames[0],))
+    c.execute('UPDATE users SET runnerups = ? WHERE username = ?', (stats[1] + 1, ranked_usernames[1],))
+    c.execute('UPDATE users SET losses = ? WHERE username = ?', (stats[2] + 1, ranked_usernames[2],))
+
+    board_name = c.execute('SELECT board FROM game WHERE game_id = ?', (game_id,)).fetchone()[0]
+    #if "randomally_generated_board" in board_name:
+    #    c.execute('DELETE FROM board WHERE title = ?', (board_name,))
+
+    #c.execute('DELETE FROM game WHERE game_id = ?', (game_id,))
+
+    db.commit()
+    db.close()
+    return ranked_usernames
+
 #=============================BOARD==============================#
 
-# creats a new board with placeholder text and null values for each board
-def create_new_board(title):
+# creats a new board with placeholder text and null values for each board. this board cannot be played until it is published
+def create_new_board(title, username):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
 
     for row in range(6):
         for column in range(6):
             c.execute(
-                'INSERT INTO board VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                (title, row, column, "Placeholder Text", None, None, None, None, None, 0,)
+                'INSERT INTO board VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                (title, username, 0, row, column, "Placeholder Text", None, None, None, None, 0, 0,)
             )
 
     db.commit()
@@ -192,8 +333,9 @@ def create_board_from_api(data, title):
 
     #create_new_board("pp")
     #print(title)
-    create_new_board(title)
+    create_new_board(title, "None")
 
+    # edits category names
     for column in range(6):
         edit_question(
             title, 0, column, data[column][0]["category"], 0, None, None, None, None
@@ -203,7 +345,7 @@ def create_board_from_api(data, title):
         for row in range(5):
             if (data[column][row]["type"] == "boolean"):
                 edit_question(
-                    title, row + 1, column, data[column][row]["question"], (row + 1) * 200, data[column][row]["correct_answer"], data[column][row]["incorrect_answers"][0], None, None
+                    title, row + 1, column, "True or False: " + data[column][row]["question"], (row + 1) * 200, data[column][row]["correct_answer"], data[column][row]["incorrect_answers"][0], None, None
                 )
             else:
                 edit_question(
@@ -269,7 +411,8 @@ def edit_question(board, row, column, question, points, correct, wrong1, wrong2,
 def edit_category(board, row, column, category):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-
+    print("CATEFORY")
+    print(category)
     c.execute(
         'UPDATE board SET (quest_cat) = (?) WHERE (title, row, column) = (?, ?, ?)',
         (category, board, row, column,)
@@ -278,6 +421,138 @@ def edit_category(board, row, column, category):
     db.commit()
     db.close()
     return
+
+# if there is an existing board by that given title already, returns True
+def board_already_exists(title):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    exists = c.execute('SELECT * FROM board WHERE title = ?', (title,)).fetchone()
+
+    db.commit()
+    db.close()
+
+    if exists != None:
+        return True
+
+    return False
+
+# publishes a board and returns True. if it's already published, returns False
+def publish_board(title):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    for row in range(6):
+        for column in range(6):
+            c.execute(
+                'UPDATE board SET published = ? WHERE title = ?',
+                (1, title,)
+            )
+
+    db.commit()
+    db.close()
+
+    return True
+
+def already_published(title):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    already_published = c.execute('SELECT published FROM board WHERE title = ?', (title,)).fetchone()
+    print("huhuiuihihuihuhiu")
+    print(already_published[0])
+    if already_published[0] == 1:
+        print("already published")
+        return True
+
+    return False
+
+# returns a list of saved boards by the given username (not published)
+def get_saved_board_list(username):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    # i have row and column here to prevent 36 instances of the same board
+    list = c.execute('SELECT title FROM board WHERE (username, published, row, column) = (?, ?, ?, ?)', (username, 0, 0, 0)).fetchall()
+
+    list = clean_list(list)
+    print(list)
+
+    return list
+
+# returns a list of published boards by the given username
+def get_published_board_list(username):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    # i have row and column here to prevent 36 instances of the same board
+    list = c.execute('SELECT title FROM board WHERE (username, published, row, column) = (?, ?, ?, ?)', (username, 1, 0, 0,)).fetchall()
+
+    list = clean_list(list)
+    print(list)
+
+    return list
+
+# returns a list of all published boards
+def get_all_published_board_list():
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    # i have row and column here to prevent 36 instances of the same board
+    list = c.execute('SELECT title FROM board WHERE (published, row, column) = (?, ?, ?)', (1, 0, 0,)).fetchall()
+
+    list = clean_list(list)
+    print(list)
+
+    return list
+#=============================LOBBIES=============================#
+
+# returns an array of a lobby given the lobby_id. returns "No lobby found" if there isn't a lobby by that lobby_id
+def get_lobby_array(lobby_id):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    lobby_array = c.execute("SELECT * FROM lobbies WHERE lobby_id = ?" , (lobby_id,)).fetchone()
+
+    print("456456456456")
+    print(lobby_array)
+
+    if lobby_array == None:
+        return "No lobby found"
+
+    # clean_list doesn't work when there's a None in the array, so i'm doing this instead
+    returning_the_lobby_array = []
+
+    for item in lobby_array:
+        returning_the_lobby_array.append(item)
+
+    print("returning the lobby array")
+    print(returning_the_lobby_array)
+    return returning_the_lobby_array
+
+# removes the user from the room that they are connected in and returns True. if the user is not in any room in the first place, returns False.
+def remove_user_from_lobby(username):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    is_user_in_room = c.execute(
+        "SELECT * FROM lobbies WHERE player1 = ? OR player2 = ? OR player3 = ?",
+        (username, username, username,)
+    ).fetchone()
+
+    if is_user_in_room == None:
+        return False
+
+    else:
+        for i in range(1,4):
+            if is_user_in_room[i] == username:
+                c.execute("UPDATE lobbies SET " + "player" + str(i) + " = ? WHERE lobby_id = ?",
+                    (None, is_user_in_room[0],)
+                )
+
+    db.commit()
+    db.close()
+    return True
 
 #=============================HELPERS=============================#
 
@@ -390,3 +665,10 @@ def delete_row(table, ID_fieldname, id):
 def gen_id():
     # use secrets module to generate a random 32-byte string
     return secrets.token_hex(32)
+
+
+def rank_players(numbers, players):
+    paired = list(zip(players, numbers))
+    random.shuffle(paired)  # randomize tie order
+    paired.sort(key=lambda x: x[1], reverse=True)
+    return [players for players, _ in paired]

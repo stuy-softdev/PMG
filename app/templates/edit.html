@@ -6,26 +6,47 @@
   </head>
 
   <body class="h-full">
-    <nav
-      class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between"
-    >
-      <a class="font-bold text-xl tracking-tight" href="/home">Jeopardy</a>
-      <div class="flex items-center">
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/new_game"
-          >New Game</a
-        >
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/create_new"
-          >Create Board</a
-        >
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/logout"
-          >Logout</a
-        >
+    <nav class="bg-gray-800 text-white py-3 px-4">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <a class="font-bold text-xl tracking-tight" href="/home">Jeffpardy</a>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/find_or_create_room"
+            >New Game</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/create_board"
+            >Create Board</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/leaderboards"
+            >Leaderboards</a
+          >
+        </div>
+        <div class="flex items-center space-x-4">
+          {% if username %}
+          <p class="text-sm">Signed in as {{ username }}</p>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/logout"
+            >Logout</a
+          >
+          {% else %}
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/login"
+            >Login</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/register"
+            >Register</a
+          >
+          {% endif %}
+        </div>
       </div>
     </nav>
 

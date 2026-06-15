@@ -3,29 +3,79 @@
   <head>
     <title>New Game</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      /* Spinner overlay */
+      #loaderOverlay {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 50;
+      }
+      .loader {
+        border: 12px solid #f3f3f3;
+        border-top: 12px solid #3498db;
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
 
   <body class="h-full">
-    <nav
-      class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between"
-    >
-      <a class="font-bold text-xl tracking-tight" href="/home">Jeopardy</a>
-      <div class="flex items-center">
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/new_game"
-          >New Game</a
-        >
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/create_new"
-          >Create Board</a
-        >
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/logout"
-          >Logout</a
-        >
+    <div id="loaderOverlay"><div class="loader"></div></div>
+    <nav class="bg-gray-800 text-white py-3 px-4">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <a class="font-bold text-xl tracking-tight" href="/home">Jeffpardy</a>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/find_or_create_room"
+            >New Game</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/create_board"
+            >Create Board</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/leaderboards"
+            >Leaderboards</a
+          >
+        </div>
+        <div class="flex items-center space-x-4">
+          {% if username %}
+          <p class="text-sm">Signed in as {{ username }}</p>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/logout"
+            >Logout</a
+          >
+          {% else %}
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/login"
+            >Login</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/register"
+            >Register</a
+          >
+          {% endif %}
+        </div>
       </div>
     </nav>
 
@@ -34,119 +84,116 @@
         <div class="bg-gray-800 rounded-lg shadow-xl p-8">
           <h1 class="text-4xl font-bold text-white mb-2">New Game</h1>
           <p class="text-gray-300 mb-8">
-            Enter usernames and passwords for three players. Leave blank to play
-            as guest.
+            {{ choosing_player }}, please select a board to play, or generate a
+            random one!
           </p>
 
-          <form method="POST" class="space-y-8">
-            <!-- Player 1 -->
-            <div class="bg-gray-700 rounded-lg p-6 space-y-4">
-              <h2 class="text-xl font-semibold text-indigo-400">Player 1</h2>
-              <div>
-                <label
-                  for="username1"
-                  class="block text-sm font-medium text-gray-200 mb-2"
-                  >Username</label
-                >
-                <input
-                  type="text"
-                  id="username1"
-                  name="username1"
-                  class="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              <div>
-                <label
-                  for="password1"
-                  class="block text-sm font-medium text-gray-200 mb-2"
-                  >Password</label
-                >
-                <input
-                  type="password"
-                  id="password1"
-                  name="password1"
-                  class="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-            </div>
-
-            <!-- Player 2 -->
-            <div class="bg-gray-700 rounded-lg p-6 space-y-4">
-              <h2 class="text-xl font-semibold text-indigo-400">Player 2</h2>
-              <div>
-                <label
-                  for="username2"
-                  class="block text-sm font-medium text-gray-200 mb-2"
-                  >Username</label
-                >
-                <input
-                  type="text"
-                  id="username2"
-                  name="username2"
-                  class="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              <div>
-                <label
-                  for="password2"
-                  class="block text-sm font-medium text-gray-200 mb-2"
-                  >Password</label
-                >
-                <input
-                  type="password"
-                  id="password2"
-                  name="password2"
-                  class="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-            </div>
-
-            <!-- Player 3 -->
-            <div class="bg-gray-700 rounded-lg p-6 space-y-4">
-              <h2 class="text-xl font-semibold text-indigo-400">Player 3</h2>
-              <div>
-                <label
-                  for="username3"
-                  class="block text-sm font-medium text-gray-200 mb-2"
-                  >Username</label
-                >
-                <input
-                  type="text"
-                  id="username3"
-                  name="username3"
-                  class="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              <div>
-                <label
-                  for="password3"
-                  class="block text-sm font-medium text-gray-200 mb-2"
-                  >Password</label
-                >
-                <input
-                  type="password"
-                  id="password3"
-                  name="password3"
-                  class="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-            </div>
-
-            {% if invalid %}
-            <div class="bg-red-500/10 border border-red-500 rounded-lg p-4">
-              <p class="text-red-400 font-medium">{{ invalid }}</p>
-            </div>
-            {% endif %}
-
+          <div class="space-y-6">
             <button
-              type="submit"
+              id="choose_random_board"
               class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
             >
-              Start Game
+              Generate a random board
             </button>
-          </form>
+
+            <div>
+              <h2 class="text-lg font-semibold text-indigo-300 mb-3">
+                Published Boards
+              </h2>
+              {% if all_published_board_list %}
+              <div class="space-y-3 max-h-64 overflow-auto">
+                {% for board in all_published_board_list %}
+                <button
+                  class="choose_published_board w-full text-left break-words bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-lg transition duration-200"
+                  data-value1="{{ board }}"
+                >
+                  {{ board }}
+                </button>
+                {% endfor %}
+              </div>
+              {% else %}
+              <p class="text-sm text-gray-400">
+                No published boards available.
+              </p>
+              {% endif %}
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+    <script>
+      const socket = io();
+
+      const params = new URLSearchParams(window.location.search);
+      const lobby_id = params.get("lobby_id");
+      let lobby_array = [
+        "{{ lobby_id }}",
+        "{{ username1 }}",
+        "{{ username2 }}",
+        "{{ username3 }}",
+      ];
+
+      console.log("why");
+      console.log(lobby_array);
+
+      socket.on("connect", () => {
+        socket.emit("stay_connected", { lobby_array: lobby_array });
+      });
+
+      const choose_random_board = document.getElementById(
+        "choose_random_board",
+      );
+
+      function showLoader() {
+        document.getElementById("loaderOverlay").style.display = "flex";
+        choose_random_board.disabled = true;
+        document
+          .querySelectorAll(".choose_published_board")
+          .forEach((b) => (b.disabled = true));
+      }
+
+      function hideLoader() {
+        document.getElementById("loaderOverlay").style.display = "none";
+        choose_random_board.disabled = false;
+        document
+          .querySelectorAll(".choose_published_board")
+          .forEach((b) => (b.disabled = false));
+      }
+
+      choose_random_board.addEventListener("click", function (event) {
+        event.preventDefault();
+        console.log("choose_random_board clicked");
+        showLoader();
+        socket.emit("choose_board", {
+          lobby_id: lobby_array[0],
+          type_of_board: "random",
+        });
+      });
+
+      // WITH MULTIPLE BUTTONS OF THE SAME ID, NEED TO USE CLASS AND THE FOLLOWING LINE INSTEAD TO MAKE AN INDIVIDUAL EVENT FOR EACH BUTTON
+      document.querySelectorAll(".choose_published_board").forEach((button) => {
+        button.addEventListener("click", function (event) {
+          console.log("clicked!");
+          let board = button.dataset.value1;
+          event.preventDefault();
+          console.log("choose_published_board clicked");
+          showLoader();
+          socket.emit("choose_board", {
+            lobby_id: lobby_array[0],
+            type_of_board: "published",
+            board: board,
+          });
+        });
+      });
+
+      socket.on("redirect_event", (data) => {
+        console.log("redirecting...");
+        hideLoader();
+        window.location.href = data.url;
+      });
+    </script>
   </body>
 </html>

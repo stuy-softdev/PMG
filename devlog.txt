@@ -141,3 +141,47 @@ jasonC -- 2026-05-28 7:03
 	fixed navbar navigating to an unknown page in create_new
 	fixed displaying categoeires in game.html
 	JESUS CHRIST WE ARE SO COOKED FOR THIS DEMO!!!!!!!!!
+
+jasonC -- 2026-06-02 7:12
+	DEVELOPER PREVIEWS: The Aftermath
+		we did not get any feedback bc we were on a trip during demos :(
+
+jasonC -- 2026-06-03 10:11
+	changed how the db should work on the game
+
+ethanC -- 2026-06-03 12:09
+    added buzzer images
+
+ethanC -- 2026-06-05 11:13
+	fix merge stuff back
+
+jasonC -- 2026-06-07 16:21
+	67676767676767
+	answering questions now function
+	now need to handle the database for it
+
+ethanC -- 2026-06-11 11:29
+    completed css animation on homepage
+    changed game name to Jeffpardy
+
+jasonC -- 2026-06-12 01:22
+	cleaned up artemis's code and now joining lobbies work let's go!
+
+jasonC -- 2026-06-12 11:46
+	joining lobby notifications work, need to test with multiple browsers
+
+ethanC -- 2026-06-12 11:47
+	lobby stuff has headers and player list and button to start game
+
+ethanC -- 2026-06-12 22:27
+	add css to find and create game
+	fix navbar to be consistent
+	remove not needed stuff 
+
+ethanC -- 2026-06-15 00:30
+	add username to navbar
+	move logout button to right
+	move other buttons to left
+	add leaderboards to navbar
+	add css to leaderboards page
+	fixed not visible text to be visible

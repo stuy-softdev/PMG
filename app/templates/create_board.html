@@ -1,0 +1,143 @@
+<!doctype html>
+<html class="h-full bg-gray-900">
+  <head>
+    <title>Create Board</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+
+  <body class="h-full">
+    <nav class="bg-gray-800 text-white py-3 px-4">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <a class="font-bold text-xl tracking-tight" href="/home">Jeffpardy</a>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/find_or_create_room"
+            >New Game</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/create_board"
+            >Create Board</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/leaderboards"
+            >Leaderboards</a
+          >
+        </div>
+        <div class="flex items-center space-x-4">
+          {% if username %}
+          <p class="text-sm">Signed in as {{ username }}</p>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/logout"
+            >Logout</a
+          >
+          {% else %}
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/login"
+            >Login</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/register"
+            >Register</a
+          >
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <div class="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl mx-auto">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-8">
+          <h1 class="text-4xl font-bold text-white mb-2">Create Your Board</h1>
+          <p class="text-gray-300 mb-8" required>Enter your board title</p>
+          <p class="text-gray-300 mb-8">{{ error }}</p>
+
+          <form method="post" class="space-y-6">
+            <div>
+              <textarea
+                id="title"
+                name="title"
+                class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-sm"
+                placeholder="Enter your board title here..."
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+            >
+              Create Board
+            </button>
+          </form>
+
+          <div class="mt-8 grid gap-6 md:grid-cols-2">
+            <section
+              class="bg-gray-900/80 rounded-lg p-6 border border-white/10"
+            >
+              <h2 class="text-xl font-semibold text-indigo-300 mb-4">
+                Your Saved Boards
+              </h2>
+              <p class="text-sm text-gray-400 mb-4">
+                Boards you have saved but not yet published.
+              </p>
+
+              {% if saved_board_list %}
+              <div class="space-y-3">
+                {% for board in saved_board_list %}
+                <div>
+                  <a href="{{ url_for('create', board = board) }}">
+                    <button
+                      type="button"
+                      class="w-full text-left break-words bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-lg transition duration-200"
+                    >
+                      {{ board }}
+                    </button>
+                  </a>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <p class="text-sm text-gray-500">No saved boards yet.</p>
+              {% endif %}
+            </section>
+
+            <section
+              class="bg-gray-900/80 rounded-lg p-6 border border-white/10"
+            >
+              <h2 class="text-xl font-semibold text-indigo-300 mb-4">
+                Your Published Boards
+              </h2>
+              <p class="text-sm text-gray-400 mb-4">
+                Boards you've published and can play or share.
+              </p>
+
+              {% if published_board_list %}
+              <div class="space-y-3">
+                {% for board in published_board_list %}
+                <div>
+                  <a href="{{ url_for('create', board = board) }}">
+                    <button
+                      type="button"
+                      class="w-full text-left break-words bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-4 rounded-lg transition duration-200"
+                    >
+                      {{ board }}
+                    </button>
+                  </a>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <p class="text-sm text-gray-500">No published boards yet.</p>
+              {% endif %}
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

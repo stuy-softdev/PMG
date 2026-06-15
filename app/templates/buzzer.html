@@ -6,26 +6,47 @@
   </head>
 
   <body class="h-full bg-gray-900">
-    <nav
-      class="bg-gray-800 text-white py-3 px-4 flex items-center justify-between"
-    >
-      <a class="font-bold text-xl tracking-tight" href="/home">Jeopardy</a>
-      <div class="flex items-center">
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/new_game"
-          >New Game</a
-        >
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/create_game"
-          >Create Game</a
-        >
-        <a
-          class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-          href="/logout"
-          >Logout</a
-        >
+    <nav class="bg-gray-800 text-white py-3 px-4">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <a class="font-bold text-xl tracking-tight" href="/home">Jeffpardy</a>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/find_or_create_room"
+            >New Game</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/create_board"
+            >Create Board</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/leaderboards"
+            >Leaderboards</a
+          >
+        </div>
+        <div class="flex items-center space-x-4">
+          {% if username %}
+          <p class="text-sm">Signed in as {{ username }}</p>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/logout"
+            >Logout</a
+          >
+          {% else %}
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/login"
+            >Login</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/register"
+            >Register</a
+          >
+          {% endif %}
+        </div>
       </div>
     </nav>
 
@@ -35,18 +56,52 @@
       <div class="max-w-3xl w-full">
         <div class="bg-gray-800 rounded-lg shadow-2xl p-12 text-center">
           <h2 class="text-5xl font-bold text-white leading-tight">
-
+            <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
             <script>
-            let questionDQ = "{{ clue_text }}";
-            let answer = "{{correct_answer}}";
-            let points = "{{clue_point_value}}";
+               let questionDQ = "{{ clue_text }}";
+               let correct_answer = "{{ correct_answer }}";
+               let answer_choices = {{ answer_choices|tojson }};
+               let points = "{{ clue_point_value }}";
+              let row = "{{ row }}";
+              let column = "{{ column }}";
+               let username = "{{ username }}"
+               let questionPoints = "{{ clue_point_value }}"
             </script>
 
             <script src="{{ url_for('static', filename='buzzer.js') }}"></script>
-            
           </h2>
-          <p id="demo"></p>
-          <p id="time"></p>
+
+          <div
+            id="message"
+            class="font-trivia text-center font-bold my-2"
+          ></div>
+
+          <!-- the entire answering the question lies on this form. when clicking on an answer it'll do all the work and pass everything to the javascript stuff, then pressing the NEXT button goes back to the game board -->
+          <form
+            action="{{ url_for('game', lobby_id = game_id) }}"
+            method="post"
+            id="idk"
+          >
+            <p id="demo"></p>
+            <p id="time"></p>
+            <input
+              type="hidden"
+              name="answer"
+              id="user_selected_answer"
+              value=""
+            />
+            <div id="display_answer_choices"></div>
+
+            <button
+              id="nextBtn"
+              name="nextbtn"
+              type="submit"
+              class="px-4 py-2 bg-gray-500 text-white cursor-not-allowed"
+              disabled
+            >
+              Next
+            </button>
+          </form>
         </div>
       </div>
     </div>

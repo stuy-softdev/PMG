@@ -1,0 +1,250 @@
+<!doctype html>
+<html class="h-full bg-gray-900">
+  <head>
+    <title>Lobby</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+
+  <body class="h-full text-white">
+    <nav class="bg-gray-800 text-white py-3 px-4">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <a class="font-bold text-xl tracking-tight" href="/home">Jeffpardy</a>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/find_or_create_room"
+            >New Game</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/create_board"
+            >Create Board</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/leaderboards"
+            >Leaderboards</a
+          >
+        </div>
+        <div class="flex items-center space-x-4">
+          {% if username %}
+          <p class="text-sm">Signed in as {{ username }}</p>
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/logout"
+            >Logout</a
+          >
+          {% else %}
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/login"
+            >Login</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/register"
+            >Register</a
+          >
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <div class="min-h-full bg-gray-900 py-10 px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-3xl">
+        <div
+          class="rounded-3xl bg-gray-800/95 border border-white/10 p-8 shadow-2xl shadow-black/40"
+        >
+          <div
+            class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between"
+          >
+            <div>
+              <h1 class="text-3xl font-bold tracking-tight text-white">
+                Game Lobby
+              </h1>
+              <p class="mt-3 text-gray-400">
+                Waiting for players to join. The game can begin once three
+                players are ready.
+              </p>
+            </div>
+            <div
+              class="rounded-2xl bg-gray-900/80 px-5 py-4 text-sm text-gray-300 border border-white/10"
+            >
+              <p class="text-gray-400">Room Code</p>
+              <p class="mt-1 text-xl font-semibold text-indigo-300">
+                {{ lobby_id }}
+              </p>
+
+              <a
+                id="leave_room_button"
+                href="/find_or_create_room"
+                class="inline-block mt-4 w-full rounded-2xl bg-red-600 px-5 py-3 text-base font-semibold text-white text-center transition hover:bg-red-500"
+              >
+                Leave Room
+              </a>
+            </div>
+          </div>
+
+          <div class="mt-8 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+            <div class="rounded-3xl bg-gray-900/90 p-6 border border-white/10">
+              <h2 class="text-xl font-semibold text-indigo-300">Players</h2>
+              <p class="mt-2 text-sm text-gray-400">
+                Connected players appear below.
+              </p>
+
+              <ul id="list_of_players" class="mt-6 space-y-3">
+                <li
+                  class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100"
+                >
+                  {{ player1 if player1 else 'Waiting for Player 1...' }}
+                </li>
+                <li
+                  class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100"
+                >
+                  {{ player2 if player2 else 'Waiting for Player 2...' }}
+                </li>
+                <li
+                  class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100"
+                >
+                  {{ player3 if player3 else 'Waiting for Player 3...' }}
+                </li>
+              </ul>
+            </div>
+
+            <div
+              class="rounded-3xl bg-gray-900/90 p-6 border border-white/10 flex flex-col justify-between"
+            >
+              <div>
+                <h2 class="text-xl font-semibold text-indigo-300">
+                  Ready to Start
+                </h2>
+                <p class="mt-2 text-sm text-gray-400">
+                  The start button is locked until all three players have
+                  joined.
+                </p>
+              </div>
+
+              <div class="mt-6">
+                <button
+                  id="start_game_button"
+                  type="submit"
+                  class="w-full rounded-2xl bg-indigo-600 px-5 py-3 text-base font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-600"
+                  {%
+                  if
+                  not
+                  player1
+                  or
+                  not
+                  player2
+                  or
+                  not
+                  player3
+                  %}disabled{%
+                  endif
+                  %}
+                >
+                  Start Game
+                </button>
+
+                <div
+                  id="join_notifications"
+                  class="mt-5 rounded-2xl bg-gray-800/90 border border-white/10 p-4 text-sm text-gray-300"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE ONE AND ONLY, THE LEGENDARY, THE SOCKET STUFF!!!!! -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+      const socket = io();
+      let lobby_array = [
+        "{{ lobby_id }}",
+        "{{ player1 }}",
+        "{{ player2 }}",
+        "{{ player3 }}",
+      ];
+
+      // automatically calls this function upon connection to server
+      socket.on("connect", () => {
+        socket.emit("join", { lobby_array: lobby_array });
+      });
+
+      // when python function for join emits this function, changes the display of the player list and sends a notification
+      socket.on("join_notif", (data) => {
+        const username_joined = data["username_joined"];
+        lobby_array = data["lobby_array"];
+
+        document.getElementById("list_of_players").innerHTML = `
+          <li class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100">
+            ${lobby_array[1]}
+          </li>
+          <li class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100">
+            ${lobby_array[2]}
+          </li>
+          <li class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100">
+            ${lobby_array[3]}
+          </li>
+        `;
+
+        document.getElementById("join_notifications").innerHTML +=
+          `${username_joined} has joined the room! <br>`;
+
+        if (!lobby_array.includes("None")) {
+          document.getElementById("start_game_button").disabled = false;
+        }
+      });
+
+      // listens to when a user leaves a room
+      const leave_room_button = document.getElementById("leave_room_button");
+
+      leave_room_button.addEventListener("click", () => {
+        console.log("Button was clicked!");
+        socket.emit("leave", { lobby_array: lobby_array });
+      });
+
+      // same as join_notif but for leaving
+      socket.on("leave_notif", (data) => {
+        const username_left = data["username_left"];
+        lobby_array = data["lobby_array"];
+
+        document.getElementById("list_of_players").innerHTML = `
+          <li class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100">
+            ${lobby_array[1]}
+          </li>
+          <li class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100">
+            ${lobby_array[2]}
+          </li>
+          <li class="rounded-2xl bg-gray-800 px-4 py-4 border border-white/10 text-gray-100">
+            ${lobby_array[3]}
+          </li>
+        `;
+
+        document.getElementById("join_notifications").innerHTML +=
+          `${username_left} has left the room! Oh noes! <br>`;
+
+        if (lobby_array.includes("None")) {
+          document.getElementById("start_game_button").disabled = true;
+        }
+      });
+
+      // listens to when a user starts a game
+      const start_game_button = document.getElementById("start_game_button");
+
+      start_game_button.addEventListener("click", () => {
+        console.log("Start Button was clicked!");
+        socket.emit("start_game", {
+          lobby_array: lobby_array,
+          choosing_player: lobby_array[1],
+        });
+      });
+
+      socket.on("redirect_at_start", (data) => {
+        window.location.href = data.url;
+      });
+    </script>
+  </body>
+</html>
