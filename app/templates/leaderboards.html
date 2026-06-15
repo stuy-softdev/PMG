@@ -27,12 +27,13 @@
           >
         </div>
         <div class="flex items-center space-x-4">
+          {% if username %}
           <p class="text-sm">Signed in as {{ username }}</p>
-          <a
-            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
-            href="/logout"
-            >Logout</a
-          >
+          <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/logout">Logout</a>
+          {% else %}
+          <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/login">Login</a>
+          <a class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700" href="/register">Register</a>
+          {% endif %}
         </div>
       </div>
     </nav>

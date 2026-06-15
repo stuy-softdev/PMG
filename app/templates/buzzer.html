@@ -27,12 +27,25 @@
           >
         </div>
         <div class="flex items-center space-x-4">
+          {% if username %}
           <p class="text-sm">Signed in as {{ username }}</p>
           <a
             class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
             href="/logout"
             >Logout</a
           >
+          {% else %}
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/login"
+            >Login</a
+          >
+          <a
+            class="text-sm px-4 py-2 leading-none rounded-full hover:bg-gray-700"
+            href="/register"
+            >Register</a
+          >
+          {% endif %}
         </div>
       </div>
     </nav>
@@ -45,14 +58,14 @@
           <h2 class="text-5xl font-bold text-white leading-tight">
             <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
             <script>
-              let questionDQ = "{{ clue_text }}";
-              let correct_answer = "{{ correct_answer }}";
-              let answer_choices = {{ answer_choices|tojson }};
-              let points = "{{ clue_point_value }}";
-      	      let row = "{{ row }}";
-      	      let column = "{{ column }}";
-              let username = "{{ username }}"
-              let questionPoints = "{{ clue_point_value }}"
+               let questionDQ = "{{ clue_text }}";
+               let correct_answer = "{{ correct_answer }}";
+               let answer_choices = {{ answer_choices|tojson }};
+               let points = "{{ clue_point_value }}";
+              let row = "{{ row }}";
+              let column = "{{ column }}";
+               let username = "{{ username }}"
+               let questionPoints = "{{ clue_point_value }}"
             </script>
 
             <script src="{{ url_for('static', filename='buzzer.js') }}"></script>

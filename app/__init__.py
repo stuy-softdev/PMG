@@ -113,6 +113,12 @@ app = Flask(__name__)
 app.secret_key = "secret"
 socketio = SocketIO(app)
 
+
+@app.context_processor
+def inject_username():
+    # make `username` available to all templates (None if not logged in)
+    return {"username": session.get('username')}
+
 @app.route("/logout")
 def logout():
     session.pop('username', None) # remove username from session
@@ -650,6 +656,5 @@ def join_lobby(userid, lobby_array):
             x = userid
 
 
-if __name__ == "__main__":
-    app.debug=True
-    socketio.run(app)
+if __name__ == '__main__':
+    socketio.run(app, debug=True, host='0.0.0.0')
